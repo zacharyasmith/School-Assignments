@@ -149,8 +149,8 @@ class DES:
 
         # execute DES
         count = self.__des(file_path, out_file, True)
-        # if count >= 0:
-        #     print('Done encrypting {} bytes.'.format(count))
+        if count >= 0:
+            print('Done encrypting {} bytes.'.format(count))
         return count
 
     def decrypt(self, file_path, out_file=None):
@@ -167,8 +167,8 @@ class DES:
             out_file = 'plain_{}.txt'.format(datetime.now().strftime('%Y-%m-%d %X'))
         # execute DES
         count = self.__des(file_path, out_file, False)
-        # if count >= 0:
-        #     print('Done decrypting {} bytes.'.format(count))
+        if count >= 0:
+            print('Done decrypting {} bytes.'.format(count))
         return count
 
 if __name__ == "__main__":
