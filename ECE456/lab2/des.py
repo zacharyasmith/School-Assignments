@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 """
 Author: Zachary Smith
 Class: ECE456
@@ -9,8 +9,10 @@ import re
 import binascii
 from datetime import datetime
 import struct
+import sys
 
-from .Exceptions import InvalidArgumentsError
+sys.path.append('./')
+from Exceptions import InvalidArgumentsError
 
 
 class DES:
@@ -145,7 +147,7 @@ class DES:
         """
         # format output file with current datetime
         if not out_file:
-            out_file = 'cypher_{}.txt'.format(datetime.now().strftime('%Y-%m-%d %X'))
+            out_file = 'cypher_{}.txt'.format(datetime.now().strftime('%Y-%m-%d %H%M%S'))
 
         # execute DES
         count = self.__des(file_path, out_file, True)
@@ -164,7 +166,7 @@ class DES:
             file_path: String describing the path to the plaintext file to be decrypted
         """
         if not out_file:
-            out_file = 'plain_{}.txt'.format(datetime.now().strftime('%Y-%m-%d %X'))
+            out_file = 'plain_{}.txt'.format(datetime.now().strftime('%Y-%m-%d %H%M%S'))
         # execute DES
         count = self.__des(file_path, out_file, False)
         if count >= 0:
