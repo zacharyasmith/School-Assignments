@@ -142,7 +142,7 @@ class DES:
             file_path: String describing the path to the plaintext file to be encrypted
         """
         # format output file with current datetime
-        out_file = 'cypher_{}.txt'.format(datetime.now().strftime('%Y-%m-%d %X'))
+        out_file = 'cypher_{}.txt'.format(datetime.now().strftime('%Y-%m-%d %H%M%S'))
         # execute DES
         count = self.__des(file_path, out_file, True)
         if count >= 0:
@@ -158,7 +158,7 @@ class DES:
         Args:
             file_path: String describing the path to the plaintext file to be decrypted
         """
-        out_file = 'plain_{}.txt'.format(datetime.now().strftime('%Y-%m-%d %X'))
+        out_file = 'plain_{}.txt'.format(datetime.now().strftime('%Y-%m-%d %H%M%S'))
         # execute DES
         count = self.__des(file_path, out_file, False)
         if count >= 0:

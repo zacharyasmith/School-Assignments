@@ -1,6 +1,7 @@
 import re
 import struct
 import os
+from math import ceil
 from datetime import datetime
 
 from lab2.des import DES
@@ -46,6 +47,7 @@ class UDP:
             # discard first 4
             f.read(4)
             total_length = half_word(f.read(2), 1, 0)
+            odd = (total_length % 2) == 1
             read_checksum = half_word(f.read(2), 1, 0)
         checksum = self.calculate_checksum(total_length, False, file)
         checksum_passed = read_checksum == checksum
@@ -55,7 +57,7 @@ class UDP:
             with open(self.temp_file, 'wb') as w:
                 with open(file, 'r+b') as r:
                     r.read(8)
-                    for i in range(total_length - 8):
+                    for i in range((total_length + 1 if odd else total_length) - 8):
                         w.write(r.read(1))
             des = DES('key.txt')
             des.decrypt(self.temp_file, 'output')
@@ -78,11 +80,8 @@ class UDP:
             w.write(struct.pack('H', checksum))
             # add bytes from encrypted file
             with open(self.temp_file, 'r+b') as r:
-                for i in range(byte_count):
+                for i in range(byte_count + 1 if odd else byte_count):
                     w.write(r.read(1))
-                if odd:
-                    # Pad the end with 0s
-                    w.write(struct.pack('B', 0))
         os.remove(self.temp_file)
         print('File successfully written with datagram.')
 
@@ -104,16 +103,12 @@ class UDP:
             checksum += total_length
             # add bytes from encrypted file
         with open(self.temp_file if send else file, 'r+b') as r:
-            for i in range(int(byte_count // 2)):
+            for i in range(int(ceil(byte_count / 2))):
                 # skip if checksum during reception
                 if send or i != 3:
                     checksum += half_word(r.read(2), 1, 0)
                 else:
                     r.read(2)
-            if odd and send:
-                checksum += r.read(1)[0] << 8
-            elif odd and not send:
-                checksum += half_word(r.read(2), 0, 1)
         # Add carry until less than 0xFFFF
         while checksum > comparator:
             carry = checksum >> 16
