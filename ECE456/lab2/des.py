@@ -2,7 +2,7 @@
 """
 Author: Zachary Smith
 Class: ECE456
-Assignment: Lab 1
+Assignment: Lab 2
 """
 
 import re
@@ -10,6 +10,7 @@ import binascii
 from datetime import datetime
 import struct
 import sys
+import os
 
 sys.path.append('./')
 from Exceptions import InvalidArgumentsError
@@ -102,6 +103,7 @@ class DES:
             with open(read, 'r+b') as r:
                 # open write cypher text
                 with open(write, 'wb') as w:
+                    file_size = os.fstat(r.fileno()).st_size
                     while r.readable():
                         # except out of range errors
                         left = None
@@ -123,7 +125,7 @@ class DES:
                         for i in range(8):
                             out, left, right = self.__des_iteration(left, right, i)
                         # write half words after 8 iterations
-                        if not encrypt and right == 0:
+                        if not encrypt and right == 0 and r.tell() == file_size:
                             # is null ==> odd number of bytes in plaintext
                             # adjusting by writing `left` only
                             byte_count -= 1

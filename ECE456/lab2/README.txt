@@ -7,6 +7,5 @@ The files, `sender.py` and `receiver.py`, contains all of the source code for th
 To execute the functions, ensure that they are executable via `chmod +x <filename>`.
 
 Usage:
-./sender.py <path/to/message> <source ip addr> <dest ip addr> <source port> <dest port> <output/file/name>
-./receiver.py <source ip addr> <dest ip addr> <path/to/datagram>
-
+./sender.py <path/to/message> <source ip addr> <dest ip addr> <source port> <dest port> <output/file/name> [--encrypt [-e] <key/file>]
+./receiver.py <source ip addr> <dest ip addr> <path/to/datagram> [--decrypt [-d] <key/file>]
