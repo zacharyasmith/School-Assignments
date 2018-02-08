@@ -1,7 +1,10 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 
-from lab2.Exceptions import InvalidArgumentsError
-from lab2.udp import UDP
+import sys
+sys.path.append('./')
+
+from Exceptions import InvalidArgumentsError
+from udp import UDP
 
 if __name__ == "__main__":
     import sys

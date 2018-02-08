@@ -4,7 +4,9 @@ import os
 from math import ceil
 from datetime import datetime
 
-from lab2.des import DES
+import sys
+sys.path.append('./')
+from des import DES
 
 
 def translate_ip(ip):
