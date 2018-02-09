@@ -5,7 +5,7 @@ Where [e] is equivalent to the empty set, or epsilon.
 LL(1) Grammar =================================================================
 
 1. <expr>   ::= <a> <t>
-2. <t>      ::= <num>
+2. <t>      ::= <expr>
 3.           | [e]
 4. <a>      ::= <b> <u>
 5. <u>      ::= <binop> <a> 
@@ -15,7 +15,7 @@ LL(1) Grammar =================================================================
 9. <c>      ::= <d> <v>
 10 <v>      ::= <incrop> <v> 
 11           | [e]
-12 <d>      ::= $<e> 
+12 <d>      ::= $<b> 
 13           | <e>
 14 <e>      ::= (<expr>) 
 15           | <num>
@@ -41,7 +41,7 @@ Nullable(num)    = False
 FIRST =========================================================================
 
 FIRST(expr)   = {incrop, F, (, num}
-FIRST(t)      = {num, [e]}
+FIRST(t)      = {incrop, F, (, num, [e]}
 FIRST(a)      = {incrop, F, (, num}
 FIRST(u)      = {binop, [e]}
 FIRST(b)      = {incrop, F, (, num}
@@ -59,9 +59,9 @@ FOLLOW(expr)   = {), $}
 FOLLOW(t)      = {), $}
 FOLLOW(a)      = {num, ), $}
 FOLLOW(u)      = {num, ), $}
-FOLLOW(b)      = {binop, num, ), $}
-FOLLOW(c)      = {binop, num, ), $}
-FOLLOW(v)      = {binop, num, ), $}
+FOLLOW(b)      = {incrop, binop, num, ), $}
+FOLLOW(c)      = {incrop, binop, num, ), $}
+FOLLOW(v)      = {incrop, binop, num, ), $}
 FOLLOW(d)      = {incrop, binop, num, ), $}
 FOLLOW(e)      = {incrop, binop, num, ), $}
 FOLLOW(incrop) = {incrop, F, (, num, ), $}
@@ -73,7 +73,7 @@ TABLE =========================================================================
          Input Symbols
          (     )     num   incrop binop F     $
 expr     r1          r1    r1           r1
-t              r3    r2                       r3
+t        r2    r3    r2    r2           r2    r3
 a        r4          r4    r4           r4
 u              r6    r6          r5           r6
 b        r8          r8    r7           r8
