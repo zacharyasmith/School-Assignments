@@ -52,11 +52,10 @@ class UDP:
             # discard first 4
             f.read(4)
             # grab fields from header
-            total_length = half_word(f.read(2), 1, 0)
-            print('Parsed total length:', total_length)
+            total_length = half_word(f.read(2), 0, 1)
+            print('Parsed total length:', total_length, 'B')
             file_length = total_length - 8
-            odd = (total_length % 2) == 1
-            read_checksum = half_word(f.read(2), 1, 0)
+            read_checksum = half_word(f.read(2), 0, 1)
             print('Parsed checksum:', hex(read_checksum), '({})'.format(read_checksum))
         # compute checksum equivalency
         checksum = self.calculate_checksum(total_length, False, file)
@@ -97,8 +96,8 @@ class UDP:
         with open(output, 'wb') as w:
             w.write(self.source_port)
             w.write(self.dest_port)
-            w.write(struct.pack('H', total_length))
-            w.write(struct.pack('H', checksum))
+            w.write(struct.pack('>H', total_length))
+            w.write(struct.pack('>H', checksum))
             # add bytes from payload file
             with open(self.temp_file, 'r+b') as r:
                 for i in range(byte_count):
@@ -116,27 +115,27 @@ class UDP:
         total_length = 8 + byte_count if send else byte_count
         odd = total_length % 2 == 1
         # add ip addresses
-        checksum = half_word(self.source_ip, 1, 0) + half_word(self.source_ip, 3, 2)
-        checksum += half_word(self.dest_ip, 1, 0) + half_word(self.dest_ip, 3, 2)
+        checksum = half_word(self.source_ip, 0, 1) + half_word(self.source_ip, 2, 3)
+        checksum += half_word(self.dest_ip, 0, 1) + half_word(self.dest_ip, 2, 3)
         # protocol (17)
         checksum += 17
         # total length
         checksum += total_length
         if send:
             # ports
-            checksum += half_word(self.source_port, 1, 0) + half_word(self.dest_port, 1, 0)
+            checksum += half_word(self.source_port, 0, 1) + half_word(self.dest_port, 0, 1)
             # total length
             checksum += total_length
             # add bytes from encrypted file
         with open(self.temp_file if send else file, 'r+b') as r:
             for i in range(int(byte_count // 2)):
                 if send or i != 3:
-                    checksum += half_word(r.read(2), 1, 0)
+                    checksum += half_word(r.read(2), 0, 1)
                 else:
                     # skip the checksum field at i = 3
                     r.read(2)
             if odd:
-                checksum += r.read(1)[0]
+                checksum += r.read(1)[0] << 8
         # Add carry until less than 0xFFFF
         while checksum > comparator:
             carry = checksum >> 16
