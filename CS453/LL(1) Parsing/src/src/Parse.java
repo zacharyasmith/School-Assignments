@@ -18,7 +18,7 @@ incrop ::=	++ | --
 binop  ::=	+ | -
 num    ::=	0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9
 
-Examples ===============================
+Examples ==============================
 
 ** Ex. 1
 INPUT
@@ -26,7 +26,6 @@ $1 + (1 - ++$2) $3
 
  */
 
-import java.io.IOException;
 import java.io.InvalidObjectException;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -41,9 +40,12 @@ public class Parse {
         this.tokens = new ArrayList<>();
         this.debug = true;
         this.scan();
-        if (debug)
+        if (debug) {
+            System.out.println("Done scanning tokens.");
             for (String s : tokens)
                 System.out.println(s);
+            System.out.println("=====================================");
+        }
     }
 
     public static String nextChar(String in, int index) {
