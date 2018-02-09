@@ -5,7 +5,7 @@ Where [e] is equivalent to the empty set, or epsilon.
 LL(1) Grammar =================================================================
 
 1. <expr>   ::= <a> <t>
-2. <t>      ::= <num> 
+2. <t>      ::= <num>
 3.           | [e]
 4. <a>      ::= <b> <u>
 5. <u>      ::= <binop> <a> 
@@ -68,7 +68,7 @@ FOLLOW(incrop) = {incrop, F, (, num, ), $}
 FOLLOW(binop)  = {incrop, F, (, num}
 FOLLOW(num)    = {incrop, binop, num, ), $}
 
-Is our grammar a LL(1) grammar?
+TABLE =========================================================================
 
          Input Symbols
          (     )     num   incrop binop F     $
@@ -82,4 +82,11 @@ v              r11   r11   r10    r11         r11
 d        r13         r13                r12
 e        r14         r14
 
+===============================================================================
 
+Is our grammar a LL(1) grammar? 
+- Yes. For each set of productions for each symbol, their FIRST() definitions
+are pairwise disjoint. Also, for each symbol, A, having a nullable RHS as a
+production, each other non-nullable FIRST(RHS) /\ FOLLOW(A) is disjoint. These
+fulfill the rules of LL(1) grammars. Furthermore, there is no left-recursion or
+ambiguity.
