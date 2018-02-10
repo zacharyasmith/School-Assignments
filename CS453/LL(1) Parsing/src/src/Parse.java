@@ -1,14 +1,15 @@
 public class Parse {
-    private boolean debug;
-
-    public Parse() throws Exception {
-        this.debug = true;
-        TokenScanner ts = new TokenScanner(debug);
-        Expr result = new Expr(ts, debug);
-        System.out.println(result.expr() && ts.eof());
-    }
-
     public static void main(String[] args) throws Exception {
-        Parse p = new Parse();
+        boolean debug = false;
+        try {
+            TokenScanner ts = new TokenScanner(debug);
+            Expr result = new Expr(ts, debug);
+            if (result.expr() && ts.eof())
+                System.out.println("Expression parsed successfully");
+            else
+                System.out.println("Invalid expression");
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
     }
 }
