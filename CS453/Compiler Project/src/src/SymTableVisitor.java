@@ -5,7 +5,7 @@ import java.util.HashMap;
 
 public class SymTableVisitor<R,A> extends GJDepthFirst<R,A> {
     // consider <String (for id), (something for types)>
-    public HashMap<String,String> table = new HashMap<>();
+    public HashMap<String,IdentifierType> table = new HashMap<>();
 
     /**
      * f0 -> MainClass()
@@ -78,8 +78,16 @@ public class SymTableVisitor<R,A> extends GJDepthFirst<R,A> {
      * f0 -> Type()
      * f1 -> Identifier()
      * f2 -> ";"
+     *
+     * Identifier:
+     *  * Grammar production:
+     * f0 -> ArrayType()
+     *       | BooleanType()
+     *       | IntegerType()
+     *       | Identifier()
      */
     public R visit(VarDeclaration n, A argu) {
+        table.put(n.f1.f0.tokenImage, new IdentifierType(n.f0));
         return super.visit(n, argu);
     }
 
