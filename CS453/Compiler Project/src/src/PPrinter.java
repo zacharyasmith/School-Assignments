@@ -34,7 +34,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f16 -> "}"
      * f17 -> "}"
      */
-    @Override
     public R visit(MainClass n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -44,7 +43,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f0 -> ClassDeclaration()
      *       | ClassExtendsDeclaration()
      */
-    @Override
     public R visit(TypeDeclaration n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -58,7 +56,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f4 -> ( MethodDeclaration() )*
      * f5 -> "}"
      */
-    @Override
     public R visit(ClassDeclaration n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -74,7 +71,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f6 -> ( MethodDeclaration() )*
      * f7 -> "}"
      */
-    @Override
     public R visit(ClassExtendsDeclaration n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -85,7 +81,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f1 -> Identifier()
      * f2 -> ";"
      */
-    @Override
     public R visit(VarDeclaration n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -106,7 +101,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f11 -> ";"
      * f12 -> "}"
      */
-    @Override
     public R visit(MethodDeclaration n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -116,7 +110,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f0 -> FormalParameter()
      * f1 -> ( FormalParameterRest() )*
      */
-    @Override
     public R visit(FormalParameterList n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -126,7 +119,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f0 -> Type()
      * f1 -> Identifier()
      */
-    @Override
     public R visit(FormalParameter n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -136,7 +128,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f0 -> ","
      * f1 -> FormalParameter()
      */
-    @Override
     public R visit(FormalParameterRest n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -148,7 +139,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      *       | IntegerType()
      *       | Identifier()
      */
-    @Override
     public R visit(Type n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -159,7 +149,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f1 -> "["
      * f2 -> "]"
      */
-    @Override
     public R visit(ArrayType n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -168,7 +157,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
     /**
      * f0 -> "boolean"
      */
-    @Override
     public R visit(BooleanType n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -177,7 +165,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
     /**
      * f0 -> "int"
      */
-    @Override
     public R visit(IntegerType n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -191,7 +178,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      *       | WhileStatement()
      *       | PrintStatement()
      */
-    @Override
     public R visit(Statement n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -202,7 +188,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f1 -> ( Statement() )*
      * f2 -> "}"
      */
-    @Override
     public R visit(Block n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -214,7 +199,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f2 -> Expression()
      * f3 -> ";"
      */
-    @Override
     public R visit(AssignmentStatement n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -229,7 +213,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f5 -> Expression()
      * f6 -> ";"
      */
-    @Override
     public R visit(ArrayAssignmentStatement n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -244,7 +227,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f5 -> "else"
      * f6 -> Statement()
      */
-    @Override
     public R visit(IfStatement n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -257,7 +239,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f3 -> ")"
      * f4 -> Statement()
      */
-    @Override
     public R visit(WhileStatement n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -270,7 +251,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f3 -> ")"
      * f4 -> ";"
      */
-    @Override
     public R visit(PrintStatement n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -287,7 +267,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      *       | MessageSend()
      *       | PrimaryExpression()
      */
-    @Override
     public R visit(Expression n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -298,7 +277,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f1 -> "&&"
      * f2 -> PrimaryExpression()
      */
-    @Override
     public R visit(AndExpression n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -309,7 +287,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f1 -> "<"
      * f2 -> PrimaryExpression()
      */
-    @Override
     public R visit(CompareExpression n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -320,7 +297,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f1 -> "+"
      * f2 -> PrimaryExpression()
      */
-    @Override
     public R visit(PlusExpression n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -331,7 +307,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f1 -> "-"
      * f2 -> PrimaryExpression()
      */
-    @Override
     public R visit(MinusExpression n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -342,7 +317,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f1 -> "*"
      * f2 -> PrimaryExpression()
      */
-    @Override
     public R visit(TimesExpression n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -354,7 +328,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f2 -> PrimaryExpression()
      * f3 -> "]"
      */
-    @Override
     public R visit(ArrayLookup n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -365,7 +338,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f1 -> "."
      * f2 -> "length"
      */
-    @Override
     public R visit(ArrayLength n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -379,7 +351,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f4 -> ( ExpressionList() )?
      * f5 -> ")"
      */
-    @Override
     public R visit(MessageSend n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -389,7 +360,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f0 -> Expression()
      * f1 -> ( ExpressionRest() )*
      */
-    @Override
     public R visit(ExpressionList n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -399,7 +369,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f0 -> ","
      * f1 -> Expression()
      */
-    @Override
     public R visit(ExpressionRest n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -416,7 +385,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      *       | NotExpression()
      *       | BracketExpression()
      */
-    @Override
     public R visit(PrimaryExpression n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -425,7 +393,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
     /**
      * f0 -> <INTEGER_LITERAL>
      */
-    @Override
     public R visit(IntegerLiteral n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -434,7 +401,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
     /**
      * f0 -> "true"
      */
-    @Override
     public R visit(TrueLiteral n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -443,7 +409,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
     /**
      * f0 -> "false"
      */
-    @Override
     public R visit(FalseLiteral n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -452,7 +417,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
     /**
      * f0 -> <IDENTIFIER>
      */
-    @Override
     public R visit(Identifier n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -461,7 +425,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
     /**
      * f0 -> "this"
      */
-    @Override
     public R visit(ThisExpression n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -474,7 +437,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f3 -> Expression()
      * f4 -> "]"
      */
-    @Override
     public R visit(ArrayAllocationExpression n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -486,7 +448,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f2 -> "("
      * f3 -> ")"
      */
-    @Override
     public R visit(AllocationExpression n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -496,7 +457,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f0 -> "!"
      * f1 -> Expression()
      */
-    @Override
     public R visit(NotExpression n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
@@ -507,7 +467,6 @@ public class PPrinter<R> extends GJDepthFirst<R, String> {
      * f1 -> Expression()
      * f2 -> ")"
      */
-    @Override
     public R visit(BracketExpression n, String argu) {
         System.out.println(argu + n.getClass().getSimpleName());
         return super.visit(n, sep + argu);
