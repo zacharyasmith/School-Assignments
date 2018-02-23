@@ -25,10 +25,10 @@ public class Typecheck {
             // Build symbol table
             SymTableVisitor<Void> stv = new SymTableVisitor();
             root.accept(stv, "");
-            HashMap <String, IdentifierType> symt = stv.table;
+            TypeCheckHelper tch = new TypeCheckHelper(stv.table);
             if (debug) {
                 System.out.println("\nSymbol table ----------------");
-                for (Map.Entry<String, IdentifierType> entry : symt.entrySet()) {
+                for (Map.Entry<String, IdentifierType> entry : tch.symt.entrySet()) {
                     String key = entry.getKey();
                     IdentifierType val = entry.getValue();
                     System.out.println(key + " : " + val.type);
@@ -36,8 +36,8 @@ public class Typecheck {
             }
 
             // Type check
-            TypeCheckVisitor<Void> tcv = new TypeCheckVisitor(debug);
-            root.accept(tcv, symt);
+            TypeCheckVisitor<Void> tcv = new TypeCheckVisitor(debug, tch);
+            root.accept(tcv, null);
         } catch (ParseException | FileNotFoundException e) {
             System.out.println(e.toString());
             System.exit(1);

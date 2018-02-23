@@ -3,11 +3,13 @@ import visitor.GJDepthFirst;
 
 import java.util.HashMap;
 
-public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, IdentifierType>> {
+public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
 
     boolean debug;
-    TypeCheckVisitor(boolean debug) {
+    public TypeCheckHelper tch;
+    TypeCheckVisitor(boolean debug, TypeCheckHelper tch) {
         this.debug = debug;
+        this.tch = tch;
     }
 
     /**
@@ -15,7 +17,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f1 -> ( TypeDeclaration() )*
      * f2 -> <EOF>
      */
-    public R visit(Goal n, HashMap<String, IdentifierType> argu) {
+    public R visit(Goal n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -39,15 +41,16 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f16 -> "}"
      * f17 -> "}"
      */
-    public R visit(MainClass n, HashMap<String, IdentifierType> argu) {
-        return super.visit(n, argu);
+    public R visit(MainClass n, ContextObject argu) {
+        ContextObject co = new ContextObject(n.f1.f0.tokenImage, "main");
+        return super.visit(n, co);
     }
 
     /**
      * f0 -> ClassDeclaration()
      *       | ClassExtendsDeclaration()
      */
-    public R visit(TypeDeclaration n, HashMap<String, IdentifierType> argu) {
+    public R visit(TypeDeclaration n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -59,8 +62,9 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f4 -> ( MethodDeclaration() )*
      * f5 -> "}"
      */
-    public R visit(ClassDeclaration n, HashMap<String, IdentifierType> argu) {
-        return super.visit(n, argu);
+    public R visit(ClassDeclaration n, ContextObject argu) {
+        ContextObject co = new ContextObject(n.f1.f0.tokenImage, null);
+        return super.visit(n, co);
     }
 
     /**
@@ -73,8 +77,9 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f6 -> ( MethodDeclaration() )*
      * f7 -> "}"
      */
-    public R visit(ClassExtendsDeclaration n, HashMap<String, IdentifierType> argu) {
-        return super.visit(n, argu);
+    public R visit(ClassExtendsDeclaration n, ContextObject argu) {
+        ContextObject co = new ContextObject(n.f1.f0.tokenImage, null);
+        return super.visit(n, co);
     }
 
     /**
@@ -82,7 +87,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f1 -> Identifier()
      * f2 -> ";"
      */
-    public R visit(VarDeclaration n, HashMap<String, IdentifierType> argu) {
+    public R visit(VarDeclaration n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -101,7 +106,9 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f11 -> ";"
      * f12 -> "}"
      */
-    public R visit(MethodDeclaration n, HashMap<String, IdentifierType> argu) {
+    public R visit(MethodDeclaration n, ContextObject argu) {
+        argu.methodName = n.f2.f0.tokenImage;
+        argu.requiredReturnType = new IdentifierType(n.f1);
         return super.visit(n, argu);
     }
 
@@ -109,7 +116,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f0 -> FormalParameter()
      * f1 -> ( FormalParameterRest() )*
      */
-    public R visit(FormalParameterList n, HashMap<String, IdentifierType> argu) {
+    public R visit(FormalParameterList n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -117,7 +124,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f0 -> Type()
      * f1 -> Identifier()
      */
-    public R visit(FormalParameter n, HashMap<String, IdentifierType> argu) {
+    public R visit(FormalParameter n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -125,7 +132,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f0 -> ","
      * f1 -> FormalParameter()
      */
-    public R visit(FormalParameterRest n, HashMap<String, IdentifierType> argu) {
+    public R visit(FormalParameterRest n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -135,7 +142,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      *       | IntegerType()
      *       | Identifier()
      */
-    public R visit(Type n, HashMap<String, IdentifierType> argu) {
+    public R visit(Type n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -144,21 +151,21 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f1 -> "["
      * f2 -> "]"
      */
-    public R visit(ArrayType n, HashMap<String, IdentifierType> argu) {
+    public R visit(ArrayType n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
     /**
      * f0 -> "boolean"
      */
-    public R visit(BooleanType n, HashMap<String, IdentifierType> argu) {
+    public R visit(BooleanType n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
     /**
      * f0 -> "int"
      */
-    public R visit(IntegerType n, HashMap<String, IdentifierType> argu) {
+    public R visit(IntegerType n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -170,7 +177,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      *       | WhileStatement()
      *       | PrintStatement()
      */
-    public R visit(Statement n, HashMap<String, IdentifierType> argu) {
+    public R visit(Statement n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -179,7 +186,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f1 -> ( Statement() )*
      * f2 -> "}"
      */
-    public R visit(Block n, HashMap<String, IdentifierType> argu) {
+    public R visit(Block n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -189,7 +196,13 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f2 -> Expression()
      * f3 -> ";"
      */
-    public R visit(AssignmentStatement n, HashMap<String, IdentifierType> argu) {
+    public R visit(AssignmentStatement n, ContextObject argu) {
+        try {
+            argu.requiredType = tch.searchSymt(argu, n.f0);
+        } catch (TypeCheckException e) {
+            System.out.println(e.getMessage());
+            tch.passing = false;
+        }
         return super.visit(n, argu);
     }
 
@@ -202,7 +215,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f5 -> Expression()
      * f6 -> ";"
      */
-    public R visit(ArrayAssignmentStatement n, HashMap<String, IdentifierType> argu) {
+    public R visit(ArrayAssignmentStatement n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -215,7 +228,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f5 -> "else"
      * f6 -> Statement()
      */
-    public R visit(IfStatement n, HashMap<String, IdentifierType> argu) {
+    public R visit(IfStatement n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -226,7 +239,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f3 -> ")"
      * f4 -> Statement()
      */
-    public R visit(WhileStatement n, HashMap<String, IdentifierType> argu) {
+    public R visit(WhileStatement n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -237,7 +250,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f3 -> ")"
      * f4 -> ";"
      */
-    public R visit(PrintStatement n, HashMap<String, IdentifierType> argu) {
+    public R visit(PrintStatement n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -252,7 +265,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      *       | MessageSend()
      *       | PrimaryExpression()
      */
-    public R visit(Expression n, HashMap<String, IdentifierType> argu) {
+    public R visit(Expression n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -261,7 +274,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f1 -> "&&"
      * f2 -> PrimaryExpression()
      */
-    public R visit(AndExpression n, HashMap<String, IdentifierType> argu) {
+    public R visit(AndExpression n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -270,7 +283,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f1 -> "<"
      * f2 -> PrimaryExpression()
      */
-    public R visit(CompareExpression n, HashMap<String, IdentifierType> argu) {
+    public R visit(CompareExpression n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -279,7 +292,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f1 -> "+"
      * f2 -> PrimaryExpression()
      */
-    public R visit(PlusExpression n, HashMap<String, IdentifierType> argu) {
+    public R visit(PlusExpression n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -288,7 +301,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f1 -> "-"
      * f2 -> PrimaryExpression()
      */
-    public R visit(MinusExpression n, HashMap<String, IdentifierType> argu) {
+    public R visit(MinusExpression n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -297,7 +310,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f1 -> "*"
      * f2 -> PrimaryExpression()
      */
-    public R visit(TimesExpression n, HashMap<String, IdentifierType> argu) {
+    public R visit(TimesExpression n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -307,7 +320,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f2 -> PrimaryExpression()
      * f3 -> "]"
      */
-    public R visit(ArrayLookup n, HashMap<String, IdentifierType> argu) {
+    public R visit(ArrayLookup n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -316,7 +329,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f1 -> "."
      * f2 -> "length"
      */
-    public R visit(ArrayLength n, HashMap<String, IdentifierType> argu) {
+    public R visit(ArrayLength n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -328,7 +341,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f4 -> ( ExpressionList() )?
      * f5 -> ")"
      */
-    public R visit(MessageSend n, HashMap<String, IdentifierType> argu) {
+    public R visit(MessageSend n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -336,7 +349,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f0 -> Expression()
      * f1 -> ( ExpressionRest() )*
      */
-    public R visit(ExpressionList n, HashMap<String, IdentifierType> argu) {
+    public R visit(ExpressionList n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -344,7 +357,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f0 -> ","
      * f1 -> Expression()
      */
-    public R visit(ExpressionRest n, HashMap<String, IdentifierType> argu) {
+    public R visit(ExpressionRest n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -359,42 +372,42 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      *       | NotExpression()
      *       | BracketExpression()
      */
-    public R visit(PrimaryExpression n, HashMap<String, IdentifierType> argu) {
+    public R visit(PrimaryExpression n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
     /**
      * f0 -> <INTEGER_LITERAL>
      */
-    public R visit(IntegerLiteral n, HashMap<String, IdentifierType> argu) {
+    public R visit(IntegerLiteral n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
     /**
      * f0 -> "true"
      */
-    public R visit(TrueLiteral n, HashMap<String, IdentifierType> argu) {
+    public R visit(TrueLiteral n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
     /**
      * f0 -> "false"
      */
-    public R visit(FalseLiteral n, HashMap<String, IdentifierType> argu) {
+    public R visit(FalseLiteral n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
     /**
      * f0 -> <IDENTIFIER>
      */
-    public R visit(Identifier n, HashMap<String, IdentifierType> argu) {
+    public R visit(Identifier n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
     /**
      * f0 -> "this"
      */
-    public R visit(ThisExpression n, HashMap<String, IdentifierType> argu) {
+    public R visit(ThisExpression n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -405,7 +418,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f3 -> Expression()
      * f4 -> "]"
      */
-    public R visit(ArrayAllocationExpression n, HashMap<String, IdentifierType> argu) {
+    public R visit(ArrayAllocationExpression n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -415,7 +428,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f2 -> "("
      * f3 -> ")"
      */
-    public R visit(AllocationExpression n, HashMap<String, IdentifierType> argu) {
+    public R visit(AllocationExpression n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -423,7 +436,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f0 -> "!"
      * f1 -> Expression()
      */
-    public R visit(NotExpression n, HashMap<String, IdentifierType> argu) {
+    public R visit(NotExpression n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
@@ -432,7 +445,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, HashMap<String, Identif
      * f1 -> Expression()
      * f2 -> ")"
      */
-    public R visit(BracketExpression n, HashMap<String, IdentifierType> argu) {
+    public R visit(BracketExpression n, ContextObject argu) {
         return super.visit(n, argu);
     }
 }
