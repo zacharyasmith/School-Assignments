@@ -28,9 +28,9 @@ public class Typecheck {
             TypeCheckHelper tch = new TypeCheckHelper(stv.table);
             if (debug) {
                 System.out.println("\nSymbol table ----------------");
-                for (Map.Entry<String, IdentifierType> entry : tch.symt.entrySet()) {
+                for (Map.Entry<String, TypeHelper> entry : tch.symt.entrySet()) {
                     String key = entry.getKey();
-                    IdentifierType val = entry.getValue();
+                    TypeHelper val = entry.getValue();
                     System.out.println(key + " : " + val.type);
                 }
             }
