@@ -14,6 +14,11 @@ public class TypeHelper {
     public Type type;
     public Identifier objName;
 
+    public TypeHelper(TypeHelper t) {
+        this.type = t.type;
+        this.objName = t.objName;
+    }
+
     public TypeHelper(Type a) {
         this.type = a;
     }

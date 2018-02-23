@@ -1,5 +1,6 @@
 import syntaxtree.Identifier;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,16 @@ public class TypeCheckHelper {
 
     public HashMap<String, TypeHelper> symt;
     public HashMap<String, TypeHelper> sigt;
+    public ArrayList<Identifier> objs;
     public boolean passing = true;
+
+    public TypeCheckHelper(HashMap<String, TypeHelper> symt,
+                           HashMap<String, TypeHelper> sigt,
+                           ArrayList<Identifier> objs) {
+        this.symt = symt;
+        this.sigt = sigt;
+        this.objs = objs;
+    }
 
     public TypeHelper searchSymt(ContextObject argu, Identifier n) throws TypeCheckException {
         String clss = argu.className + "::" + n.f0.tokenImage;
@@ -18,14 +28,21 @@ public class TypeCheckHelper {
         else if (symt.containsKey(clss))
             return symt.get(clss);
         else {
-            throw new TypeCheckException("Neither identifiers found in symbol table:" +
+            throw new TypeCheckException("Neither identifiers found in symbol sigt:" +
                     "\n\t" + clss +
                     "\n\t" + method);
         }
     }
 
-    public TypeHelper searchSigt(ContextObject argu) throws TypeCheckException {
-        String method = argu.className + "::" + argu.methodName;
+    public TypeHelper searchSigt(ContextObject c) throws TypeCheckException {
+        return searchSigt(c.className + "::" + c.methodName);
+    }
+
+    public TypeHelper searchSigt(String className, String methodName) throws TypeCheckException {
+        return searchSigt(className + "::" + methodName);
+    }
+
+    private TypeHelper searchSigt(String method) throws TypeCheckException {
         if (sigt.containsKey(method))
             return sigt.get(method);
         else
@@ -33,9 +50,15 @@ public class TypeCheckHelper {
                     "\n\t" + method);
     }
 
-    public TypeCheckHelper(HashMap<String, TypeHelper> symt, HashMap<String, TypeHelper> sigt) {
-        this.symt = symt;
-        this.sigt = sigt;
+    public TypeHelper searchObjs(Identifier c) throws TypeCheckException {
+        return searchObjs(c.f0.tokenImage);
+    }
+
+    public TypeHelper searchObjs(String c) throws TypeCheckException {
+        for (Identifier i : objs)
+            if(i.f0.tokenImage.equals(c))
+                return new TypeHelper(i);
+        throw new TypeCheckException("Class `" + c + "` not declared.");
     }
 
     @Override
@@ -51,6 +74,10 @@ public class TypeCheckHelper {
             String key = entry.getKey();
             TypeHelper val = entry.getValue();
             ret += key + " : " + val.type + "\n";
+        }
+        ret += "Classes table -------------------------\n";
+        for (Identifier i : this.objs) {
+            ret += i.f0 + "\n";
         }
         return ret;
     }

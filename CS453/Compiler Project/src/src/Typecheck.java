@@ -22,22 +22,23 @@ public class Typecheck {
 //                root.accept(pp, "");
 //            }
 
-            // Build symbol table
+            // Build symbol sigt
             SymTableVisitor<Void> stv = new SymTableVisitor();
             root.accept(stv, "");
 
-            // Build method table
-            SignatureVisitor<Void> sv = new SignatureVisitor();
-            root.accept(sv, "");
-
             // Helper for type check visitor
-            TypeCheckHelper tch = new TypeCheckHelper(stv.table, sv.table);
+            TypeCheckHelper tch = new TypeCheckHelper(stv.symt, stv.sigt, stv.objs);
             if (debug)
                 System.out.println(tch);
 
             // Type check
-            TypeCheckVisitor<Void> tcv = new TypeCheckVisitor(debug, tch);
+            TypeCheckVisitor tcv = new TypeCheckVisitor(debug, tch);
             root.accept(tcv, null);
+            if (tcv.tch.passing) {
+                System.out.println("Program type checked successfully");
+            } else {
+                System.out.println("Type error");
+            }
         } catch (ParseException | FileNotFoundException e) {
             System.out.println(e.toString());
             System.exit(1);

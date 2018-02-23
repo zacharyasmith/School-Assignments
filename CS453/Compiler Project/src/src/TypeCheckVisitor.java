@@ -1,7 +1,7 @@
 import syntaxtree.*;
 import visitor.GJDepthFirst;
 
-public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
+public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
 
     boolean debug;
     public TypeCheckHelper tch;
@@ -31,7 +31,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f16 -> "}"
      * f17 -> "}"
      */
-    public R visit(MainClass n, ContextObject argu) {
+    public TypeHelper visit(MainClass n, ContextObject argu) {
         ContextObject co = new ContextObject(n.f1.f0.tokenImage, "main");
         return super.visit(n, co);
     }
@@ -44,7 +44,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f4 -> ( MethodDeclaration() )*
      * f5 -> "}"
      */
-    public R visit(ClassDeclaration n, ContextObject argu) {
+    public TypeHelper visit(ClassDeclaration n, ContextObject argu) {
         ContextObject co = new ContextObject(n.f1.f0.tokenImage, null);
         return super.visit(n, co);
     }
@@ -59,7 +59,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f6 -> ( MethodDeclaration() )*
      * f7 -> "}"
      */
-    public R visit(ClassExtendsDeclaration n, ContextObject argu) {
+    public TypeHelper visit(ClassExtendsDeclaration n, ContextObject argu) {
         ContextObject co = new ContextObject(n.f1.f0.tokenImage, null);
         return super.visit(n, co);
     }
@@ -79,11 +79,11 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f11 -> ";"
      * f12 -> "}"
      */
-    public R visit(MethodDeclaration n, ContextObject argu) {
+    public TypeHelper visit(MethodDeclaration n, ContextObject argu) {
         argu.methodName = n.f2.f0.tokenImage;
         argu.expressionType = null;
 
-        R _ret = null;
+        TypeHelper _ret = null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
         n.f2.accept(this, argu);
@@ -94,6 +94,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
         n.f7.accept(this, argu);
         n.f8.accept(this, argu);
         n.f9.accept(this, argu);
+        // TODO accept f10 return type
         // assign return type
         argu.expressionType = new TypeHelper(n.f1);
         n.f10.accept(this, argu);
@@ -108,15 +109,23 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f2 -> Expression()
      * f3 -> ";"
      */
-    public R visit(AssignmentStatement n, ContextObject argu) {
+    public TypeHelper visit(AssignmentStatement n, ContextObject argu) {
+        TypeHelper curr;
         try {
-            argu.expressionType = tch.searchSymt(argu, n.f0);
+            curr = tch.searchSymt(argu, n.f0);
         } catch (TypeCheckException e) {
             System.out.println(TypeCheckException.debugString(e, argu, n.f0.f0));
             tch.passing = false;
             return null;
         }
-        return super.visit(n, argu);
+        TypeHelper _ret=null;
+        argu.expressionType = null;
+        n.f0.accept(this, argu);
+        n.f1.accept(this, argu);
+        argu.expressionType = curr;
+        n.f2.accept(this, argu);
+        n.f3.accept(this, argu);
+        return _ret;
     }
 
     /**
@@ -128,9 +137,24 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f5 -> Expression()
      * f6 -> ";"
      */
-    public R visit(ArrayAssignmentStatement n, ContextObject argu) {
+    public TypeHelper visit(ArrayAssignmentStatement n, ContextObject argu) {
+        TypeHelper _ret = null;
+        try {
+            // f0 must be array type...
+            tch.searchSymt(argu, n.f0);
+        } catch (TypeCheckException e) {
+            System.out.println(TypeCheckException.debugString(e, argu, n.f0.f0));
+        }
+        argu.expressionType = null;
+        n.f0.accept(this, argu);
+        n.f1.accept(this, argu);
         argu.expressionType = new TypeHelper(TypeHelper.Type.IntegerType);
-        return super.visit(n, argu);
+        n.f2.accept(this, argu);
+        n.f3.accept(this, argu);
+        n.f4.accept(this, argu);
+        n.f5.accept(this, argu);
+        n.f6.accept(this, argu);
+        return _ret;
     }
 
     /**
@@ -142,7 +166,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f5 -> "else"
      * f6 -> Statement()
      */
-    public R visit(IfStatement n, ContextObject argu) {
+    public TypeHelper visit(IfStatement n, ContextObject argu) {
         argu.expressionType = new TypeHelper(TypeHelper.Type.BooleanType);
         return super.visit(n, argu);
     }
@@ -154,7 +178,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f3 -> ")"
      * f4 -> Statement()
      */
-    public R visit(WhileStatement n, ContextObject argu) {
+    public TypeHelper visit(WhileStatement n, ContextObject argu) {
         argu.expressionType = new TypeHelper(TypeHelper.Type.BooleanType);
         return super.visit(n, argu);
     }
@@ -166,9 +190,48 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f3 -> ")"
      * f4 -> ";"
      */
-    public R visit(PrintStatement n, ContextObject argu) {
+    public TypeHelper visit(PrintStatement n, ContextObject argu) {
         argu.expressionType = new TypeHelper(TypeHelper.Type.IntegerType);
         return super.visit(n, argu);
+    }
+
+    /**
+     * f0 -> AndExpression()
+     *       | CompareExpression()
+     *       | PlusExpression()
+     *       | MinusExpression()
+     *       | TimesExpression()
+     *       | ArrayLookup()
+     *       | ArrayLength()
+     *       | MessageSend()
+     *       | PrimaryExpression()
+     */
+    public TypeHelper visit(Expression n, ContextObject argu) {
+        TypeHelper thisType = new TypeHelper(argu.expressionType);
+        TypeHelper returned = n.f0.accept(this, argu);
+        try {
+            TypeHelper.compare(thisType, returned);
+        } catch (TypeCheckException e) {
+            System.out.println(TypeCheckException.debugString(e, argu, (NodeToken) n.f0.choice));
+        }
+        return returned;
+    }
+
+    /**
+     * f0 -> IntegerLiteral()
+     *       | TrueLiteral()
+     *       | FalseLiteral()
+     *       | Identifier()
+     *       | ThisExpression()
+     *       | ArrayAllocationExpression()
+     *       | AllocationExpression()
+     *       | NotExpression()
+     *       | BracketExpression()
+     */
+    public TypeHelper visit(PrimaryExpression n, ContextObject argu) {
+        TypeHelper _ret=null;
+        n.f0.accept(this, argu);
+        return _ret;
     }
 
     /**
@@ -176,15 +239,8 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f1 -> "&&"
      * f2 -> PrimaryExpression()
      */
-    public R visit(AndExpression n, ContextObject argu) {
-        try {
-            TypeHelper.compare(argu.expressionType,
-                    new TypeHelper(TypeHelper.Type.BooleanType));
-        } catch (TypeCheckException e) {
-            System.out.println(TypeCheckException.debugString(e, argu, n.f1));
-            this.tch.passing = false;
-            return null;
-        }
+    public TypeHelper visit(AndExpression n, ContextObject argu) {
+        argu.expressionType = new TypeHelper(TypeHelper.Type.BooleanType);
         return super.visit(n, argu);
     }
 
@@ -193,7 +249,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f1 -> "<"
      * f2 -> PrimaryExpression()
      */
-    public R visit(CompareExpression n, ContextObject argu) {
+    public TypeHelper visit(CompareExpression n, ContextObject argu) {
         try {
             TypeHelper.compare(argu.expressionType,
                     new TypeHelper(TypeHelper.Type.BooleanType));
@@ -210,7 +266,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f1 -> "+"
      * f2 -> PrimaryExpression()
      */
-    public R visit(PlusExpression n, ContextObject argu) {
+    public TypeHelper visit(PlusExpression n, ContextObject argu) {
         try {
             TypeHelper.compare(argu.expressionType,
                     new TypeHelper(TypeHelper.Type.IntegerType));
@@ -227,7 +283,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f1 -> "-"
      * f2 -> PrimaryExpression()
      */
-    public R visit(MinusExpression n, ContextObject argu) {
+    public TypeHelper visit(MinusExpression n, ContextObject argu) {
         try {
             TypeHelper.compare(argu.expressionType,
                     new TypeHelper(TypeHelper.Type.IntegerType));
@@ -244,7 +300,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f1 -> "*"
      * f2 -> PrimaryExpression()
      */
-    public R visit(TimesExpression n, ContextObject argu) {
+    public TypeHelper visit(TimesExpression n, ContextObject argu) {
         try {
             TypeHelper.compare(argu.expressionType,
                     new TypeHelper(TypeHelper.Type.IntegerType));
@@ -262,23 +318,14 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f2 -> PrimaryExpression()
      * f3 -> "]"
      */
-    public R visit(ArrayLookup n, ContextObject argu) {
-        try {
-            TypeHelper.compare(argu.expressionType,
-                    new TypeHelper(TypeHelper.Type.IntegerType));
-        } catch (TypeCheckException e) {
-            System.out.println(TypeCheckException.debugString(e, argu, n.f1));
-            this.tch.passing = false;
-            return null;
-        }
-        R _ret = null;
+    public TypeHelper visit(ArrayLookup n, ContextObject argu) {
         argu.expressionType = new TypeHelper(TypeHelper.Type.ArrayType);
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
         argu.expressionType = new TypeHelper(TypeHelper.Type.IntegerType);
         n.f2.accept(this, argu);
         n.f3.accept(this, argu);
-        return _ret;
+        return new TypeHelper(TypeHelper.Type.ArrayType);
     }
 
     /**
@@ -286,17 +333,10 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f1 -> "."
      * f2 -> "length"
      */
-    public R visit(ArrayLength n, ContextObject argu) {
-        try {
-            TypeHelper.compare(argu.expressionType,
-                    new TypeHelper(TypeHelper.Type.IntegerType));
-        } catch (TypeCheckException e) {
-            System.out.println(TypeCheckException.debugString(e, argu, n.f1));
-            this.tch.passing = false;
-            return null;
-        }
+    public TypeHelper visit(ArrayLength n, ContextObject argu) {
         argu.expressionType = new TypeHelper(TypeHelper.Type.ArrayType);
-        return super.visit(n, argu);
+        super.visit(n, argu);
+        return new TypeHelper(TypeHelper.Type.IntegerType);
     }
 
     /**
@@ -306,98 +346,61 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f3 -> "("
      * f4 -> ( ExpressionList() )?
      * f5 -> ")"
-     * <p>
-     * Allowable:
-     * f0 -> 3 Identifier()
-     * | 4 ThisExpression()
-     * | 6 AllocationExpression()
      */
-    public R visit(MessageSend n, ContextObject argu) {
-        // TODO ensure f0
-        // TODO ensure f2 associate with f0
-        // TODO ensure f4 as needed for f2
-        return super.visit(n, argu);
-    }
-
-    /**
-     * f0 -> 0 IntegerLiteral()
-     * | 1 TrueLiteral()
-     * | 2 FalseLiteral()
-     * | 3 Identifier()
-     * | 4 ThisExpression()
-     * | 5 ArrayAllocationExpression()
-     * | 6 AllocationExpression()
-     * | 7 NotExpression()
-     * | 8 BracketExpression()
-     */
-    public R visit(PrimaryExpression n, ContextObject argu) {
-        return super.visit(n, argu);
+    public TypeHelper visit(MessageSend n, ContextObject argu) {
+        argu.expressionType = new TypeHelper(TypeHelper.Type.Identifier);
+        TypeHelper clss = n.f0.accept(this, argu);
+        TypeHelper method = n.f2.accept(this, argu);
+        // TODO associate method/clss signatures with argument list
+        // n.f4.accept(this, argu);
+        try {
+            return this.tch.searchSigt(clss.objName.f0.tokenImage, method.objName.f0.tokenImage);
+        } catch (TypeCheckException e) {
+            System.out.println(TypeCheckException.debugString(e, argu, n.f2.f0));
+            this.tch.passing = false;
+            return new TypeHelper(TypeHelper.Type.Error);
+        }
     }
 
     /**
      * f0 -> <INTEGER_LITERAL>
      */
-    public R visit(IntegerLiteral n, ContextObject argu) {
-        try {
-            TypeHelper.compare(argu.expressionType,
-                    new TypeHelper(TypeHelper.Type.IntegerType));
-        } catch (TypeCheckException e) {
-            System.out.println(TypeCheckException.debugString(e, argu, n.f0));
-            this.tch.passing = false;
-        }
+    public TypeHelper visit(IntegerLiteral n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
     /**
      * f0 -> "true"
      */
-    public R visit(TrueLiteral n, ContextObject argu) {
-        try {
-            TypeHelper.compare(argu.expressionType,
-                    new TypeHelper(TypeHelper.Type.BooleanType));
-        } catch (TypeCheckException e) {
-            System.out.println(TypeCheckException.debugString(e, argu, n.f0));
-            this.tch.passing = false;
-        }
+    public TypeHelper visit(TrueLiteral n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
     /**
      * f0 -> "false"
      */
-    public R visit(FalseLiteral n, ContextObject argu) {
-        try {
-            TypeHelper.compare(argu.expressionType,
-                    new TypeHelper(TypeHelper.Type.BooleanType));
-        } catch (TypeCheckException e) {
-            System.out.println(TypeCheckException.debugString(e, argu, n.f0));
-            this.tch.passing = false;
-        }
+    public TypeHelper visit(FalseLiteral n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
     /**
      * f0 -> <IDENTIFIER>
      */
-    public R visit(Identifier n, ContextObject argu) {
-        if (argu.expressionType != null)
-            try {
-                TypeHelper.compare(argu.expressionType,
-                        new TypeHelper(n));
-            } catch (TypeCheckException e) {
-                System.out.println(TypeCheckException.debugString(e, argu, n.f0));
-                this.tch.passing = false;
-                return null;
-            }
+    public TypeHelper visit(Identifier n, ContextObject argu) {
         return super.visit(n, argu);
     }
 
     /**
      * f0 -> "this"
      */
-    public R visit(ThisExpression n, ContextObject argu) {
-        // TODO associate this with context
-        return super.visit(n, argu);
+    public TypeHelper visit(ThisExpression n, ContextObject argu) {
+        try {
+            return tch.searchObjs(argu.className);
+        } catch (TypeCheckException e) {
+            System.out.println(TypeCheckException.debugString(e, argu, n.f0));
+            this.tch.passing = false;
+            return new TypeHelper(TypeHelper.Type.Error);
+        }
     }
 
     /**
@@ -407,17 +410,10 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f3 -> Expression()
      * f4 -> "]"
      */
-    public R visit(ArrayAllocationExpression n, ContextObject argu) {
-        try {
-            TypeHelper.compare(argu.expressionType,
-                    new TypeHelper(TypeHelper.Type.ArrayType));
-        } catch (TypeCheckException e) {
-            System.out.println(TypeCheckException.debugString(e, argu, n.f0));
-            this.tch.passing = false;
-            return null;
-        }
+    public TypeHelper visit(ArrayAllocationExpression n, ContextObject argu) {
         argu.expressionType = new TypeHelper(TypeHelper.Type.IntegerType);
-        return super.visit(n, argu);
+        n.f3.accept(this, argu);
+        return new TypeHelper(TypeHelper.Type.ArrayType);
     }
 
     /**
@@ -426,32 +422,24 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f2 -> "("
      * f3 -> ")"
      */
-    public R visit(AllocationExpression n, ContextObject argu) {
+    public TypeHelper visit(AllocationExpression n, ContextObject argu) {
         try {
-            TypeHelper.compare(argu.expressionType,
-                    new TypeHelper(n.f1));
+            return tch.searchObjs(n.f1);
         } catch (TypeCheckException e) {
             System.out.println(TypeCheckException.debugString(e, argu, n.f0));
             this.tch.passing = false;
-            return null;
+            return new TypeHelper(TypeHelper.Type.Error);
         }
-        return super.visit(n, argu);
     }
 
     /**
      * f0 -> "!"
      * f1 -> Expression()
      */
-    public R visit(NotExpression n, ContextObject argu) {
-        try {
-            TypeHelper.compare(argu.expressionType,
-                    new TypeHelper(TypeHelper.Type.BooleanType));
-        } catch (TypeCheckException e) {
-            System.out.println(TypeCheckException.debugString(e, argu, n.f0));
-            this.tch.passing = false;
-            return null;
-        }
-        return super.visit(n, argu);
+    public TypeHelper visit(NotExpression n, ContextObject argu) {
+        argu.expressionType = new TypeHelper(TypeHelper.Type.BooleanType);
+        super.visit(n, argu);
+        return new TypeHelper(TypeHelper.Type.BooleanType);
     }
 
     /**
@@ -459,7 +447,7 @@ public class TypeCheckVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f1 -> Expression()
      * f2 -> ")"
      */
-    public R visit(BracketExpression n, ContextObject argu) {
-        return super.visit(n, argu);
+    public TypeHelper visit(BracketExpression n, ContextObject argu) {
+        return n.f1.accept(this, argu);
     }
 }

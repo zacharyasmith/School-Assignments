@@ -1,11 +1,18 @@
+import com.sun.org.apache.xalan.internal.xsltc.compiler.SyntaxTreeNode;
 import syntaxtree.*;
 import visitor.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
 
-    public HashMap<String, TypeHelper> table = new HashMap<>();
+    public HashMap<String, TypeHelper> symt = new HashMap<>();
+
+    public HashMap<String, TypeHelper> sigt = new HashMap<>();
+
+    public ArrayList<Identifier> objs = new ArrayList<>();
+
 
     /**
      * f0 -> "class"
@@ -28,8 +35,8 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f17 -> "}"
      */
     public R visit(MainClass n, String argu) {
-        String id = n.f1.f0.tokenImage + "::main::";
-        return super.visit(n, id);
+        String id = n.f1.f0.tokenImage + "::main";
+        return super.visit(n, id + "::");
     }
 
     /**
@@ -41,8 +48,9 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f5 -> "}"
      */
     public R visit(ClassDeclaration n, String argu) {
-        String id = n.f1.f0.tokenImage + "::";
-        return super.visit(n, id);
+        String id = n.f1.f0.tokenImage;
+        objs.add(n.f1);
+        return super.visit(n, id + "::");
     }
 
     /**
@@ -56,8 +64,9 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f7 -> "}"
      */
     public R visit(ClassExtendsDeclaration n, String argu) {
-        String id = n.f1.f0.tokenImage + "::";
-        return super.visit(n, argu);
+        String id = n.f1.f0.tokenImage;
+        objs.add(n.f1);
+        return super.visit(n, argu + "::");
     }
 
     /**
@@ -66,7 +75,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f2 -> ";"
      */
     public R visit(VarDeclaration n, String argu) {
-        table.put(argu + n.f1.f0.tokenImage, new TypeHelper(n.f0));
+        symt.put(argu + n.f1.f0.tokenImage, new TypeHelper(n.f0));
         return super.visit(n, argu);
     }
 
@@ -87,8 +96,9 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      */
     public R visit(MethodDeclaration n, String argu) {
         // argu = <classname>::
-        String id = argu + n.f2.f0.tokenImage + "::";
-        return super.visit(n, id);
+        String id = argu + n.f2.f0.tokenImage;
+        sigt.put(id, new TypeHelper(n.f1));
+        return super.visit(n, id + "::");
     }
 
     /**
@@ -96,7 +106,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f1 -> Identifier()
      */
     public R visit(FormalParameter n, String argu) {
-        table.put(argu + n.f1.f0.tokenImage, new TypeHelper(n.f0));
+        symt.put(argu + n.f1.f0.tokenImage, new TypeHelper(n.f0));
         return super.visit(n, argu);
     }
 }
