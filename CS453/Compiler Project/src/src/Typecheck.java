@@ -25,15 +25,15 @@ public class Typecheck {
             // Build symbol table
             SymTableVisitor<Void> stv = new SymTableVisitor();
             root.accept(stv, "");
-            TypeCheckHelper tch = new TypeCheckHelper(stv.table);
-            if (debug) {
-                System.out.println("\nSymbol table ----------------");
-                for (Map.Entry<String, TypeHelper> entry : tch.symt.entrySet()) {
-                    String key = entry.getKey();
-                    TypeHelper val = entry.getValue();
-                    System.out.println(key + " : " + val.type);
-                }
-            }
+
+            // Build method table
+            SignatureVisitor<Void> sv = new SignatureVisitor();
+            root.accept(sv, "");
+
+            // Helper for type check visitor
+            TypeCheckHelper tch = new TypeCheckHelper(stv.table, sv.table);
+            if (debug)
+                System.out.println(tch);
 
             // Type check
             TypeCheckVisitor<Void> tcv = new TypeCheckVisitor(debug, tch);

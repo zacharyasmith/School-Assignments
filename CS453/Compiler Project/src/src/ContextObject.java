@@ -7,4 +7,9 @@ public class ContextObject {
         this.className = className;
         this.methodName = methodName;
     }
+
+    @Override
+    public String toString() {
+        return "Context: Class::" + className + " Method::" + methodName;
+    }
 }
