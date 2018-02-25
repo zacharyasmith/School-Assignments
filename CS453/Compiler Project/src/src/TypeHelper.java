@@ -14,6 +14,13 @@ public class TypeHelper {
     public Type type;
     public Identifier objName;
 
+    public static TypeHelper NewArray() {return new TypeHelper(Type.ArrayType);}
+    public static TypeHelper NewBool() {return new TypeHelper(Type.BooleanType);}
+    public static TypeHelper NewInt() {return new TypeHelper(Type.IntegerType);}
+//    public static TypeHelper NewIdentifier() {return new TypeHelper(Type.IntegerType);}
+    public static TypeHelper NewVoid() {return new TypeHelper(Type.Void);}
+    public static TypeHelper NewErr() {return new TypeHelper(Type.Error);}
+
     public TypeHelper(TypeHelper t) {
         this.type = t.type;
         this.objName = t.objName;
@@ -60,5 +67,12 @@ public class TypeHelper {
         throw new TypeCheckException("Expecting type `" +
                 expected.type + "` but found `" +
                 actual.type + "`.");
+    }
+
+    @Override
+    public String toString() {
+        if (type == Type.Identifier && objName != null)
+            return Type.Identifier + ":: " + objName;
+        return type.toString();
     }
 }

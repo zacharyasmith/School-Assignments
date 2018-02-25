@@ -75,7 +75,7 @@ public class TypeCheckHelper {
             TypeHelper val = entry.getValue();
             ret += key + " : " + val.type + "\n";
         }
-        ret += "Classes table -------------------------\n";
+        ret += "Classes table --------------------------\n";
         for (Identifier i : this.objs) {
             ret += i.f0 + "\n";
         }
