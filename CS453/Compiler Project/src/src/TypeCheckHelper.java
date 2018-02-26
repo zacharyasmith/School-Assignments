@@ -7,12 +7,12 @@ import java.util.Map;
 public class TypeCheckHelper {
 
     public HashMap<String, TypeHelper> symt;
-    public HashMap<String, TypeHelper> sigt;
+    public HashMap<String, ArrayList<TypeHelper>> sigt;
     public ArrayList<Identifier> objs;
     public boolean passing = true;
 
     public TypeCheckHelper(HashMap<String, TypeHelper> symt,
-                           HashMap<String, TypeHelper> sigt,
+                           HashMap<String, ArrayList<TypeHelper>> sigt,
                            ArrayList<Identifier> objs) {
         this.symt = symt;
         this.sigt = sigt;
@@ -34,15 +34,15 @@ public class TypeCheckHelper {
         }
     }
 
-    public TypeHelper searchSigt(ContextObject c) throws TypeCheckException {
+    public ArrayList<TypeHelper> searchSigt(ContextObject c) throws TypeCheckException {
         return searchSigt(c.className + "::" + c.methodName);
     }
 
-    public TypeHelper searchSigt(String className, String methodName) throws TypeCheckException {
+    public ArrayList<TypeHelper> searchSigt(String className, String methodName) throws TypeCheckException {
         return searchSigt(className + "::" + methodName);
     }
 
-    private TypeHelper searchSigt(String method) throws TypeCheckException {
+    private ArrayList<TypeHelper> searchSigt(String method) throws TypeCheckException {
         if (sigt.containsKey(method))
             return sigt.get(method);
         else
@@ -63,19 +63,22 @@ public class TypeCheckHelper {
 
     @Override
     public String toString() {
-        String ret = "Symbol table ---------------------------\n";
+        String ret = "Symbol table ----------------------\n";
         for (Map.Entry<String, TypeHelper> entry : this.symt.entrySet()) {
             String key = entry.getKey();
             TypeHelper val = entry.getValue();
             ret += key + " : " + val.type + "\n";
         }
-        ret += "Method signature table -----------------\n";
-        for (Map.Entry<String, TypeHelper> entry : this.sigt.entrySet()) {
+        ret += "Method signature table ------------\n";
+        for (Map.Entry<String, ArrayList<TypeHelper>> entry : this.sigt.entrySet()) {
             String key = entry.getKey();
-            TypeHelper val = entry.getValue();
-            ret += key + " : " + val.type + "\n";
+            ArrayList<TypeHelper> val = entry.getValue();
+            ret += key + " : ";
+            for (TypeHelper t : val)
+                ret += t + " ";
+            ret += "\n";
         }
-        ret += "Classes table --------------------------\n";
+        ret += "Classes table ---------------------\n";
         for (Identifier i : this.objs) {
             ret += i.f0 + "\n";
         }

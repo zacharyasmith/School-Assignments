@@ -4,16 +4,19 @@ import syntaxtree.*;
 
 public class Typecheck {
     private static void typecheck() {
-        typecheck("", false);
+        typecheck("", false, 0);
     }
 
-    private static void typecheck(String file, boolean debug) {
+    private static void typecheck(String file, boolean debug, int count) {
         Node root = null;
         try {
             // Stream start, execute parser
             if(debug)
                 System.setIn(new FileInputStream(file));
-            root = new MiniJavaParser(System.in).Goal();
+            if (count > 0)
+                MiniJavaParser.ReInit(System.in);
+            else
+                root = new MiniJavaParser(System.in).Goal();
 
             // Pretty print parser output
 //            if (debug) {
@@ -49,11 +52,12 @@ public class Typecheck {
         if (args.length > 0) {
             if (args[0].equals("--manual")) {
                 Scanner reader = new Scanner(System.in);
-                System.out.println("File: ");
-                typecheck(reader.next(), true);
+                System.out.print("File: typeCheck/");
+                typecheck("typeCheck/" + reader.next(), true, 0);
             } else
-                for (String f : args)
-                    typecheck(f, true);
+                for (int i = 0; i < args.length; i++) {
+                    typecheck(args[i], true, i);
+                }
             return;
         }
         typecheck();

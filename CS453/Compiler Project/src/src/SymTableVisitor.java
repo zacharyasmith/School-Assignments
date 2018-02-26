@@ -9,7 +9,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
 
     public HashMap<String, TypeHelper> symt = new HashMap<>();
 
-    public HashMap<String, TypeHelper> sigt = new HashMap<>();
+    public HashMap<String, ArrayList<TypeHelper>> sigt = new HashMap<>();
 
     public ArrayList<Identifier> objs = new ArrayList<>();
 
@@ -50,7 +50,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
     public R visit(ClassDeclaration n, String argu) {
         String id = n.f1.f0.tokenImage;
         objs.add(n.f1);
-        return super.visit(n, id + "::");
+        return super.visit(n, id);
     }
 
     /**
@@ -66,7 +66,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
     public R visit(ClassExtendsDeclaration n, String argu) {
         String id = n.f1.f0.tokenImage;
         objs.add(n.f1);
-        return super.visit(n, argu + "::");
+        return super.visit(n, id);
     }
 
     /**
@@ -75,7 +75,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f2 -> ";"
      */
     public R visit(VarDeclaration n, String argu) {
-        symt.put(argu + n.f1.f0.tokenImage, new TypeHelper(n.f0));
+        symt.put(argu + "::" + n.f1.f0.tokenImage, new TypeHelper(n.f0));
         return super.visit(n, argu);
     }
 
@@ -95,10 +95,13 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f12 -> "}"
      */
     public R visit(MethodDeclaration n, String argu) {
-        // argu = <classname>::
-        String id = argu + n.f2.f0.tokenImage;
-        sigt.put(id, new TypeHelper(n.f1));
-        return super.visit(n, id + "::");
+        // argu = <classname>
+        String id = argu + "::" + n.f2.f0.tokenImage;
+        sigt.put(id, new ArrayList<>());
+        sigt.get(id).add(new TypeHelper(n.f1));
+        n.f4.accept(this, id);
+        n.f7.accept(this, id);
+        return null;
     }
 
     /**
@@ -106,7 +109,8 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f1 -> Identifier()
      */
     public R visit(FormalParameter n, String argu) {
-        symt.put(argu + n.f1.f0.tokenImage, new TypeHelper(n.f0));
+        sigt.get(argu).add(new TypeHelper(n.f0));
+        symt.put(argu + "::" + n.f1.f0.tokenImage, new TypeHelper(n.f0));
         return super.visit(n, argu);
     }
 }

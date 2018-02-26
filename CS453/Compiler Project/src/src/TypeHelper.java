@@ -58,7 +58,8 @@ public class TypeHelper {
     public static void compare (TypeHelper expected, TypeHelper actual) throws TypeCheckException {
         if (expected.type == actual.type) {
             if (expected.type == Type.Identifier)
-                if (expected.objName.f0.tokenImage != actual.objName.f0.tokenImage)
+                if (expected.objName != null &&
+                        expected.objName.f0.tokenImage != actual.objName.f0.tokenImage)
                     throw new TypeCheckException("Expecting identifier `" +
                             expected.objName.f0.tokenImage + "` but found `" +
                             actual.objName.f0.tokenImage + "`.");
@@ -72,7 +73,7 @@ public class TypeHelper {
     @Override
     public String toString() {
         if (type == Type.Identifier && objName != null)
-            return Type.Identifier + ":: " + objName;
+            return Type.Identifier + "::" + objName.f0.tokenImage;
         return type.toString();
     }
 }
