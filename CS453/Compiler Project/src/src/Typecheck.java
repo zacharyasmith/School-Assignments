@@ -26,7 +26,7 @@ public class Typecheck {
 //            }
 
             // Build symbol sigt
-            SymTableVisitor<Void> stv = new SymTableVisitor();
+            SymTableVisitor stv = new SymTableVisitor();
             root.accept(stv, "");
 
             // Helper for type check visitor
