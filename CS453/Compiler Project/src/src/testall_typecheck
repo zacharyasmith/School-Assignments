@@ -1,6 +1,8 @@
 #!/bin/bash
 # Compile the programs
-make
+if [[ $* == *--make* ]]; then
+	make
+fi
 
 for filename in testFiles/*.java; do
 	echo "Testing file: "$filename""
