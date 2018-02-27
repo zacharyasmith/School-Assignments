@@ -1,0 +1,9 @@
+#!/bin/bash
+# Compile the programs
+make
+
+for filename in testFiles/*.java; do
+	echo "Testing file: "$filename""
+	diff <(java Typecheck << $filename) <(cat typeCheck/$(basename $filename .java).out)
+	echo ""
+done
