@@ -6,9 +6,9 @@ import java.util.Map;
 
 public class TypeCheckHelper {
 
-    public HashMap<String, TypeHelper> symt;
-    public HashMap<String, ArrayList<TypeHelper>> sigt;
-    public ArrayList<Identifier> objs;
+    protected HashMap<String, TypeHelper> symt;
+    protected HashMap<String, ArrayList<TypeHelper>> sigt;
+    protected ArrayList<Identifier> objs;
     public boolean passing = true;
 
     public TypeCheckHelper(HashMap<String, TypeHelper> symt,

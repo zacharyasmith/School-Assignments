@@ -34,7 +34,7 @@ public class ContextObject {
         this.expressionType = c.expressionType;
         this.methodName = c.methodName;
         this.className = c.className;
-        this.searchSigt = this.searchSigt;
+        this.searchSigt = c.searchSigt;
     }
 
     public TypeHelper checkExpressionList(TypeCheckHelper tch) throws TypeCheckException {
