@@ -52,8 +52,8 @@ public class Typecheck {
         if (args.length > 0) {
             if (args[0].equals("--manual")) {
                 Scanner reader = new Scanner(System.in);
-                System.out.print("File: typeCheck/");
-                typecheck("typeCheck/" + reader.next(), true, 0);
+                System.out.print("File: testFiles/");
+                typecheck("testFiles/" + reader.next(), true, 0);
             } else
                 for (int i = 0; i < args.length; i++) {
                     typecheck(args[i], true, i);

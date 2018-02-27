@@ -107,7 +107,7 @@ class Tree {
     // This method compares two integers and
     // returns true if they are equal and false
     // otherwise
-    public boolean Compare(int num1 , int num2) {
+    public boolean Compare(int num1, int num2) {
         boolean ntb;
         int nti;
 
@@ -142,8 +142,7 @@ class Tree {
                     ntb = current_node.SetHas_Left(true);
                     ntb = current_node.SetLeft(new_node);
                 }
-            }
-            else {
+            } else {
                 if (current_node.GetHas_Right())
                     current_node = current_node.GetRight();
                 else {
@@ -178,26 +177,23 @@ class Tree {
                 if (current_node.GetHas_Left()) {
                     parent_node = current_node;
                     current_node = current_node.GetLeft();
-                }
-                else cont = false;
-            else 
-                if (key_aux < v_key)
-                    if (current_node.GetHas_Right()) {
-                        parent_node = current_node;
-                        current_node = current_node.GetRight();
-                    }
-                    else cont = false;
-                else { 
-                    if (is_root) 
-                        if ((!current_node.GetHas_Right()) && 
-                                (!current_node.GetHas_Left()) )
-                            ntb = true;
-                        else 
-                            ntb = this.Remove(parent_node,current_node); 
-                    else ntb = this.Remove(parent_node,current_node);
-                    found = true;
-                    cont = false;
-                }
+                } else cont = false;
+            else if (key_aux < v_key)
+                if (current_node.GetHas_Right()) {
+                    parent_node = current_node;
+                    current_node = current_node.GetRight();
+                } else cont = false;
+            else {
+                if (is_root)
+                    if ((!current_node.GetHas_Right()) &&
+                            (!current_node.GetHas_Left()))
+                        ntb = true;
+                    else
+                        ntb = this.Remove(parent_node, current_node);
+                else ntb = this.Remove(parent_node, current_node);
+                found = true;
+                cont = false;
+            }
             is_root = false;
         }
         return found;
@@ -211,25 +207,23 @@ class Tree {
         int auxkey1;
         int auxkey2;
 
-        if (c_node.GetHas_Left()) 
-            ntb = this.RemoveLeft(p_node,c_node);
-        else 
-            if (c_node.GetHas_Right())
-                ntb = this.RemoveRight(p_node,c_node);
-            else {
-                auxkey1 = c_node.GetKey();
-                //auxtree01 = p_node.GetLeft();
-                //auxkey2 = auxtree01.GetKey();
-                auxkey2 = (p_node.GetLeft()).GetKey();
-                if (this.Compare(auxkey1,auxkey2)) {
-                    ntb = p_node.SetLeft(my_null);
-                    ntb = p_node.SetHas_Left(false);
-                }
-                else {
-                    ntb = p_node.SetRight(my_null);
-                    ntb = p_node.SetHas_Right(false);
-                }
+        if (c_node.GetHas_Left())
+            ntb = this.RemoveLeft(p_node, c_node);
+        else if (c_node.GetHas_Right())
+            ntb = this.RemoveRight(p_node, c_node);
+        else {
+            auxkey1 = c_node.GetKey();
+            //auxtree01 = p_node.GetLeft() ;
+            //auxkey2 = auxtree01.GetKey() ;
+            auxkey2 = (p_node.GetLeft()).GetKey();
+            if (this.Compare(auxkey1, auxkey2)) {
+                ntb = p_node.SetLeft(my_null);
+                ntb = p_node.SetHas_Left(false);
+            } else {
+                ntb = p_node.SetRight(my_null);
+                ntb = p_node.SetHas_Right(false);
             }
+        }
         return true;
     }
 
@@ -241,7 +235,7 @@ class Tree {
         boolean ntb;
 
         while (c_node.GetHas_Right()) {
-            //auxtree01 = c_node.GetRight();
+            //auxtree01 = c_node.GetRight() ;
             //auxint02 = auxtree01.GetKey();
             //ntb = c_node.SetKey(auxint02);
             ntb = c_node.SetKey((c_node.GetRight()).GetKey());
@@ -261,7 +255,7 @@ class Tree {
         boolean ntb;
 
         while (c_node.GetHas_Left()) {
-            //auxtree01 = c_node.GetLeft();
+            //auxtree01 = c_node.GetLeft() ;
             //auxint02 = auxtree01.GetKey();
             //ntb = c_node.SetKey(auxint02);
             ntb = c_node.SetKey((c_node.GetLeft()).GetKey());
@@ -289,15 +283,14 @@ class Tree {
                 if (current_node.GetHas_Left())
                     current_node = current_node.GetLeft();
                 else cont = false;
-            else 
-                if (key_aux < v_key)
-                    if (current_node.GetHas_Right())
-                        current_node = current_node.GetRight();
-                    else cont = false;
-                else { 
-                    ifound = 1;
-                    cont = false;
-                }
+            else if (key_aux < v_key)
+                if (current_node.GetHas_Right())
+                    current_node = current_node.GetRight();
+                else cont = false;
+            else {
+                ifound = 1;
+                cont = false;
+            }
         }
         return ifound;
     }
@@ -317,13 +310,13 @@ class Tree {
         boolean ntb;
 
         if (node.GetHas_Left()) {
-            //auxtree01 = node.GetLeft();
+            //auxtree01 = node.GetLeft() ;
             //ntb = this.RecPrint(auxtree01);
             ntb = this.RecPrint(node.GetLeft());
         } else ntb = true;
         System.out.println(node.GetKey());
         if (node.GetHas_Right()) {
-            //auxtree01 = node.GetRight();
+            //auxtree01 = node.GetRight() ;
             //ntb = this.RecPrint(auxtree01);
             ntb = this.RecPrint(node.GetRight());
         } else ntb = true;
@@ -331,4 +324,4 @@ class Tree {
     }
 
 }
-
+   
