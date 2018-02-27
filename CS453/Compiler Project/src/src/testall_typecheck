@@ -6,6 +6,6 @@ fi
 
 for filename in testFiles/*.java; do
 	echo "Testing file: "$filename""
-	diff <($(java Typecheck << $filename)) <($(cat typeCheck/$(basename $filename .java).out))
+	diff -y <(cat "$filename" | java Typecheck 2> /dev/null) <(cat typeCheck/$(basename $filename .java).out)
 	echo ""
 done
