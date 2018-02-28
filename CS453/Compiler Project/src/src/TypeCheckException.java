@@ -1,8 +1,9 @@
+import org.omg.SendingContext.RunTime;
 import syntaxtree.*;
 
 import static java.lang.System.exit;
 
-public class TypeCheckException extends Exception {
+public class TypeCheckException extends RuntimeException {
     public TypeCheckException(String message) {
         super("TypeCheckException:: " + message);
     }
@@ -99,12 +100,13 @@ public class TypeCheckException extends Exception {
                 break;
             default:
                 debugString(e, c, (PrimaryExpression) p.f0.choice);
+                return;
         }
         debugString(e, c, n);
     }
 
     private static void err(String m, TypeCheckException e) {
-        System.err.println(m);
-        e.printStackTrace(System.err);
+        System.err.println(m + "\n");
+//        e.printStackTrace(System.err);
     }
 }
