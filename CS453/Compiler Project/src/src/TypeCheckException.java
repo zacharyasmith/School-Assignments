@@ -1,7 +1,4 @@
-import org.omg.SendingContext.RunTime;
 import syntaxtree.*;
-
-import static java.lang.System.exit;
 
 public class TypeCheckException extends RuntimeException {
     public TypeCheckException(String message) {
