@@ -7,6 +7,7 @@ public class ContextObject {
     public String listClass = null;
     public String listMeth = null;
     public int expressionCount = 0;
+    public int sigExprTotal = -1;
 
     public ContextObject(ContextObject c, boolean expressionList) {
         this.expressionList = expressionList;
@@ -40,7 +41,10 @@ public class ContextObject {
     public TypeHelper checkExpressionList(TypeCheckHelper tch) throws TypeCheckException {
         if (!expressionList)
             throw new TypeCheckException("Internal: checkExpressionList Called erroneously.");
-        if (tch.searchSigt(this.listClass, this.listMeth).size() >= ++expressionCount + 1)
+        if (sigExprTotal == -1)
+            sigExprTotal = tch.searchSigt(this.listClass, this.listMeth).size();
+        ++expressionCount;
+        if (sigExprTotal >= expressionCount + 1)
             return tch.searchSigt(this.listClass, this.listMeth).get(expressionCount);
         throw new TypeCheckException("Method signature not found matching parameters.");
     }
