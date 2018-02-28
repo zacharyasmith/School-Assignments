@@ -370,7 +370,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
                     true);
             n.f4.accept(this, expList);
             if (expList.sigExprTotal != expList.expressionCount + 1)
-                throw new TypeCheckException("Method signature not found matching parameters. Too many.");
+                throw new TypeCheckException("Method signature not found matching parameters. Too few parameters.");
             return this.tch.searchSigt(clss.objName.f0.tokenImage,
                     method.objName.f0.tokenImage).get(0);
         } catch (TypeCheckException e) {
