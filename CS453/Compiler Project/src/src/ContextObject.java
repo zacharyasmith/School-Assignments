@@ -46,7 +46,7 @@ public class ContextObject {
         ++expressionCount;
         if (sigExprTotal >= expressionCount + 1)
             return tch.searchSigt(this.listClass, this.listMeth).get(expressionCount);
-        throw new TypeCheckException("Method signature not found matching parameters.");
+        throw new TypeCheckException("Method signature not found matching parameters. Too many parameters.");
     }
 
     @Override
