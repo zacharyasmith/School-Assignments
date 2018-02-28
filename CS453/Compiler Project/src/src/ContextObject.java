@@ -1,13 +1,13 @@
 public class ContextObject {
     public String className;
     public String methodName;
-    public TypeHelper expressionType = null;
+    public TypeHelper expressionType = TypeHelper.NewVoid();
     public boolean expressionList = false;
     public boolean searchSigt = false;
     public String listClass = null;
     public String listMeth = null;
     public int expressionCount = 0;
-    public int sigExprTotal = -1;
+    public int sigExprTotal = 0;
 
     public ContextObject(ContextObject c, boolean expressionList) {
         this.expressionList = expressionList;
@@ -41,10 +41,9 @@ public class ContextObject {
     public TypeHelper checkExpressionList(TypeCheckHelper tch) throws TypeCheckException {
         if (!expressionList)
             throw new TypeCheckException("Internal: checkExpressionList Called erroneously.");
-        if (sigExprTotal == -1)
-            sigExprTotal = tch.searchSigt(this.listClass, this.listMeth).size();
-        ++expressionCount;
-        if (sigExprTotal >= expressionCount + 1)
+        if (sigExprTotal == 0)
+            sigExprTotal = tch.searchSigt(this.listClass, this.listMeth).size() - 1;
+        if (sigExprTotal >= ++expressionCount)
             return tch.searchSigt(this.listClass, this.listMeth).get(expressionCount);
         throw new TypeCheckException("Method signature not found matching parameters. Too many parameters.");
     }

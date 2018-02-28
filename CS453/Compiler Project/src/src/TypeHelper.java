@@ -70,6 +70,15 @@ public class TypeHelper {
                 actual.type + "`.");
     }
 
+    public static boolean compare (TypeHelper expected, TypeHelper actual, boolean nothrow) {
+        try {
+            compare(expected, actual);
+            return true;
+        } catch (TypeCheckException e) {
+            return false;
+        }
+    }
+
     @Override
     public String toString() {
         if (type == Type.Identifier && objName != null)

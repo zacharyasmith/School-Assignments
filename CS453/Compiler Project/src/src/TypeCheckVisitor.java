@@ -35,7 +35,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         ContextObject co = new ContextObject(n.f1.f0.tokenImage, "main");
         n.f14.accept(this, co);
         n.f15.accept(this, co);
-        return null;
+        return TypeHelper.NewVoid();
     }
 
     /**
@@ -50,7 +50,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         ContextObject co = new ContextObject(n.f1.f0.tokenImage, null);
         n.f3.accept(this, co);
         n.f4.accept(this, co);
-        return null;
+        return TypeHelper.NewVoid();
     }
 
     /**
@@ -67,7 +67,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         ContextObject co = new ContextObject(n.f1.f0.tokenImage, null);
         n.f5.accept(this, co);
         n.f6.accept(this, co);
-        return null;
+        return TypeHelper.NewVoid();
     }
 
     /**
@@ -87,7 +87,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
      */
     public TypeHelper visit(MethodDeclaration n, ContextObject argu) {
         argu.methodName = n.f2.f0.tokenImage;
-        argu.expressionType = null;
+        argu.expressionType = TypeHelper.NewVoid();
 
         n.f7.accept(this, argu);
         n.f8.accept(this, argu);
@@ -102,7 +102,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
             this.tch.passing = false;
             return TypeHelper.NewErr();
         }
-        return null;
+        return TypeHelper.NewVoid();
     }
 
     /**
@@ -118,13 +118,13 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         } catch (TypeCheckException e) {
             TypeCheckException.debugString(e, argu, n.f0.f0);
             tch.passing = false;
-            return null;
+            return TypeHelper.NewVoid();
         }
-        argu.expressionType = null;
+        argu.expressionType = TypeHelper.NewVoid();
         n.f0.accept(this, argu);
         argu.expressionType = curr;
         n.f2.accept(this, argu);
-        return null;
+        return TypeHelper.NewVoid();
     }
 
     /**
@@ -150,7 +150,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         n.f2.accept(this, argu);
         argu.expressionType = TypeHelper.NewInt();
         n.f5.accept(this, argu);
-        return null;
+        return TypeHelper.NewVoid();
     }
 
     /**
@@ -167,7 +167,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         n.f2.accept(this, argu);
         n.f4.accept(this, argu);
         n.f6.accept(this, argu);
-        return null;
+        return TypeHelper.NewVoid();
     }
 
     /**
@@ -180,9 +180,9 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
     public TypeHelper visit(WhileStatement n, ContextObject argu) {
         argu.expressionType = TypeHelper.NewBool();
         n.f2.accept(this, argu);
-        argu.expressionType = null;
+        argu.expressionType = TypeHelper.NewVoid();
         n.f4.accept(this, argu);
-        return null;
+        return TypeHelper.NewVoid();
     }
 
     /**
@@ -369,7 +369,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
                     method.objName.f0.tokenImage,
                     true);
             n.f4.accept(this, expList);
-            if (expList.sigExprTotal != expList.expressionCount + 1)
+            if (expList.sigExprTotal != expList.expressionCount)
                 throw new TypeCheckException("Method signature not found matching parameters. Too few parameters.");
             return this.tch.searchSigt(clss.objName.f0.tokenImage,
                     method.objName.f0.tokenImage).get(0);
@@ -405,7 +405,8 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
      * f0 -> <IDENTIFIER>
      */
     public TypeHelper visit(Identifier n, ContextObject argu) {
-        if (argu.expressionType != null && argu.searchSigt)
+        if (!TypeHelper.compare(TypeHelper.NewVoid(), argu.expressionType, true)
+                && argu.searchSigt)
             try {
                 return this.tch.searchSymt(argu, n);
             } catch (TypeCheckException e) {
