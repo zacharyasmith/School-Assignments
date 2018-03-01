@@ -12,7 +12,7 @@ public class TypeHelper {
     }
 
     public Type type;
-    public Identifier objName;
+    public String objName;
 
     public static TypeHelper NewArray() {return new TypeHelper(Type.ArrayType);}
     public static TypeHelper NewBool() {return new TypeHelper(Type.BooleanType);}
@@ -30,7 +30,7 @@ public class TypeHelper {
         this.type = a;
     }
 
-    public TypeHelper(Identifier a) {
+    public TypeHelper(String a) {
         this.type = Type.Identifier;
         this.objName = a;
     }
@@ -48,7 +48,7 @@ public class TypeHelper {
                 break;
             case 3: // Identifier
                 type = Type.Identifier;
-                objName = (Identifier) a.f0.choice;
+                objName = ((Identifier) a.f0.choice).f0.tokenImage;
                 break;
             default:
                 type = Type.Error;
@@ -58,15 +58,12 @@ public class TypeHelper {
     public static void compare (TypeHelper expected, TypeHelper actual) throws TypeCheckException {
         if (expected.type == actual.type) {
             if (expected.type == Type.Identifier)
-                if (expected.objName != null &&
-                        expected.objName.f0.tokenImage != actual.objName.f0.tokenImage)
+                if (expected.objName != null && expected.objName!= actual.objName)
                     throw new TypeCheckException("Expecting identifier `" +
-                            expected.objName.f0.tokenImage + "` but found `" +
-                            actual.objName.f0.tokenImage + "`.");
+                            expected.objName + "` but found `" + actual.objName + "`.");
             return;
         }
-        throw new TypeCheckException("Expecting type `" +
-                expected.type + "` but found `" +
+        throw new TypeCheckException("Expecting type `" + expected.type + "` but found `" +
                 actual.type + "`.");
     }
 
@@ -82,7 +79,7 @@ public class TypeHelper {
     @Override
     public String toString() {
         if (type == Type.Identifier && objName != null)
-            return Type.Identifier + "::" + objName.f0.tokenImage;
+            return Type.Identifier + "::" + objName;
         return type.toString();
     }
 }

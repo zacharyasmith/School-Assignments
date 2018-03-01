@@ -98,7 +98,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         try {
             TypeHelper.compare(new TypeHelper(n.f1), returned);
         } catch (TypeCheckException e) {
-            TypeCheckException.debugString(e, argu, n.f9);
+            if (debug) TypeCheckException.debugString(e, argu, n.f9);
             this.tch.passing = false;
             return TypeHelper.NewErr();
         }
@@ -112,11 +112,12 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
      * f3 -> ";"
      */
     public TypeHelper visit(AssignmentStatement n, ContextObject argu) {
+        // TODO keep track of assignments
         TypeHelper curr;
         try {
             curr = tch.searchSymt(argu, n.f0);
         } catch (TypeCheckException e) {
-            TypeCheckException.debugString(e, argu, n.f0.f0);
+            if (debug) TypeCheckException.debugString(e, argu, n.f0.f0);
             tch.passing = false;
             return TypeHelper.NewVoid();
         }
@@ -142,7 +143,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
             TypeHelper.compare(tch.searchSymt(argu, n.f0),
                     TypeHelper.NewArray());
         } catch (TypeCheckException e) {
-            TypeCheckException.debugString(e, argu, n.f0.f0);
+            if (debug) TypeCheckException.debugString(e, argu, n.f0.f0);
             tch.passing = false;
             return TypeHelper.NewErr();
         }
@@ -225,7 +226,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
             TypeHelper.compare(thisType, returned);
             return returned;
         } catch (TypeCheckException e) {
-            TypeCheckException.debugString(e, argu, n);
+            if (debug) TypeCheckException.debugString(e, argu, n);
             tch.passing = false;
             return TypeHelper.NewErr();
         }
@@ -254,7 +255,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
             TypeHelper.compare(check, actual);
             return actual;
         } catch (TypeCheckException e) {
-            TypeCheckException.debugString(e, argu, n);
+            if (debug) TypeCheckException.debugString(e, argu, n);
             this.tch.passing = false;
             return TypeHelper.NewErr();
         }
@@ -365,16 +366,13 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         try {
             // run through expression list
             ContextObject expList = new ContextObject(argu,
-                    clss.objName.f0.tokenImage,
-                    method.objName.f0.tokenImage,
-                    true);
+                    clss.objName, method.objName, true);
             n.f4.accept(this, expList);
             if (expList.sigExprTotal != expList.expressionCount)
                 throw new TypeCheckException("Method signature not found matching parameters. Too few parameters.");
-            return this.tch.searchSigt(clss.objName.f0.tokenImage,
-                    method.objName.f0.tokenImage).get(0);
+            return this.tch.searchSigt(clss.objName, method.objName).get(0);
         } catch (TypeCheckException e) {
-            TypeCheckException.debugString(e, argu, n.f2.f0);
+            if (debug) TypeCheckException.debugString(e, argu, n.f2.f0);
             this.tch.passing = false;
             return TypeHelper.NewErr();
         }
@@ -410,11 +408,11 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
             try {
                 return this.tch.searchSymt(argu, n);
             } catch (TypeCheckException e) {
-                TypeCheckException.debugString(e, argu, n.f0);
+                if (debug) TypeCheckException.debugString(e, argu, n.f0);
                 this.tch.passing = false;
                 return TypeHelper.NewErr();
             }
-        return new TypeHelper(n);
+        return new TypeHelper(n.f0.tokenImage);
     }
 
     /**
@@ -424,7 +422,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         try {
             return tch.searchObjs(argu.className);
         } catch (TypeCheckException e) {
-            TypeCheckException.debugString(e, argu, n.f0);
+            if (debug) TypeCheckException.debugString(e, argu, n.f0);
             this.tch.passing = false;
             return TypeHelper.NewErr();
         }
@@ -453,7 +451,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         try {
             return tch.searchObjs(n.f1);
         } catch (TypeCheckException e) {
-            TypeCheckException.debugString(e, argu, n.f0);
+            if (debug) TypeCheckException.debugString(e, argu, n.f0);
             this.tch.passing = false;
             return TypeHelper.NewErr();
         }

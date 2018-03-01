@@ -30,7 +30,8 @@ public class Typecheck {
             root.accept(stv, "");
 
             // Helper for type check visitor
-            TypeCheckHelper tch = new TypeCheckHelper(stv.symt, stv.sigt, stv.objs);
+            TypeCheckHelper tch = new TypeCheckHelper(stv.symt, stv.sigt,
+                    stv.objs, stv.inherits);
             if (debug)
                 System.out.println(tch);
 

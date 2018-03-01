@@ -10,8 +10,9 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
 
     public HashMap<String, ArrayList<TypeHelper>> sigt = new HashMap<>();
 
-    public ArrayList<Identifier> objs = new ArrayList<>();
+    public ArrayList<String> objs = new ArrayList<>();
 
+    public HashMap<String, String> inherits = new HashMap<>();
 
     /**
      * f0 -> "class"
@@ -35,7 +36,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      */
     public R visit(MainClass n, String argu) {
         String id = n.f1.f0.tokenImage + "::main";
-        return super.visit(n, id + "::");
+        return super.visit(n, id);
     }
 
     /**
@@ -48,7 +49,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      */
     public R visit(ClassDeclaration n, String argu) {
         String id = n.f1.f0.tokenImage;
-        objs.add(n.f1);
+        objs.add(n.f1.f0.tokenImage);
         return super.visit(n, id);
     }
 
@@ -64,7 +65,8 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      */
     public R visit(ClassExtendsDeclaration n, String argu) {
         String id = n.f1.f0.tokenImage;
-        objs.add(n.f1);
+        objs.add(n.f1.f0.tokenImage);
+        inherits.put(n.f1.f0.tokenImage, n.f3.f0.tokenImage);
         return super.visit(n, id);
     }
 
