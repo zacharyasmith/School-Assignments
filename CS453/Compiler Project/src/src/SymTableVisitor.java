@@ -14,6 +14,18 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
 
     public HashMap<String, String> inherits = new HashMap<>();
 
+    public void objsEnsure(String clss) {
+        if (objs.contains(clss))
+            throw new TypeCheckException("Class `" + clss + "` has already been defined.");
+        objs.add(clss);
+    }
+
+    public void symtEnsure(String var, TypeHelper t) {
+        if (symt.containsKey(var))
+            throw new TypeCheckException("Variable `" + var + "` has already been defined.");
+        symt.put(var, t);
+    }
+
     /**
      * f0 -> "class"
      * f1 -> Identifier()
@@ -49,7 +61,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      */
     public R visit(ClassDeclaration n, String argu) {
         String id = n.f1.f0.tokenImage;
-        objs.add(n.f1.f0.tokenImage);
+        objsEnsure(n.f1.f0.tokenImage);
         return super.visit(n, id);
     }
 
@@ -65,7 +77,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      */
     public R visit(ClassExtendsDeclaration n, String argu) {
         String id = n.f1.f0.tokenImage;
-        objs.add(n.f1.f0.tokenImage);
+        objsEnsure(n.f1.f0.tokenImage);
         inherits.put(n.f1.f0.tokenImage, n.f3.f0.tokenImage);
         return super.visit(n, id);
     }
@@ -76,7 +88,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f2 -> ";"
      */
     public R visit(VarDeclaration n, String argu) {
-        symt.put(argu + "::" + n.f1.f0.tokenImage, new TypeHelper(n.f0));
+        symtEnsure(argu + "::" + n.f1.f0.tokenImage, new TypeHelper(n.f0));
         return super.visit(n, argu);
     }
 
@@ -111,7 +123,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      */
     public R visit(FormalParameter n, String argu) {
         sigt.get(argu).add(new TypeHelper(n.f0));
-        symt.put(argu + "::" + n.f1.f0.tokenImage, new TypeHelper(n.f0));
+        symtEnsure(argu + "::" + n.f1.f0.tokenImage, new TypeHelper(n.f0));
         return super.visit(n, argu);
     }
 }

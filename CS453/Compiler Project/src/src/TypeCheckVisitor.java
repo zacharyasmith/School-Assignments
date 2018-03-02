@@ -96,7 +96,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         argu.expressionType = new TypeHelper(n.f1);
         TypeHelper returned = n.f10.accept(this, argu);
         try {
-            TypeHelper.compare(new TypeHelper(n.f1), returned);
+            TypeHelper.compare(new TypeHelper(n.f1), returned, tch);
         } catch (TypeCheckException e) {
             if (debug) TypeCheckException.debugString(e, argu, n.f9);
             this.tch.passing = false;
@@ -112,7 +112,6 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
      * f3 -> ";"
      */
     public TypeHelper visit(AssignmentStatement n, ContextObject argu) {
-        // TODO keep track of assignments
         TypeHelper curr;
         try {
             curr = tch.searchSymt(argu, n.f0);
@@ -141,7 +140,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         try {
             // f0 must be array type...
             TypeHelper.compare(tch.searchSymt(argu, n.f0),
-                    TypeHelper.NewArray());
+                    TypeHelper.NewArray(), tch);
         } catch (TypeCheckException e) {
             if (debug) TypeCheckException.debugString(e, argu, n.f0.f0);
             tch.passing = false;
@@ -223,7 +222,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
                 returned = n.f0.accept(this, argu);
             }
             // process expr
-            TypeHelper.compare(thisType, returned);
+            TypeHelper.compare(thisType, returned, tch);
             return returned;
         } catch (TypeCheckException e) {
             if (debug) TypeCheckException.debugString(e, argu, n);
@@ -252,7 +251,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
         // reset signal
         argu.searchSigt = false;
         try {
-            TypeHelper.compare(check, actual);
+            TypeHelper.compare(check, actual, tch);
             return actual;
         } catch (TypeCheckException e) {
             if (debug) TypeCheckException.debugString(e, argu, n);
@@ -403,7 +402,7 @@ public class TypeCheckVisitor extends GJDepthFirst<TypeHelper, ContextObject> {
      * f0 -> <IDENTIFIER>
      */
     public TypeHelper visit(Identifier n, ContextObject argu) {
-        if (!TypeHelper.compare(TypeHelper.NewVoid(), argu.expressionType, true)
+        if (!TypeHelper.NewVoid().equals(argu.expressionType)
                 && argu.searchSigt)
             try {
                 return this.tch.searchSymt(argu, n);

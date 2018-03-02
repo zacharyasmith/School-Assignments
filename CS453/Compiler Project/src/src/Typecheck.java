@@ -18,13 +18,6 @@ public class Typecheck {
             else
                 root = new MiniJavaParser(System.in).Goal();
 
-            // Pretty print parser output
-//            if (debug) {
-//                PPrinter pp = new PPrinter();
-//                System.out.println("Starting...");
-//                root.accept(pp, "");
-//            }
-
             // Build symbol sigt
             SymTableVisitor stv = new SymTableVisitor();
             root.accept(stv, "");
@@ -32,6 +25,8 @@ public class Typecheck {
             // Helper for type check visitor
             TypeCheckHelper tch = new TypeCheckHelper(stv.symt, stv.sigt,
                     stv.objs, stv.inherits);
+            // normalize inheritance
+            tch.normalize();
             if (debug)
                 System.out.println(tch);
 
@@ -44,8 +39,12 @@ public class Typecheck {
                 System.out.println("Type error");
             }
         } catch (ParseException | FileNotFoundException e) {
-            System.out.println(e.toString());
+            System.err.println(e.toString());
             System.exit(1);
+        } catch (TypeCheckException e) {
+            if (debug)
+                System.err.println(e.toString());
+            System.out.println("Type error");
         }
     }
 

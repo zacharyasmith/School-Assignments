@@ -1,4 +1,6 @@
 import syntaxtree.Identifier;
+import syntaxtree.Type;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -22,43 +24,82 @@ public class TypeCheckHelper {
     }
 
     public void normalize() {
-        boolean changed = true;
-        while(changed)
-            for (String clss : objs)
-                changed = normalizeRec(clss) || changed;
+        HashMap<String, String> cpy = new HashMap<>(inherits);
+        for (String clss : objs)
+            normalizeRec(clss, new ArrayList<>());
+        inherits = cpy;
     }
 
-    public boolean normalizeRec(String curr) {
-        // TODO finish
-        // trivial case
+    /**
+     * @param curr
+     * @param children
+     */
+    public void normalizeRec(String curr, ArrayList<String> children) {
+        // add self to children
+        if (!children.contains(curr)) children.add(curr);
+        
+        // does curr inherit? base case.
         if (!inherits.containsKey(curr))
-            return false;
+            return;
 
-        // track changes
-        boolean changed = false;
-        boolean computed = false;
+        // It does inherit
+        String from = inherits.get(curr);
+        // Is there a parent inheriting from a child?
+        if (children.contains(from))
+            throw new TypeCheckException("Parent class `" + from +
+                    "` inheriting from child class `"+curr+"`");
+        // does inherited class exist?
+        if (!objs.contains(from))
+            throw new TypeCheckException("Class `" + curr +
+                    "` inherits from non-existent class `" + from + "`.");
+        // inherit further? recurse... DFS
+        normalizeRec(from, children);
+        // remove self from inheritance list
+        inherits.remove(curr);
 
         // for substring search
-        String from = inherits.get(curr);
-        int len = from.length() + 2;
         String search = from + "::";
-        for (Map.Entry<String, TypeHelper> e : symt.entrySet()) {
-            String sym = e.getKey();
+        int len = search.length();
+
+        // Method table inheritance
+        for (Map.Entry<String, ArrayList<TypeHelper>> e : (new HashMap<>(sigt)).entrySet()) {
+            String method = e.getKey();
             // Ensure length for substring
-            if (sym.length() <= len)
+            if (method.length() <= len)
                 continue;
-            String newSym = search + sym.substring(len, sym.length());
+            String newMethod = curr + "::" + method.substring(len, method.length());
             // Ensure
-            if (sym.substring(0, len).equals(search)) {
-                if (symt.containsKey(newSym)) {
-                    computed = true;
-                    break;
+            if (method.substring(0, len).equals(search)) {
+                // Current method is one of `from`'s
+                // Overriden? Already handled?
+                if (sigt.containsKey(newMethod)) {
+                    // Method signature the same?
+                    // If not, illegal override
+                    if (!sigt.get(newMethod).equals(sigt.get(method)))
+                        throw new TypeCheckException("Method override `" + newMethod + "` with `" +
+                                method + "` " + "have different signatures.");
+                } else {
+                    // Add to `curr`'s method list
+                    sigt.put(newMethod, sigt.get(method));
+                    // along with method symbols
+                    for (Map.Entry<String, TypeHelper> s : searchSymt(method + "::",
+                            newMethod + "::", true).entrySet())
+                        symt.put(s.getKey(), s.getValue());
                 }
-                symt.put(newSym, new TypeHelper(symt.get(newSym)));
             }
         }
 
-        return changed;
+        // Class variable inheritance
+        for (Map.Entry<String, TypeHelper> e : searchSymt(search, curr + "::",
+                false).entrySet()) {
+            String sym = e.getKey(); // symbol with replacement
+            // Ensure
+            if (symt.containsKey(sym)) {
+                // already implemented or overridden
+                continue;
+            }
+            symt.put(sym, new TypeHelper(e.getValue()));
+        }
     }
 
     public TypeHelper searchSymt(ContextObject argu, Identifier n) throws TypeCheckException {
@@ -74,6 +115,38 @@ public class TypeCheckHelper {
                     "\n\t" + clss +
                     "\n\t" + method);
         }
+    }
+
+    /**
+     * @param pattern : Include the separator `::` at end of String
+     * @param method  : Specify whether the search is at method level.
+     *                If false, will search only class level.
+     * @return Symbols matching search criteria
+     */
+    public HashMap<String, TypeHelper> searchSymt(String pattern, String replace, boolean method) {
+        HashMap<String, TypeHelper> ret = new HashMap<>();
+        int len = pattern.length();
+        // along with method symbols
+        for (Map.Entry<String, TypeHelper> s : symt.entrySet()) {
+            String sym = s.getKey();
+            // Trivial case
+            if (sym.length() <= len)
+                continue;
+            if (sym.substring(0, len).equals(pattern)) {
+                if (!method) {
+                    // ensure no more `::`s
+                    if (sym.substring(len, sym.length()).contains("::"))
+                        continue;
+                }
+                // match
+                if (replace != null)
+                    ret.put(replace + sym.substring(len, sym.length()),
+                            s.getValue());
+                else
+                    ret.put(sym, s.getValue());
+            }
+        }
+        return ret;
     }
 
     public ArrayList<TypeHelper> searchSigt(ContextObject c) throws TypeCheckException {
@@ -98,9 +171,15 @@ public class TypeCheckHelper {
 
     public TypeHelper searchObjs(String c) throws TypeCheckException {
         for (String i : objs)
-            if(i.equals(c))
+            if (i.equals(c))
                 return new TypeHelper(i);
         throw new TypeCheckException("Class `" + c + "` not declared.");
+    }
+
+    public boolean inheritsFrom(String child, String parent) {
+        if (inherits.containsKey(child) && inherits.get(child) == parent)
+            return true;
+        return false;
     }
 
     @Override
