@@ -177,8 +177,14 @@ public class TypeCheckHelper {
     }
 
     public boolean inheritsFrom(String child, String parent) {
-        if (inherits.containsKey(child) && inherits.get(child) == parent)
-            return true;
+        String curr = child;
+        do {
+            if (curr == parent)
+                return true;
+            if (inherits.containsKey(curr))
+                curr = inherits.get(curr);
+            else curr = null;
+        } while (curr != null);
         return false;
     }
 

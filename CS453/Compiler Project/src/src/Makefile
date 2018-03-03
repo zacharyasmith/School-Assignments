@@ -9,4 +9,5 @@ clean:
 	$(RM) *.class
 
 package:
+	-rm smithza.zip
 	zip smithza ContextObject.java SymTableVisitor.java TypeCheckException.java TypeCheckHelper.java TypeCheckVisitor.java TypeHelper.java Typecheck.java
