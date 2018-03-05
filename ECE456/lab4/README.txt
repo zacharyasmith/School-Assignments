@@ -7,8 +7,8 @@ This lab has been written entirely in Python3. It will need to be installed to r
 Make the files executable by running `chmod +x <file>` on each python file.
 
 Run the following:
-    `./client <dest ip address> <dest port> [--file [-f] <path/to/file>] [--encrypt [-e] <key/file>]`
-    `./server <listening port> [--decrypt [-d] <key/file>]`
+    `./client <dest ip address> <dest port> <key/file> [--file [-f] <path/to/file>]`
+    `./server <listening port> <key/file>`
 
 NOTE on the keys: the keys must be formatted, in one line, like this (this package has an example):
 dc 21 45 22 1a 1d 14 ce
