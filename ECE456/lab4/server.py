@@ -42,15 +42,13 @@ def respond(ip_address, port, msg):
 if __name__ == "__main__":
     try:
         # Should have either 7 or 9 arguments
-        if len(sys.argv) not in [4]:
+        if len(sys.argv) not in [3]:
             raise InvalidArgumentsError
         # read in des key file if intended
         listening_port = int(sys.argv[1])
         cls()
         print("Starting server. ({}:{})".format(get_ip_address(), listening_port))
-        key = search_args(sys.argv, ['--decrypt', '-d'])
-        if not key:
-            raise InvalidArgumentsError
+        key = sys.argv[2]
         # Blank messages container
         messages = []
         # Start the listen socket
@@ -58,8 +56,8 @@ if __name__ == "__main__":
         s.bind((get_ip_address(), listening_port))
         while True:
             response, address = s.recvfrom(4096)
-            print("Received {} bytes from client {}:{}:\n{}"
-                  .format(len(response), address[0], address[1], response))
+            print("Received {} bytes from client {}:{}"
+                  .format(len(response), address[0], address[1]))
             # decrypt
             data = decrypt(key, response)
             # add message to message container
@@ -72,7 +70,7 @@ if __name__ == "__main__":
             send_msg(enc_response, address[0], address[1], False)
     except InvalidArgumentsError:
         print('Invalid use of program. Correct use:')
-        print('./server <listening port> --decrypt [-d] <key/file>')
+        print('./server <listening port> <key/file>')
         exit(1)
     except KeyboardInterrupt:
         print('Closing server...')

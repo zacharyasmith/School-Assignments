@@ -33,14 +33,12 @@ def search_args(args, flags):
 if __name__ == "__main__":
     try:
         # Should have either 7 or 9 arguments
-        if len(sys.argv) not in [5, 7]:
+        if len(sys.argv) not in [4, 6]:
             raise InvalidArgumentsError
         # read in des key file if intended
         ip_address = sys.argv[1]
         port = int(sys.argv[2])
-        key = search_args(sys.argv, ['--encrypt', '-e'])
-        if not key:
-            raise InvalidArgumentsError
+        key = sys.argv[3]
         file = search_args(sys.argv, ['--file', '-f'])
         data = None
 
@@ -80,7 +78,7 @@ if __name__ == "__main__":
         print(dec_response.decode("utf-8"))
     except InvalidArgumentsError:
         print('Invalid use of program. Correct use:')
-        print('./client <dest ip address> <dest port> --encrypt [-e] <key/file> '
+        print('./client <dest ip address> <dest port> <key/file> '
               '[--file [-f] <path/to/file>]')
         exit(1)
     except TimeoutException:
