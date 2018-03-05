@@ -5,18 +5,19 @@ Class: ECE456
 Assignment: Lab 4
 """
 
-import sys
-import socket
 import signal
-import os
-
-from des import *
+from tools import *
 from Exceptions import InvalidArgumentsError, TimeoutException
 sys.path.append('./')
 
 
+def get_ip_address():
+    s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    s.connect(("8.8.8.8", 80))
+    return s.getsockname()[0]
+
+
 def handler(signum, frame):
-    print("Timeout! Datagram not sent or response not received.")
     raise TimeoutException()
 
 
@@ -37,12 +38,14 @@ if __name__ == "__main__":
         # read in des key file if intended
         ip_address = sys.argv[1]
         port = int(sys.argv[2])
-        print("Connecting to: {}:{}".format(ip_address, port))
         key = search_args(sys.argv, ['--encrypt', '-e'])
         if not key:
             raise InvalidArgumentsError
         file = search_args(sys.argv, ['--file', '-f'])
         data = None
+
+        # clear prompt
+        cls()
 
         # Get data to send
         if file:
@@ -51,8 +54,9 @@ if __name__ == "__main__":
                 data = f.read()
             print("Read {} bytes from `{}`.".format(os.path.getsize(file), file))
         else:
+            print("Welcome to the UDP communication client.")
             # prompt keyboard data
-            input_str = input("Keyboard input:\n")
+            input_str = input("Keyboard message to send:\n")
             if len(input_str) > 250:
                 print("Truncating input to 250 characters.")
                 data = bytes(input_str[0:250], 'utf-8')
@@ -60,35 +64,25 @@ if __name__ == "__main__":
                 data = bytes(input_str, 'utf-8')
 
         # encrypt
-        _des = DES(key)
-        tmp = 'tmp_{}.txt'.format(datetime.now().strftime('%Y-%m-%d %H%M%S'))
-        out = 'out_{}.txt'.format(datetime.now().strftime('%Y-%m-%d %H%M%S'))
-        # temporarily write data
-        with open(tmp, 'wb') as w:
-            w.write(data)
-        _des.encrypt(tmp, out)
-        with open(out, 'r+b') as r:
-            data = r.read()
-        # remove tmp files
-        os.remove(tmp)
-        os.remove(out)
-
-        # Start the send socket
-        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)  # UDP
-        sent_length = s.sendto(data, (ip_address, port))
-        print("Sent {} bytes.".format(sent_length))
-
+        data = encrypt(key, data)
+        # send the data
+        my_port = send_msg(data, ip_address, port)
         # Start timeout after sent
         signal.signal(signal.SIGALRM, handler)
-        signal.alarm(10)
+        signal.alarm(5)
 
         # Start the listen socket
-        # s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-        # s.bind((socket.gethostname(), my_port))
-        # response, address = s.recvfrom(4096)
-        # print("Received {} bytes from server ({}):\n{}".format(len(response), address, response))
+        s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+        s.bind((get_ip_address(), my_port))
+        response, address = s.recvfrom(4096)
+        print("Received {} bytes from server {}:{}".format(len(response), address[0], address[1]))
+        dec_response = decrypt(key, response)
+        print(dec_response.decode("utf-8"))
     except InvalidArgumentsError:
         print('Invalid use of program. Correct use:')
-        print('./client <dest ip address> <dest port> [--file [-f] <path/to/file>] '
-              '[--encrypt [-e] <key/file>]')
+        print('./client <dest ip address> <dest port> --encrypt [-e] <key/file> '
+              '[--file [-f] <path/to/file>]')
         exit(1)
+    except TimeoutException:
+        print("Timeout! Response not received in time.\nClosing connection...")
+        s.close()
