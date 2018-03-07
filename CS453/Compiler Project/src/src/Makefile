@@ -10,4 +10,4 @@ clean:
 
 package:
 	-rm smithza.zip
-	zip smithza ContextObject.java SymTableVisitor.java TypeCheckException.java TypeCheckHelper.java TypeCheckVisitor.java TypeHelper.java Typecheck.java
+	zip smithza ContextObject.java SymTableVisitor.java TypeCheckException.java SymbolHelper.java TypeCheckVisitor.java TypeHelper.java Typecheck.java

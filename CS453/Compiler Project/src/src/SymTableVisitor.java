@@ -4,27 +4,13 @@ import visitor.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
+public class SymTableVisitor<R> extends GJDepthFirst<R,ContextObject> {
 
-    public HashMap<String, TypeHelper> symt = new HashMap<>();
+    public HashMap<Symbol, TypeHelper> symt = new HashMap<>();
 
-    public HashMap<String, ArrayList<TypeHelper>> sigt = new HashMap<>();
+    public HashMap<ContextObject, ArrayList<TypeHelper>> sigt = new HashMap<>();
 
-    public ArrayList<String> objs = new ArrayList<>();
-
-    public HashMap<String, String> inherits = new HashMap<>();
-
-    public void objsEnsure(String clss) {
-        if (objs.contains(clss))
-            throw new TypeCheckException("Class `" + clss + "` has already been defined.");
-        objs.add(clss);
-    }
-
-    public void symtEnsure(String var, TypeHelper t) {
-        if (symt.containsKey(var))
-            throw new TypeCheckException("Variable `" + var + "` has already been defined.");
-        symt.put(var, t);
-    }
+    public ArrayList<ContextObject> objs = new ArrayList<>();
 
     /**
      * f0 -> "class"
@@ -46,9 +32,9 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f16 -> "}"
      * f17 -> "}"
      */
-    public R visit(MainClass n, String argu) {
-        String id = n.f1.f0.tokenImage + "::main";
-        return super.visit(n, id);
+    public R visit(MainClass n, ContextObject argu) {
+        ContextObject c = new ContextObject(n.f1.f0.tokenImage);
+        return super.visit(n, c);
     }
 
     /**
@@ -59,10 +45,10 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f4 -> ( MethodDeclaration() )*
      * f5 -> "}"
      */
-    public R visit(ClassDeclaration n, String argu) {
-        String id = n.f1.f0.tokenImage;
-        objsEnsure(n.f1.f0.tokenImage);
-        return super.visit(n, id);
+    public R visit(ClassDeclaration n, ContextObject argu) {
+        ContextObject c = new ContextObject(n.f1.f0.tokenImage);
+        objs.add(new ContextObject(c));
+        return super.visit(n, c);
     }
 
     /**
@@ -75,11 +61,10 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f6 -> ( MethodDeclaration() )*
      * f7 -> "}"
      */
-    public R visit(ClassExtendsDeclaration n, String argu) {
-        String id = n.f1.f0.tokenImage;
-        objsEnsure(n.f1.f0.tokenImage);
-        inherits.put(n.f1.f0.tokenImage, n.f3.f0.tokenImage);
-        return super.visit(n, id);
+    public R visit(ClassExtendsDeclaration n, ContextObject argu) {
+        ContextObject c = new ContextObject(n.f1.f0.tokenImage);
+        objs.add(new InheritedContextObject(c, new ContextObject(n.f3.f0.tokenImage)));
+        return super.visit(n, c);
     }
 
     /**
@@ -87,8 +72,8 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f1 -> Identifier()
      * f2 -> ";"
      */
-    public R visit(VarDeclaration n, String argu) {
-        symtEnsure(argu + "::" + n.f1.f0.tokenImage, new TypeHelper(n.f0));
+    public R visit(VarDeclaration n, ContextObject argu) {
+        symt.put(new Symbol(argu, n.f1.f0.tokenImage), new TypeHelper(n.f0));
         return super.visit(n, argu);
     }
 
@@ -107,13 +92,14 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f11 -> ";"
      * f12 -> "}"
      */
-    public R visit(MethodDeclaration n, String argu) {
-        // argu = <classname>
-        String id = argu + "::" + n.f2.f0.tokenImage;
-        sigt.put(id, new ArrayList<>());
-        sigt.get(id).add(new TypeHelper(n.f1));
-        n.f4.accept(this, id);
-        n.f7.accept(this, id);
+    public R visit(MethodDeclaration n, ContextObject argu) {
+        // argu contains <classname>
+        argu.methodName = n.f2.f0.tokenImage;
+        ContextObject c = new ContextObject(argu);
+        sigt.put(c, new ArrayList<>());
+        sigt.get(c).add(new TypeHelper(n.f1));
+        n.f4.accept(this, c);
+        n.f7.accept(this, c);
         return null;
     }
 
@@ -121,9 +107,9 @@ public class SymTableVisitor<R> extends GJDepthFirst<R,String> {
      * f0 -> Type()
      * f1 -> Identifier()
      */
-    public R visit(FormalParameter n, String argu) {
+    public R visit(FormalParameter n, ContextObject argu) {
         sigt.get(argu).add(new TypeHelper(n.f0));
-        symtEnsure(argu + "::" + n.f1.f0.tokenImage, new TypeHelper(n.f0));
+        symt.put(new Symbol(argu, n.f1.f0.tokenImage), new TypeHelper(n.f0));
         return super.visit(n, argu);
     }
 }

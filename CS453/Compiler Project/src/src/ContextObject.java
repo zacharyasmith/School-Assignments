@@ -1,24 +1,15 @@
 public class ContextObject {
     public String className;
     public String methodName;
-    public TypeHelper expressionType = TypeHelper.NewVoid();
-    public boolean expressionList = false;
-    public boolean searchSigt = false;
-    public String listClass = null;
-    public String listMeth = null;
-    public int expressionCount = 0;
-    public int sigExprTotal = 0;
 
-    public ContextObject(ContextObject c, boolean expressionList) {
-        this.expressionList = expressionList;
-        if (expressionList)
-            this.expressionCount = c.expressionCount;
-        this.listClass = c.listClass;
-        this.listMeth = c.listMeth;
-        this.expressionType = c.expressionType;
+    public ContextObject() {
+        this.className = "";
+        this.methodName = null;
+    }
+
+    public ContextObject(ContextObject c) {
         this.methodName = c.methodName;
         this.className = c.className;
-        this.searchSigt = c.searchSigt;
     }
 
     public ContextObject(String className, String methodName) {
@@ -26,31 +17,31 @@ public class ContextObject {
         this.methodName = methodName;
     }
 
-    public ContextObject(ContextObject c, String className,
-                         String methodName, boolean expressionList) {
-        this.expressionList = expressionList;
-        this.listClass = className;
-        this.listMeth = methodName;
-        this.expressionCount = c.expressionCount;
-        this.expressionType = c.expressionType;
-        this.methodName = c.methodName;
-        this.className = c.className;
-        this.searchSigt = c.searchSigt;
-    }
-
-    public TypeHelper checkExpressionList(TypeCheckHelper tch) throws TypeCheckException {
-        if (!expressionList)
-            throw new TypeCheckException("Internal: checkExpressionList Called erroneously.");
-        if (sigExprTotal == 0)
-            sigExprTotal = tch.searchSigt(this.listClass, this.listMeth).size() - 1;
-        if (sigExprTotal >= ++expressionCount)
-            return tch.searchSigt(this.listClass, this.listMeth).get(expressionCount);
-        throw new TypeCheckException("Method signature not found matching parameters. Too many parameters.");
+    public ContextObject(String className) {
+        this.className = className;
+        this.methodName = null;
     }
 
     @Override
     public String toString() {
-        return "Context: Class::" + className + " Method::" + methodName + " EType::"
-                + expressionType + " List::" + expressionList + ":" + expressionCount;
+        return "Class::" + className + (methodName != null ? " Method::" + methodName : "");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ContextObject that = (ContextObject) o;
+
+        if (!className.equals(that.className)) return false;
+        return methodName != null ? methodName.equals(that.methodName) : that.methodName == null;
+    }
+
+    @Override
+    public int hashCode() {
+        int result = className.hashCode();
+        result = 31 * result + (methodName != null ? methodName.hashCode() : 0);
+        return result;
     }
 }

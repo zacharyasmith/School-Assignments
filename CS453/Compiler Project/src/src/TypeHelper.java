@@ -55,34 +55,22 @@ public class TypeHelper {
         }
     }
 
-    public static void compare (TypeHelper expected, TypeHelper actual, TypeCheckHelper tch) throws TypeCheckException {
-        if (expected.type == actual.type) {
-            if (expected.type == Type.Identifier)
-                if (expected.objName != null && expected.objName != actual.objName) {
-                    // check to see if actual inherits from expected
-                    if (tch != null && tch.inheritsFrom(actual.objName, expected.objName)) {
-                        return;
-                    }
-                    throw new TypeCheckException("Expecting identifier `" +
-                            expected.objName + "` but found `" + actual.objName + "`.");
-                }
-            return;
-        }
-        throw new TypeCheckException("Expecting type `" + expected.type + "` but found `" +
-                actual.type + "`.");
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        TypeHelper that = (TypeHelper) o;
+
+        if (type != that.type) return false;
+        return objName != null ? objName.equals(that.objName) : that.objName == null;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (obj instanceof TypeHelper) {
-            try {
-                compare(this, (TypeHelper) obj, null);
-                return true;
-            } catch (TypeCheckException e) {
-                return false;
-            }
-        }
-        return false;
+    public int hashCode() {
+        int result = type.hashCode();
+        result = 31 * result + (objName != null ? objName.hashCode() : 0);
+        return result;
     }
 
     @Override
