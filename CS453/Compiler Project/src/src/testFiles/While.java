@@ -1,7 +1,11 @@
 class While {
     public static void main(String[] a) {
-        while (false) {
-            System.out.println(1337);
+        int b;
+
+        b = 0;
+        while (b < 5) {
+            System.out.println(b);
+            b = b + 1;
         }
     }
 }

@@ -1,4 +1,4 @@
-class Foo {
+class MultiInheritance {
     public static void main(String[] args) {
         One f;
 

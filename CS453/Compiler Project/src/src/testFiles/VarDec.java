@@ -1,10 +1,10 @@
-class Runner {
+class VarDec {
     public static void main (String[] args) {
-        System.out.println((new VarDec()).Meth(true));
+        System.out.println((new Class()).Meth(true));
     }
 }
 
-class VarDec {
+class Class {
     int var;
     public int Meth(boolean success) {
         boolean failure;

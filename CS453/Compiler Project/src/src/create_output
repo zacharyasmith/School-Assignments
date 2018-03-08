@@ -1,0 +1,13 @@
+#!/bin/bash
+# Compile the programs
+
+for filename in testFiles/*.java; do
+	echo "Testing file: "$filename""
+	javac $filename
+	cd testFiles
+	java $(basename $filename .java) >> ../out/$(basename $filename .java).out
+	cd ..
+	rm testFiles/*.class
+	echo ""
+done
+
