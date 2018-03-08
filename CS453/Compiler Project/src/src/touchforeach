@@ -1,4 +1,0 @@
-#!/bin/bash
-for filename in testFiles/*.java; do
-	touch "typeCheck/$(basename "$filename" .java).out"
-done
