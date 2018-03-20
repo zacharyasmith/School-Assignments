@@ -9,7 +9,9 @@ class MultiInheritance {
 }
 
 class One {
+    int a;
     public int foo() {
+        int b;
         return 1;
     }
 }

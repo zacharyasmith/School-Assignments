@@ -1,5 +1,8 @@
 import java.io.*;
 import java.util.*;
+
+import context.SymTableVisitor;
+import context.SymbolHelper;
 import syntaxtree.*;
 
 public class J2V {

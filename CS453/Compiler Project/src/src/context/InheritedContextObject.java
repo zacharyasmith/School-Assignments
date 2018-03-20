@@ -1,9 +1,11 @@
+package context;
+
 public class InheritedContextObject extends ContextObject {
     public ContextObject inheritsFrom;
 
     public InheritedContextObject(ContextObject c, ContextObject inheritsFrom) {
         this.methodName = c.methodName;
-        this.className = c.className;
+        this.classObject = c.classObject;
         this.inheritsFrom = inheritsFrom;
     }
 

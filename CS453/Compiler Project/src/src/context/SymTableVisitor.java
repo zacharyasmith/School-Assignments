@@ -1,10 +1,12 @@
+package context;
+
 import syntaxtree.*;
 import visitor.*;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class SymTableVisitor<R> extends GJDepthFirst<R,ContextObject> {
+public class SymTableVisitor<R> extends GJDepthFirst<R, ContextObject> {
 
     public HashMap<Symbol, TypeHelper> symt = new HashMap<>();
 

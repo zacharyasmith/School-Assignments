@@ -1,3 +1,5 @@
+package context;
+
 import syntaxtree.Identifier;
 
 public class TypeHelper {

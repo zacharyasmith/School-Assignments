@@ -1,3 +1,5 @@
+package context;
+
 public class Symbol {
     public ContextObject context;
     public String symbol;
