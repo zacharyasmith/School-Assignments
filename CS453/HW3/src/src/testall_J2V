@@ -1,0 +1,15 @@
+#!/bin/bash
+# Compile the programs
+if [[ $* == *--make* ]]; then
+	make
+fi
+
+for filename in testFiles/*.java; do
+	echo "Testing file: "$filename""
+	diff -y <(cat "$filename" | java Typecheck) <(cat typeCheck/$(basename $filename .java).out)
+	echo ""
+done
+
+if [[ $* == *--make* ]]; then
+	make clean
+fi

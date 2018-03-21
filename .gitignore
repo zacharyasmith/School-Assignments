@@ -12,12 +12,12 @@
 **/__pycache__
 
 *.pyc
-CS453/Compiler Project/jtb.out.jj
-CS453/Compiler Project/src/src/JavaCharStream.java
-CS453/Compiler Project/src/src/MiniJavaParser.java
-CS453/Compiler Project/src/src/MiniJavaParserConstants.java
-CS453/Compiler Project/src/src/MiniJavaParserTokenManager.java
-CS453/Compiler Project/src/src/ParseException.java
-CS453/Compiler Project/src/src/Token.java
-CS453/Compiler Project/src/src/TokenMgrError.java
-CS453/Compiler Project/src/src/jtb.out.jj
+**/jtb.out.jj
+**/src/src/JavaCharStream.java
+**/src/src/MiniJavaParser.java
+**/src/src/MiniJavaParserConstants.java
+**/src/src/MiniJavaParserTokenManager.java
+**/src/src/ParseException.java
+**/src/src/Token.java
+**/src/src/TokenMgrError.java
+**/src/src/jtb.out.jj

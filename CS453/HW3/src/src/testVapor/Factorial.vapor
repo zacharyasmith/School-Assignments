@@ -1,0 +1,48 @@
+class Factorial{
+    public static void main(String[] a){
+        System.out.println(new Fac().ComputeFac(10));
+    }
+}
+
+class Fac {
+    public int ComputeFac(int num){
+        int num_aux ;
+        if (num < 1)
+            num_aux = 1 ;
+        else
+            num_aux = num * (this.ComputeFac(num-1)) ;
+        return num_aux ;
+    }
+}
+---------
+const ft_Fac:
+  :Fac.ComputeFac
+
+func Main()
+  t.0 = HeapAllocZ(4)
+  if0 t.0 goto :mem_error
+  [t.0] = :ft_Fac
+  t.1 = [t.0]
+  t.1 = [t.1+0]
+  t.2 = call t.1(t.0 10)
+  PrintIntS(t.2)
+  goto :exit
+  mem_error:
+    Error(“Mem exhausted”)
+    goto :exit
+  exit:
+    ret
+
+func Fac.ComputeFac(this num)
+  t.0 = LtS(num 1)
+  if0 t.0 goto :if1_else
+    num_aux = 1
+    goto :if1_end
+  if1_else:
+    t.1 = [this]
+    t.1 = [t.1+0]
+    t.2 = Sub(num 1)
+    t.3 = call t.1(this t.2)
+    num_aux = MulS(num t.3)
+  if1_end:
+  ret num_aux
