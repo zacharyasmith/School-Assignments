@@ -24,13 +24,16 @@ public class J2V {
             SymTableVisitor stv = new SymTableVisitor();
             root.accept(stv, null);
             // Helper for type check visitor
-            SymbolHelper tch = new SymbolHelper(stv.symt, stv.sigt, stv.objs);
+            SymbolHelper sh = new SymbolHelper(stv.symt, stv.sigt, stv.objs);
             // normalize inheritance
-            tch.normalize();
+            sh.normalize();
             if (debug)
-                System.out.println(tch);
+                System.out.println(sh);
 
             // Java -> Vapor
+            VaporVisitor vv = new VaporVisitor(sh, debug);
+            root.accept(vv, null);
+            System.out.println(vv.toVapor());
         } catch (ParseException | FileNotFoundException e) {
             System.err.println(e.toString());
             System.exit(1);

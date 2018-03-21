@@ -1,17 +1,38 @@
-import context.SymbolHelper;
-import elements.ElementStack;
+import context.*;
+import elements.Element;
+import elements.ElementList;
+import elements.Function;
+import elements.FunctionTable;
 import syntaxtree.*;
 import visitor.GJDepthFirst;
 
-public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
+public class VaporVisitor<R> extends GJDepthFirst<R, Element> {
     SymbolHelper sh;
     boolean debug;
-    private ElementStack constStack;
+    private ElementList<FunctionTable> const_list = new ElementList<>();
+    private ElementList<Function> func_list = new ElementList<>();
+    private Counters GLOBALS = new Counters();
+
+    // configurables
+    public static final String TAB = "  ";
+    public static final String CONST_PREFIX = "ft_";
 
     public VaporVisitor(SymbolHelper sh, boolean debug) {
         this.sh = sh;
         this.debug = debug;
-        this.constStack = new ElementStack(debug);
+        for (ContextObject c : sh.classes) {
+            FunctionTable ft = new FunctionTable(c, sh.searchSigt(c.classObject), CONST_PREFIX);
+            const_list.add(ft);
+        }
+    }
+
+    public String toVapor() {
+        String ret = "";
+        // Const table
+        ret += const_list.toVapor(TAB, 0);
+        // Funcs
+        // Main method
+        return ret;
     }
 
     /**
@@ -19,12 +40,11 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1 -> ( TypeDeclaration() )*
      * f2 -> <EOF>
      */
-    public R visit(Goal n, A argu) {
+    public R visit(Goal n, Element argu) {
         R _ret=null;
         // TODO new stack for main class
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
-        n.f2.accept(this, argu);
         return _ret;
     }
 
@@ -48,37 +68,10 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f16 -> "}"
      * f17 -> "}"
      */
-    public R visit(MainClass n, A argu) {
+    public R visit(MainClass n, Element argu) {
         R _ret=null;
-        n.f0.accept(this, argu);
-        n.f1.accept(this, argu);
-        n.f2.accept(this, argu);
-        n.f3.accept(this, argu);
-        n.f4.accept(this, argu);
-        n.f5.accept(this, argu);
-        n.f6.accept(this, argu);
-        n.f7.accept(this, argu);
-        n.f8.accept(this, argu);
-        n.f9.accept(this, argu);
-        n.f10.accept(this, argu);
-        n.f11.accept(this, argu);
-        n.f12.accept(this, argu);
-        n.f13.accept(this, argu);
         n.f14.accept(this, argu);
         n.f15.accept(this, argu);
-        n.f16.accept(this, argu);
-        n.f17.accept(this, argu);
-        return _ret;
-    }
-
-    /**
-     * f0 -> ClassDeclaration()
-     *       | ClassExtendsDeclaration()
-     */
-    public R visit(TypeDeclaration n, A argu) {
-        R _ret=null;
-        // TODO create const declarations for each
-        n.f0.accept(this, argu);
         return _ret;
     }
 
@@ -90,7 +83,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f4 -> ( MethodDeclaration() )*
      * f5 -> "}"
      */
-    public R visit(ClassDeclaration n, A argu) {
+    public R visit(ClassDeclaration n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -111,7 +104,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f6 -> ( MethodDeclaration() )*
      * f7 -> "}"
      */
-    public R visit(ClassExtendsDeclaration n, A argu) {
+    public R visit(ClassExtendsDeclaration n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -129,7 +122,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1 -> Identifier()
      * f2 -> ";"
      */
-    public R visit(VarDeclaration n, A argu) {
+    public R visit(VarDeclaration n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -152,7 +145,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f11 -> ";"
      * f12 -> "}"
      */
-    public R visit(MethodDeclaration n, A argu) {
+    public R visit(MethodDeclaration n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -174,7 +167,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0 -> FormalParameter()
      * f1 -> ( FormalParameterRest() )*
      */
-    public R visit(FormalParameterList n, A argu) {
+    public R visit(FormalParameterList n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -185,7 +178,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0 -> Type()
      * f1 -> Identifier()
      */
-    public R visit(FormalParameter n, A argu) {
+    public R visit(FormalParameter n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -196,7 +189,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0 -> ","
      * f1 -> FormalParameter()
      */
-    public R visit(FormalParameterRest n, A argu) {
+    public R visit(FormalParameterRest n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -209,7 +202,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      *       | IntegerType()
      *       | Identifier()
      */
-    public R visit(Type n, A argu) {
+    public R visit(Type n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         return _ret;
@@ -220,7 +213,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1 -> "["
      * f2 -> "]"
      */
-    public R visit(ArrayType n, A argu) {
+    public R visit(ArrayType n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -231,7 +224,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
     /**
      * f0 -> "boolean"
      */
-    public R visit(BooleanType n, A argu) {
+    public R visit(BooleanType n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         return _ret;
@@ -240,7 +233,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
     /**
      * f0 -> "int"
      */
-    public R visit(IntegerType n, A argu) {
+    public R visit(IntegerType n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         return _ret;
@@ -254,7 +247,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      *       | WhileStatement()
      *       | PrintStatement()
      */
-    public R visit(Statement n, A argu) {
+    public R visit(Statement n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         return _ret;
@@ -265,7 +258,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1 -> ( Statement() )*
      * f2 -> "}"
      */
-    public R visit(Block n, A argu) {
+    public R visit(Block n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -279,7 +272,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f2 -> Expression()
      * f3 -> ";"
      */
-    public R visit(AssignmentStatement n, A argu) {
+    public R visit(AssignmentStatement n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -297,7 +290,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f5 -> Expression()
      * f6 -> ";"
      */
-    public R visit(ArrayAssignmentStatement n, A argu) {
+    public R visit(ArrayAssignmentStatement n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -318,7 +311,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f5 -> "else"
      * f6 -> Statement()
      */
-    public R visit(IfStatement n, A argu) {
+    public R visit(IfStatement n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -337,7 +330,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f3 -> ")"
      * f4 -> Statement()
      */
-    public R visit(WhileStatement n, A argu) {
+    public R visit(WhileStatement n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -354,7 +347,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f3 -> ")"
      * f4 -> ";"
      */
-    public R visit(PrintStatement n, A argu) {
+    public R visit(PrintStatement n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -375,7 +368,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      *       | MessageSend()
      *       | PrimaryExpression()
      */
-    public R visit(Expression n, A argu) {
+    public R visit(Expression n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         return _ret;
@@ -386,7 +379,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1 -> "&&"
      * f2 -> PrimaryExpression()
      */
-    public R visit(AndExpression n, A argu) {
+    public R visit(AndExpression n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -399,7 +392,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1 -> "<"
      * f2 -> PrimaryExpression()
      */
-    public R visit(CompareExpression n, A argu) {
+    public R visit(CompareExpression n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -412,7 +405,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1 -> "+"
      * f2 -> PrimaryExpression()
      */
-    public R visit(PlusExpression n, A argu) {
+    public R visit(PlusExpression n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -425,7 +418,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1 -> "-"
      * f2 -> PrimaryExpression()
      */
-    public R visit(MinusExpression n, A argu) {
+    public R visit(MinusExpression n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -438,7 +431,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1 -> "*"
      * f2 -> PrimaryExpression()
      */
-    public R visit(TimesExpression n, A argu) {
+    public R visit(TimesExpression n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -452,7 +445,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f2 -> PrimaryExpression()
      * f3 -> "]"
      */
-    public R visit(ArrayLookup n, A argu) {
+    public R visit(ArrayLookup n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -466,7 +459,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1 -> "."
      * f2 -> "length"
      */
-    public R visit(ArrayLength n, A argu) {
+    public R visit(ArrayLength n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -482,7 +475,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f4 -> ( ExpressionList() )?
      * f5 -> ")"
      */
-    public R visit(MessageSend n, A argu) {
+    public R visit(MessageSend n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -497,7 +490,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0 -> Expression()
      * f1 -> ( ExpressionRest() )*
      */
-    public R visit(ExpressionList n, A argu) {
+    public R visit(ExpressionList n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -508,7 +501,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0 -> ","
      * f1 -> Expression()
      */
-    public R visit(ExpressionRest n, A argu) {
+    public R visit(ExpressionRest n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -526,7 +519,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      *       | NotExpression()
      *       | BracketExpression()
      */
-    public R visit(PrimaryExpression n, A argu) {
+    public R visit(PrimaryExpression n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         return _ret;
@@ -535,7 +528,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
     /**
      * f0 -> <INTEGER_LITERAL>
      */
-    public R visit(IntegerLiteral n, A argu) {
+    public R visit(IntegerLiteral n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         return _ret;
@@ -544,7 +537,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
     /**
      * f0 -> "true"
      */
-    public R visit(TrueLiteral n, A argu) {
+    public R visit(TrueLiteral n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         return _ret;
@@ -553,7 +546,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
     /**
      * f0 -> "false"
      */
-    public R visit(FalseLiteral n, A argu) {
+    public R visit(FalseLiteral n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         return _ret;
@@ -562,7 +555,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
     /**
      * f0 -> <IDENTIFIER>
      */
-    public R visit(Identifier n, A argu) {
+    public R visit(Identifier n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         return _ret;
@@ -571,7 +564,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
     /**
      * f0 -> "this"
      */
-    public R visit(ThisExpression n, A argu) {
+    public R visit(ThisExpression n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         return _ret;
@@ -584,7 +577,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f3 -> Expression()
      * f4 -> "]"
      */
-    public R visit(ArrayAllocationExpression n, A argu) {
+    public R visit(ArrayAllocationExpression n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -600,7 +593,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f2 -> "("
      * f3 -> ")"
      */
-    public R visit(AllocationExpression n, A argu) {
+    public R visit(AllocationExpression n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -613,7 +606,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f0 -> "!"
      * f1 -> Expression()
      */
-    public R visit(NotExpression n, A argu) {
+    public R visit(NotExpression n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);
@@ -625,7 +618,7 @@ public class VaporVisitor<R, A> extends GJDepthFirst<R, A> {
      * f1 -> Expression()
      * f2 -> ")"
      */
-    public R visit(BracketExpression n, A argu) {
+    public R visit(BracketExpression n, Element argu) {
         R _ret=null;
         n.f0.accept(this, argu);
         n.f1.accept(this, argu);

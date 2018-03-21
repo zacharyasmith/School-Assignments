@@ -10,10 +10,6 @@ class While {
     }
 }
 -----------
-fun Main()
-
-
-
 const vmt_Fac
   :Fac.ComputeFac
 

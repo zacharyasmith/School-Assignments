@@ -6,9 +6,9 @@ import java.util.Map;
 
 public class SymbolHelper {
 
-    private HashMap<Symbol, TypeHelper> symt;
-    private HashMap<ContextObject, ArrayList<TypeHelper>> sigt;
-    private ArrayList<ContextObject> classes;
+    public HashMap<Symbol, TypeHelper> symt;
+    public HashMap<ContextObject, ArrayList<TypeHelper>> sigt;
+    public ArrayList<ContextObject> classes;
 
     public SymbolHelper(HashMap<Symbol, TypeHelper> symt,
                         HashMap<ContextObject, ArrayList<TypeHelper>> sigt,

@@ -1,4 +1,5 @@
 package elements;
 
-public class Element {
+public interface Element {
+    public String toVapor(String tab, int depth);
 }
