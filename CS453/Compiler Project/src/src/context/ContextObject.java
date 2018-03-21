@@ -24,6 +24,12 @@ public class ContextObject {
         this.methodName = null;
     }
 
+    public String getVaporName() {
+        if (methodName != null)
+            throw new RuntimeException("Getting vapor name of class");
+        return classObject.className + "." + methodName;
+    }
+
     @Override
     public String toString() {
         return "Class::" + classObject + (methodName != null ? " Method::" + methodName : "");
