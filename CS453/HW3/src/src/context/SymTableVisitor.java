@@ -36,6 +36,9 @@ public class SymTableVisitor<R> extends GJDepthFirst<R, ContextObject> {
      */
     public R visit(MainClass n, ContextObject argu) {
         ContextObject c = new ContextObject(n.f1.f0.tokenImage);
+        c.methodName = "main";
+        objs.add(new ContextObject(c));
+        sigt.put(c, new ArrayList<>());
         return super.visit(n, c);
     }
 

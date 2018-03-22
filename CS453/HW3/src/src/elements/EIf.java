@@ -1,12 +1,19 @@
 package elements;
 
+import context.ContextObject;
 import context.Counters;
 
 public class EIf implements Element {
     private int id = Counters.nextIf();
-    public EContainer true_statements = new EContainer();
-    public EContainer false_statements = new EContainer();
-    private ESymbol conditional = new ESymbol();
+    public EContainer<EStatement> true_statements;
+    public EContainer<EStatement> false_statements;
+    private EExpression conditional;
+
+    public EIf(ContextObject c, EExpression conditional) {
+        this.conditional = conditional;
+        true_statements = new EContainer<>(c);
+        false_statements = new EContainer<>(c);
+    }
 
     private String elseLabel (int colon) {
         return (colon < 0 ? ":" : "") +
@@ -22,8 +29,9 @@ public class EIf implements Element {
 
     @Override
     public String toVapor(String tab, int depth) {
-        String ret = Element.repeatTab(tab, depth) +
-                "if0 " + conditional.toVapor(tab, 0) + " goto " + elseLabel(-1) +
+        String ret = conditional.toVapor(tab, depth);
+        ret += Element.repeatTab(tab, depth) +
+                "if0 " + conditional.getAccessor() + " goto " + elseLabel(-1) +
                 "\n";
         ret += true_statements.toVapor(tab, depth + 1);
         ret += "goto " + endLabel(-1);

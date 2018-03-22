@@ -1,14 +1,18 @@
 package context;
 
+import elements.ETemporarySymbol;
+
 public class Symbol {
     public ContextObject context;
     public String symbol;
     public TypeHelper type;
+    public ETemporarySymbol tmp = null;
 
     public Symbol(ContextObject c, String symbol, TypeHelper t) {
         this.context = new ContextObject(c);
         this.symbol = symbol;
-        type = t;
+        if (c.methodName != null)
+            tmp = new ETemporarySymbol();
     }
 
     @Override
@@ -33,6 +37,6 @@ public class Symbol {
 
     @Override
     public String toString() {
-        return context + " Symbol::" + symbol + " " + type;
+        return context + " Symbol::" + symbol + (tmp != null ? "[" + tmp + "] " : " ") + type;
     }
 }

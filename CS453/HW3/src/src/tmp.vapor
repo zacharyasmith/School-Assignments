@@ -1,0 +1,30 @@
+const ft_One
+  :One.foo
+
+const ft_Two
+  :Two.bar
+
+const ft_Three
+  :Three.foo
+
+func One.foo(this t.3)
+  t.4 = 1
+  [this + 4] = 1
+  ret 1
+
+func Two.bar(this)
+  ret 2
+
+func Three.foo(this)
+  ret 3
+
+func Main()
+  t.1 = 5
+  PrintIntS(5)
+  goto :exit
+  mem_error:
+    Error("Mem exhausted")
+    goto :exit
+  exit:
+    ret
+

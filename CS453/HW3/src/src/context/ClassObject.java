@@ -7,7 +7,6 @@ public class ClassObject {
     private boolean inherits;
     private boolean init = false;
 
-
     public ClassObject(String name) {
         this.className = name;
     }
@@ -16,6 +15,14 @@ public class ClassObject {
         init = true;
         this.numVars = numVars;
         this.hasFunctions = hasFunctions;
+    }
+
+    public boolean hasFunctions() {
+        return hasFunctions;
+    }
+
+    public int funcOffset() {
+        return hasFunctions ? 1 : 0;
     }
 
     public boolean isInit() {

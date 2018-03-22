@@ -1,5 +1,8 @@
 package context;
 
+import sun.jvm.hotspot.debugger.cdbg.Sym;
+import syntaxtree.Identifier;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -35,11 +38,11 @@ public class SymbolHelper {
         c.classObject.init(syms.size() + wordsFromParents, !funcs.isEmpty(), inherits);
     }
 
-    public ContextObject searchObjs(ContextObject o) {
+    public ContextObject searchObjs(String class_name) {
         // execute search
         ContextObject ret = null;
         for (ContextObject s : classes) {
-            if (s.classObject.equals(o.classObject)) {
+            if (s.classObject.className.equals(class_name)) {
                 ret = s;
                 break;
             }
@@ -47,6 +50,10 @@ public class SymbolHelper {
         if (ret == null)
             return null;
         return ret;
+    }
+
+    public ContextObject searchObjs(ContextObject o) {
+        return searchObjs(o.classObject.className);
     }
 
     public HashMap<ContextObject, ArrayList<Symbol>> searchSigt(ClassObject c) {
@@ -57,6 +64,14 @@ public class SymbolHelper {
         return ret;
     }
 
+    public Map.Entry<ContextObject, ArrayList<Symbol>> searchSigt(ClassObject c, String method) {
+        HashMap<ContextObject, ArrayList<Symbol>> search = searchSigt(c);
+        for (Map.Entry<ContextObject, ArrayList<Symbol>> curr : search.entrySet())
+            if (curr.getKey().methodName.equals(method))
+                return curr;
+        return null;
+    }
+
     public ArrayList<Symbol> searchSymt(ClassObject c) {
         ArrayList<Symbol> ret = new ArrayList<>();
         for (Symbol curr : symt)
@@ -64,6 +79,29 @@ public class SymbolHelper {
             if (curr.context.methodName == null && curr.context.classObject.equals(c))
                 ret.add(curr);
         return ret;
+    }
+
+    public Symbol searchSymt(ContextObject c, Identifier i) {
+        for (Symbol curr : symt) {
+            if (curr.context.equals(c) && curr.symbol == i.f0.tokenImage) {
+                return curr;
+            }
+        }
+        for (Symbol curr : searchSymt(c.classObject)) {
+            if (curr.symbol == i.f0.tokenImage)
+                return curr;
+        }
+        return null;
+    }
+
+    /**
+     * @return offset in bytes (not words)
+     */
+    public int getOffset(ContextObject location, Symbol sym) {
+        if (sym.context.classObject.equals(sym.context.classObject))
+            return 4 * (location.classObject.funcOffset() + searchSymt(location.classObject).indexOf(sym));
+        // TODO for inheritance
+        return -1;
     }
 
     public void normalize() {

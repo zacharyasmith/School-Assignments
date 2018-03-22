@@ -22,7 +22,9 @@ public class EFunctionTable implements Element {
     }
 
     public String toVapor(String tab, int depth) {
-        String ret = "const " + prefix + context.classObject.className + ":\n";
+        if (context.methodName == "main")
+            return "";
+        String ret = "const " + prefix + context.classObject.className + "\n";
         for (String f : funcs)
             ret += tab + ":" + f + "\n";
         return ret + "\n";

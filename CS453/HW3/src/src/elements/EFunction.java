@@ -1,5 +1,9 @@
 package elements;
 
-public class EFunction extends EContainer<EStatement> {
+import context.ContextObject;
 
+public class EFunction extends EContainer<EStatement> {
+    public EFunction(ContextObject c) {
+        super(c);
+    }
 }

@@ -1,10 +1,13 @@
 class MultiInheritance {
     public static void main(String[] args) {
         One f;
+        int a;
 
-        f = new Three();
-        f = new Two();
-        f = new One();
+//        f = new Three();
+//        f = new Two();
+//        f = new One();
+        a = 5;
+        System.out.println(5);
     }
 }
 
@@ -12,6 +15,8 @@ class One {
     int a;
     public int foo(int tmp) {
         int b;
+        b = 1; // t.0 = 1
+        a = 1; // [this + 4] = 1
         return 1;
     }
 }

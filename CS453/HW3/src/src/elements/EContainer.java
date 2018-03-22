@@ -1,9 +1,16 @@
 package elements;
 
+import context.ContextObject;
+
 import java.util.ArrayList;
 
 public class EContainer<T extends Element> implements Element {
-    private ArrayList<T> elements = new ArrayList<>();
+    public ContextObject c;
+    public ArrayList<T> elements = new ArrayList<>();
+
+    public EContainer(ContextObject c){
+        this.c = c;
+    }
 
     public void add(T e) {
         elements.add(e);
@@ -12,9 +19,7 @@ public class EContainer<T extends Element> implements Element {
     public String toVapor(String tab, int depth) {
         String ret = "";
         for (T e : elements)
-            ret += Element.repeatTab(tab, depth) +
-                    e.toVapor(tab, depth + 1) +
-                    "\n";
+            ret += e.toVapor(tab, depth);
         return ret;
     }
 }
