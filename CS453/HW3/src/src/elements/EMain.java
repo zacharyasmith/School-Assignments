@@ -1,26 +1,10 @@
 package elements;
 
-import context.ContextObject;
-import context.Symbol;
-import java.util.ArrayList;
-
-public class Method extends FunctionElement {
-    private ContextObject c;
-    private ArrayList<Symbol> list;
-
-    public Method(ContextObject c, ArrayList<Symbol> list) {
-        this.c = c;
-        this.list = list;
-    }
-
+public class EMain extends EFunction {
     @Override
     public String toVapor(String tab, int depth) {
         // declare
-        String params = "";
-        for (Symbol t : list) {
-
-        }
-        String ret = "func " + c.getVaporName() + "(this " + params + ")\n";
+        String ret = "func Main()\n";
         // convert all elements
         ret += super.toVapor(tab, 1);
         ret += tab + "mem_error:\n";
@@ -31,4 +15,3 @@ public class Method extends FunctionElement {
         return ret + "\n";
     }
 }
-

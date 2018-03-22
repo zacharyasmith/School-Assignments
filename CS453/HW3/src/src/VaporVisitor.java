@@ -9,9 +9,9 @@ import java.util.HashMap;
 public class VaporVisitor<R> extends GJDepthFirst<R, Element> {
     SymbolHelper sh;
     boolean debug;
-    private ElementList<FunctionTable> const_list = new ElementList<>();
-    private MainMethod main_method = new MainMethod();
-    private ElementList<Method> methods = new ElementList<>();
+    private EList<EFunctionTable> const_list = new EList<>();
+    private EMain main_method = new EMain();
+    private EList<EMethod> methods = new EList<>();
     private Counters GLOBALS = new Counters();
 
     // configurables
@@ -24,7 +24,7 @@ public class VaporVisitor<R> extends GJDepthFirst<R, Element> {
         for (ContextObject c : sh.classes) {
             HashMap<ContextObject, ArrayList<Symbol>> list = sh.searchSigt(c.classObject);
             if (!list.isEmpty()) {
-                FunctionTable ft = new FunctionTable(c, list, CONST_PREFIX);
+                EFunctionTable ft = new EFunctionTable(c, list, CONST_PREFIX);
                 const_list.add(ft);
             }
         }
@@ -70,7 +70,7 @@ public class VaporVisitor<R> extends GJDepthFirst<R, Element> {
      * f12 -> ")"
      * f13 -> "{"
      * f14 -> ( VarDeclaration() )*
-     * f15 -> ( StatementElement() )*
+     * f15 -> ( Statement() )*
      * f16 -> "}"
      * f17 -> "}"
      */
@@ -138,7 +138,7 @@ public class VaporVisitor<R> extends GJDepthFirst<R, Element> {
      *       | PrintStatement()
      */
     public R visit(Statement n, Element argu) {
-        assert argu instanceof FunctionElement;
+        assert argu instanceof EFunction;
         n.f0.accept(this, argu);
         return null;
     }

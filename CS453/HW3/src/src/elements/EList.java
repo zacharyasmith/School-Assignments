@@ -2,10 +2,10 @@ package elements;
 
 import java.util.ArrayList;
 
-public class ElementList<T extends Element> implements Element {
+public class EList<T extends Element> implements Element {
     private ArrayList<T> list;
 
-    public ElementList() {
+    public EList() {
         list = new ArrayList<>();
     }
 

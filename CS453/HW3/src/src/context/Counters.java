@@ -6,19 +6,19 @@ public class Counters {
     public static int IF = 0;
     public static int WHILE = 0;
 
-    public int nextSym() {
+    public static int nextSym() {
         return SYMBOL++;
     }
 
-    public int nextError() {
+    public static int nextError() {
         return ERROR++;
     }
 
-    public int nextIf() {
+    public static int nextIf() {
         return IF++;
     }
 
-    public int nextWhile() {
+    public static int nextWhile() {
         return WHILE++;
     }
 }

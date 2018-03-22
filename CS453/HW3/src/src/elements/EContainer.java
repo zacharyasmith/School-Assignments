@@ -2,7 +2,7 @@ package elements;
 
 import java.util.ArrayList;
 
-public class ContainerElement<T extends Element> implements Element {
+public class EContainer<T extends Element> implements Element {
     private ArrayList<T> elements = new ArrayList<>();
 
     public void add(T e) {

@@ -1,12 +1,12 @@
 package elements;
 import java.util.ArrayList;
 
-public class ElementStack {
+public class EStack {
     private ArrayList<Element> stack;
     private int pointer;
     private boolean debug;
 
-    public ElementStack(boolean debug) {
+    public EStack(boolean debug) {
         this.debug = debug;
         stack = new ArrayList<>();
         pointer = 0;

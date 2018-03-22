@@ -2,12 +2,12 @@ package elements;
 
 import java.util.ArrayList;
 
-public class ElementQueue<T> {
+public class EQueue<T> {
     private ArrayList<T> queue;
     private int pointer;
     private boolean debug;
 
-    public ElementQueue(boolean debug) {
+    public EQueue(boolean debug) {
         this.debug = debug;
         queue = new ArrayList<>();
         pointer = 0;

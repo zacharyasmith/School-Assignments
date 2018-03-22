@@ -1,8 +1,8 @@
 package elements;
 import context.*;
 
-public class Allocation implements Element {
-    public Allocation(int numWords, ContextObject allocatedObj) {
+public class EAllocation implements Element {
+    public EAllocation(int numWords, ContextObject allocatedObj) {
         // TODO implement
     }
 
