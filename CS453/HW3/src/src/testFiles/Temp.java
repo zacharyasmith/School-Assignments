@@ -14,8 +14,8 @@ class MultiInheritance {
 class One {
     int a;
     public int foo(int tmp) {
-        int b;
-        b = 1; // t.0 = 1
+        int[] b;
+        b = new int[1]; // t.0 = 1
         a = 1; // [this + 4] = 1
         return 1;
     }

@@ -36,6 +36,8 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
         ret += const_list.toVapor(TAB, 0);
         // Funcs
         ret += methods.toVapor(TAB, 0);
+        // alloc array helper
+        ret += new EArrayAllocHelper().toVapor(TAB, 0);
         // Main method
         ret += main_method.toVapor(TAB, 0);
         return ret;
@@ -430,9 +432,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f4 -> "]"
      */
     public EExpression visit(ArrayAllocationExpression n, EContainer argu) {
-        // TODO array alloc
-        n.f3.accept(this, argu);
-        return null;
+        return new EArrayAllocationExpression(n.f3.accept(this, argu));
     }
 
     /**

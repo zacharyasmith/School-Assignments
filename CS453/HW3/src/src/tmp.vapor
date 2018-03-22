@@ -8,7 +8,8 @@ const ft_Three
   :Three.foo
 
 func One.foo(this t.3)
-  t.4 = 1
+  t.7 = call :AllocArray(1)
+  t.4 = t.7
   [this + 4] = 1
   ret 1
 
@@ -17,6 +18,13 @@ func Two.bar(this)
 
 func Three.foo(this)
   ret 3
+
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
 
 func Main()
   t.1 = 5
