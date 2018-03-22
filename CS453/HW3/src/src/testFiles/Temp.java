@@ -10,7 +10,7 @@ class MultiInheritance {
 
 class One {
     int a;
-    public int foo() {
+    public int foo(int tmp) {
         int b;
         return 1;
     }

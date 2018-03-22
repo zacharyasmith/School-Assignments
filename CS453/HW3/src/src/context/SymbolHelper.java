@@ -6,12 +6,12 @@ import java.util.Map;
 
 public class SymbolHelper {
 
-    public HashMap<Symbol, TypeHelper> symt;
-    public HashMap<ContextObject, ArrayList<TypeHelper>> sigt;
+    public ArrayList<Symbol> symt;
+    public HashMap<ContextObject, ArrayList<Symbol>> sigt;
     public ArrayList<ContextObject> classes;
 
-    public SymbolHelper(HashMap<Symbol, TypeHelper> symt,
-                        HashMap<ContextObject, ArrayList<TypeHelper>> sigt,
+    public SymbolHelper(ArrayList<Symbol> symt,
+                        HashMap<ContextObject, ArrayList<Symbol>> sigt,
                         ArrayList<ContextObject> objs) {
         this.symt = symt;
         this.sigt = sigt;
@@ -30,8 +30,8 @@ public class SymbolHelper {
             wordsFromParents = ((InheritedContextObject) c).inheritsFrom.classObject.numWords();
         }
         // proceed to calculate class var count and function presence
-        HashMap<ContextObject, ArrayList<TypeHelper>> funcs = searchSigt(c.classObject);
-        HashMap<Symbol, TypeHelper> syms = searchSymt(c.classObject);
+        HashMap<ContextObject, ArrayList<Symbol>> funcs = searchSigt(c.classObject);
+        ArrayList<Symbol> syms = searchSymt(c.classObject);
         c.classObject.init(syms.size() + wordsFromParents, !funcs.isEmpty(), inherits);
     }
 
@@ -49,20 +49,20 @@ public class SymbolHelper {
         return ret;
     }
 
-    public HashMap<ContextObject, ArrayList<TypeHelper>> searchSigt(ClassObject c) {
-        HashMap<ContextObject, ArrayList<TypeHelper>> ret = new HashMap<>();
-        for (Map.Entry<ContextObject, ArrayList<TypeHelper>> curr : sigt.entrySet())
+    public HashMap<ContextObject, ArrayList<Symbol>> searchSigt(ClassObject c) {
+        HashMap<ContextObject, ArrayList<Symbol>> ret = new HashMap<>();
+        for (Map.Entry<ContextObject, ArrayList<Symbol>> curr : sigt.entrySet())
             if (curr.getKey().classObject.equals(c))
                 ret.put(curr.getKey(), curr.getValue());
         return ret;
     }
 
-    public HashMap<Symbol, TypeHelper> searchSymt(ClassObject c) {
-        HashMap<Symbol, TypeHelper> ret = new HashMap<>();
-        for (Map.Entry<Symbol, TypeHelper> curr : symt.entrySet())
+    public ArrayList<Symbol> searchSymt(ClassObject c) {
+        ArrayList<Symbol> ret = new ArrayList<>();
+        for (Symbol curr : symt)
             // only interested in class level
-            if (curr.getKey().context.methodName == null && curr.getKey().context.classObject.equals(c))
-                ret.put(curr.getKey(), curr.getValue());
+            if (curr.context.methodName == null && curr.context.classObject.equals(c))
+                ret.add(curr);
         return ret;
     }
 
@@ -85,24 +85,20 @@ public class SymbolHelper {
     @Override
     public String toString() {
         String ret = "Symbol table ----------------------\n";
-        for (Map.Entry<Symbol, TypeHelper> entry : this.symt.entrySet()) {
-            Symbol key = entry.getKey();
-            TypeHelper val = entry.getValue();
-            ret += key + " : " + val + "\n";
-        }
+        for (Symbol entry : this.symt)
+            ret += entry + "\n";
         ret += "Method signature table ------------\n";
-        for (Map.Entry<ContextObject, ArrayList<TypeHelper>> entry : this.sigt.entrySet()) {
+        for (Map.Entry<ContextObject, ArrayList<Symbol>> entry : this.sigt.entrySet()) {
             ContextObject key = entry.getKey();
-            ArrayList<TypeHelper> val = entry.getValue();
-            ret += key + " : ";
-            for (TypeHelper t : val)
-                ret += t + " ";
+            ArrayList<Symbol> val = entry.getValue();
+            ret += key;
+            for (Symbol t : val)
+                ret += "\n\t" + t;
             ret += "\n";
         }
         ret += "Classes table ---------------------\n";
-        for (ContextObject i : this.classes) {
+        for (ContextObject i : this.classes)
             ret += i + "\n";
-        }
         return ret;
     }
 }

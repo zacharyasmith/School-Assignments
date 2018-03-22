@@ -1,6 +1,7 @@
 package elements;
 
 import context.ContextObject;
+import context.Symbol;
 import context.TypeHelper;
 
 import java.util.ArrayList;
@@ -20,9 +21,9 @@ public class FunctionTable implements Element {
     private String prefix;
 
     public FunctionTable(ContextObject c,
-                         HashMap<ContextObject, ArrayList<TypeHelper>> sigt,
+                         HashMap<ContextObject, ArrayList<Symbol>> sigt,
                          String prefix) {
-        for (Map.Entry<ContextObject, ArrayList<TypeHelper>> curr : sigt.entrySet())
+        for (Map.Entry<ContextObject, ArrayList<Symbol>> curr : sigt.entrySet())
             funcs.add(curr.getKey().getVaporName());
         context = c;
         this.prefix = prefix;

@@ -19,7 +19,7 @@ public class TypeHelper {
     public static TypeHelper NewArray() {return new TypeHelper(Type.ArrayType);}
     public static TypeHelper NewBool() {return new TypeHelper(Type.BooleanType);}
     public static TypeHelper NewInt() {return new TypeHelper(Type.IntegerType);}
-//    public static TypeHelper NewIdentifier() {return new TypeHelper(Type.IntegerType);}
+    //    public static TypeHelper NewIdentifier() {return new TypeHelper(Type.IntegerType);}
     public static TypeHelper NewVoid() {return new TypeHelper(Type.Void);}
     public static TypeHelper NewErr() {return new TypeHelper(Type.Error);}
 

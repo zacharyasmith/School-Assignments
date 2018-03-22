@@ -8,9 +8,9 @@ import java.util.HashMap;
 
 public class SymTableVisitor<R> extends GJDepthFirst<R, ContextObject> {
 
-    public HashMap<Symbol, TypeHelper> symt = new HashMap<>();
+    public ArrayList<Symbol> symt = new ArrayList<>();
 
-    public HashMap<ContextObject, ArrayList<TypeHelper>> sigt = new HashMap<>();
+    public HashMap<ContextObject, ArrayList<Symbol>> sigt = new HashMap<>();
 
     public ArrayList<ContextObject> objs = new ArrayList<>();
 
@@ -30,7 +30,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f12 -> ")"
      * f13 -> "{"
      * f14 -> ( VarDeclaration() )*
-     * f15 -> ( Statement() )*
+     * f15 -> ( StatementElement() )*
      * f16 -> "}"
      * f17 -> "}"
      */
@@ -75,7 +75,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f2 -> ";"
      */
     public R visit(VarDeclaration n, ContextObject argu) {
-        symt.put(new Symbol(argu, n.f1.f0.tokenImage), new TypeHelper(n.f0));
+        symt.add(new Symbol(argu, n.f1.f0.tokenImage, new TypeHelper(n.f0)));
         return super.visit(n, argu);
     }
 
@@ -88,7 +88,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f5 -> ")"
      * f6 -> "{"
      * f7 -> ( VarDeclaration() )*
-     * f8 -> ( Statement() )*
+     * f8 -> ( StatementElement() )*
      * f9 -> "return"
      * f10 -> Expression()
      * f11 -> ";"
@@ -99,7 +99,7 @@ public class SymTableVisitor<R> extends GJDepthFirst<R, ContextObject> {
         argu.methodName = n.f2.f0.tokenImage;
         ContextObject c = new ContextObject(argu);
         sigt.put(c, new ArrayList<>());
-        sigt.get(c).add(new TypeHelper(n.f1));
+        sigt.get(c).add(new Symbol(c, null, new TypeHelper(n.f1)));
         n.f4.accept(this, c);
         n.f7.accept(this, c);
         return null;
@@ -110,8 +110,9 @@ public class SymTableVisitor<R> extends GJDepthFirst<R, ContextObject> {
      * f1 -> Identifier()
      */
     public R visit(FormalParameter n, ContextObject argu) {
-        sigt.get(argu).add(new TypeHelper(n.f0));
-        symt.put(new Symbol(argu, n.f1.f0.tokenImage), new TypeHelper(n.f0));
+        Symbol s = new Symbol(argu, n.f1.f0.tokenImage, new TypeHelper(n.f0));
+        sigt.get(argu).add(s);
+        symt.add(s);
         return super.visit(n, argu);
     }
 }

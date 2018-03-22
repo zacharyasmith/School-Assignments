@@ -2,7 +2,7 @@ package elements;
 
 import java.util.ArrayList;
 
-public class ElementList<T> implements Element {
+public class ElementList<T extends Element> implements Element {
     private ArrayList<T> list;
 
     public ElementList() {
@@ -21,7 +21,7 @@ public class ElementList<T> implements Element {
     public String toVapor(String tab, int depth) {
         String ret = "";
         for (T e : list)
-            ret += ((Element) e).toVapor(tab, depth);
+            ret += e.toVapor(tab, depth);
         return ret;
     }
 }

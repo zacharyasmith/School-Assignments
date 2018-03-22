@@ -3,15 +3,12 @@ package context;
 public class Symbol {
     public ContextObject context;
     public String symbol;
+    public TypeHelper type;
 
-    public Symbol(String clss, String method, String symbol) {
-        this.context = new ContextObject(clss, method);
-        this.symbol = symbol;
-    }
-
-    public Symbol(ContextObject c, String symbol) {
+    public Symbol(ContextObject c, String symbol, TypeHelper t) {
         this.context = new ContextObject(c);
         this.symbol = symbol;
+        type = t;
     }
 
     @Override
@@ -22,18 +19,20 @@ public class Symbol {
         Symbol symbol1 = (Symbol) o;
 
         if (!context.equals(symbol1.context)) return false;
-        return symbol.equals(symbol1.symbol);
+        if (!symbol.equals(symbol1.symbol)) return false;
+        return type.equals(symbol1.type);
     }
 
     @Override
     public int hashCode() {
         int result = context.hashCode();
         result = 31 * result + symbol.hashCode();
+        result = 31 * result + type.hashCode();
         return result;
     }
 
     @Override
     public String toString() {
-        return context + " Symbol::" + symbol;
+        return context + " Symbol::" + symbol + " " + type;
     }
 }
