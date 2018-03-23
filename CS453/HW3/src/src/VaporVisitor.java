@@ -442,9 +442,8 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f3 -> ")"
      */
     public EExpression visit(AllocationExpression n, EContainer argu) {
-        // TODO alloc
-        n.f1.accept(this, argu);
-        return null;
+        ContextObject search = sh.searchObjs(n.f1.f0.tokenImage);
+        return new EAllocationExpression(search.classObject, CONST_PREFIX);
     }
 
     /**

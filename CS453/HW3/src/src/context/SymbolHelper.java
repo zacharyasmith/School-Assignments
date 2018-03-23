@@ -27,15 +27,17 @@ public class SymbolHelper {
             return;
         // depth-first initialization
         boolean inherits = c instanceof InheritedContextObject;
-        int wordsFromParents = 0;
+        ClassObject inherited_class = null;
+//        int wordsFromParents = 0;
         if (inherits) {
             initClass(((InheritedContextObject) c).inheritsFrom);
-            wordsFromParents = ((InheritedContextObject) c).inheritsFrom.classObject.numWords();
+            inherited_class = ((InheritedContextObject) c).inheritsFrom.classObject;
+//            wordsFromParents = ((InheritedContextObject) c).inheritsFrom.classObject.numWords();
         }
         // proceed to calculate class var count and function presence
         HashMap<ContextObject, ArrayList<Symbol>> funcs = searchSigt(c.classObject);
         ArrayList<Symbol> syms = searchSymt(c.classObject);
-        c.classObject.init(syms.size() + wordsFromParents, !funcs.isEmpty(), inherits);
+        c.classObject.init(syms.size(), !funcs.isEmpty(), inherited_class);
     }
 
     public ContextObject searchObjs(String class_name) {

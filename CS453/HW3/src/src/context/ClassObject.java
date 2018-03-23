@@ -4,17 +4,18 @@ public class ClassObject {
     public String className;
     private int numVars;
     private boolean hasFunctions;
-    private boolean inherits;
+    public ClassObject extends_ = null;
     private boolean init = false;
 
     public ClassObject(String name) {
         this.className = name;
     }
 
-    public void init(int numVars, boolean hasFunctions, boolean inherits) {
+    public void init(int numVars, boolean hasFunctions, ClassObject extends_) {
         init = true;
         this.numVars = numVars;
         this.hasFunctions = hasFunctions;
+        this.extends_ = extends_;
     }
 
     public boolean hasFunctions() {
@@ -30,7 +31,15 @@ public class ClassObject {
     }
 
     public int numWords() {
-        return numVars + (hasFunctions ? 1 : 0) + (inherits ? 1 : 0);
+        int from_parents = 0;
+        if (extends_ != null) {
+            from_parents += extends_.numWords();
+        }
+        return from_parents + numWordsSelf();
+    }
+
+    public int numWordsSelf() {
+        return numVars + (hasFunctions ? 1 : 0);
     }
 
     @Override
