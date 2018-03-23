@@ -253,10 +253,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f2 -> PrimaryExpression()
      */
     public EExpression visit(AndExpression n, EContainer argu) {
-        // TODO And
-        n.f0.accept(this, argu);
-        n.f2.accept(this, argu);
-        return null;
+        return new EAndExpression(n.f0.accept(this, argu), n.f0.accept(this, argu));
     }
 
     /**

@@ -8,8 +8,8 @@ const ft_Three
   :Three.foo
 
 func One.foo(this t.3)
-  t.10 = call :AllocArray(1)
-  t.4 = t.10
+  t.8 = call :AllocArray(1)
+  t.4 = t.8
   [this + 4] = 1
   ret 1
 
@@ -27,23 +27,14 @@ func AllocArray(size)
   ret v
 
 func Main()
-  t.7 = heapAllocZ(16)
-  if0 t.7 goto :mem_error
-  [t.7] = :ft_Three
-  [t.7 + 4] = :ft_Two
-  [t.7 + 8] = :ft_One
-  t.0 = t.7
-  t.8 = heapAllocZ(12)
-  if0 t.8 goto :mem_error
-  [t.8] = :ft_Two
-  [t.8 + 4] = :ft_One
-  t.0 = t.8
-  t.9 = heapAllocZ(8)
-  if0 t.9 goto :mem_error
-  [t.9] = :ft_One
-  t.0 = t.9
   t.1 = 5
-  PrintIntS(5)
+  t.7 = MulS(1 1)
+  if t.7 goto :if0_else
+    PrintIntS(1)
+  goto :if0_end
+  if0_else:
+    PrintIntS(0)
+  if0_end:
   goto :exit
   mem_error:
     Error("Mem exhausted")

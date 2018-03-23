@@ -34,7 +34,7 @@ public class EIf implements Element {
                 "if0 " + conditional.getAccessor() + " goto " + elseLabel(-1) +
                 "\n";
         ret += true_statements.toVapor(tab, depth + 1);
-        ret += "goto " + endLabel(-1);
+        ret += Element.repeatTab(tab, depth) + "goto " + endLabel(-1) + "\n";
         ret += Element.repeatTab(tab, depth) + elseLabel(1) + "\n";
         ret += false_statements.toVapor(tab, depth + 1);
         ret += Element.repeatTab(tab, depth) + endLabel(1) + "\n";

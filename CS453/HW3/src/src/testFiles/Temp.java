@@ -3,11 +3,14 @@ class MultiInheritance {
         One f;
         int a;
 
-        f = new Three();
-        f = new Two();
-        f = new One();
+//        f = new Three();
+//        f = new Two();
+//        f = new One();
         a = 5;
-        System.out.println(5);
+        if (true && true)
+            System.out.println(1);
+        else
+            System.out.println(0);
     }
 }
 
