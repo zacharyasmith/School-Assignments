@@ -2,7 +2,6 @@ package context;
 
 import elements.EAccessorSymbol;
 import elements.ESymbol;
-import sun.jvm.hotspot.debugger.cdbg.Sym;
 import syntaxtree.Identifier;
 
 import java.util.ArrayList;

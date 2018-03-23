@@ -6,8 +6,8 @@ JC = javac
 default: .java.class
 
 clean:
-	$(RM) *.class
+	$(RM) *.class context/*.class elements/*.class
 
 package:
 	-rm smithza.zip
-	zip smithza ContextObject.java SymTableVisitor.java TypeCheckException.java SymbolHelper.java TypeCheckVisitor.java TypeHelper.java Typecheck.java
+	zip smithza -r context elements J2V.java VaporVisitor.java

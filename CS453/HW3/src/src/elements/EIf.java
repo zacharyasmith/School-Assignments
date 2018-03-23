@@ -30,6 +30,7 @@ public class EIf implements Element {
     @Override
     public String toVapor(String tab, int depth) {
         String ret = conditional.toVapor(tab, depth);
+        ret += conditional.getAccessor().toVapor(tab, depth);
         ret += Element.repeatTab(tab, depth) +
                 "if0 " + conditional.getAccessor() + " goto " + elseLabel(-1) +
                 "\n";

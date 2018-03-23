@@ -17,6 +17,7 @@ public class EArrayAssignmentStatement extends EStatement {
         // create temp for offset
         ESymbol offset = new ETemporarySymbol();
         // add 1, multiply 4
+        ret += index_expr.getAccessor().toVapor(tab, depth);
         ret += Element.repeatTab(tab, depth) + offset + " = call :ArrayIndexHelper(" +
                 index_expr.getAccessor() + ")\n";
         // add array location with offset
@@ -25,6 +26,7 @@ public class EArrayAssignmentStatement extends EStatement {
         // compute assignment
         ret += assn_expr.toVapor(tab, depth);
         // print statement
+        ret += assn_expr.getAccessor().toVapor(tab, depth);
         ret += Element.repeatTab(tab, depth) + "[" + offset + "] = " +
                 assn_expr.getAccessor() + "\n";
         return ret;

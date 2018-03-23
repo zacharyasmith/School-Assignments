@@ -11,6 +11,7 @@ public class EPrintStatement extends EStatement {
     @Override
     public String toVapor(String tab, int depth) {
         String ret = expr.toVapor(tab, depth);
+        ret += expr.getAccessor().toVapor(tab, depth);
         ret += Element.repeatTab(tab, depth) + "PrintIntS(" + expr.getAccessor() + ")\n";
         return ret;
     }

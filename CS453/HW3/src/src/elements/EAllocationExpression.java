@@ -14,7 +14,8 @@ public class EAllocationExpression extends EExpression {
     @Override
     public String toVapor(String tab, int depth) {
         String tab_ = Element.repeatTab(tab, depth);
-        String ret = tab_ + getAccessor() +
+        String ret = getAccessor().toVapor(tab, depth);
+        ret += tab_ + getAccessor() +
                 " = heapAllocZ(" + 4 * c.numWords() + ")\n";
         ret += tab_ + "if0 " + getAccessor() + " goto :mem_error\n";
         // assign the function tables

@@ -14,6 +14,8 @@ public class ETimesExpression extends EExpression {
         String ret = left.toVapor(tab, depth);
         ret += right.toVapor(tab, depth);
         String tab_ = Element.repeatTab(tab, depth);
+        ret += getAccessor().toVapor(tab, depth) + left.getAccessor().toVapor(tab, depth) +
+                right.getAccessor().toVapor(tab, depth);
         ret += tab_ + getAccessor() + " = MulS(" + left.getAccessor() + " " + right.getAccessor() + ")\n";
         return ret;
     }

@@ -18,6 +18,7 @@ public class EWhile implements Element {
         // declare
         String ret = Element.repeatTab(tab, depth) + "while" + id + "_test:\n";
         ret += expr.toVapor(tab, depth + 1);
+        ret += expr.getAccessor().toVapor(tab, depth + 1);
         ret += Element.repeatTab(tab, depth + 1) + "if0 " +
                 expr.getAccessor() + " goto :while" + id + "_end\n";
         ret += Element.repeatTab(tab, depth) + "while" + id + "_body:\n";

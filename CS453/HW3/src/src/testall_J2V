@@ -4,9 +4,18 @@ if [[ $* == *--make* ]]; then
 	make
 fi
 
+if [[ $* == *--out* ]]; then
+	sh create_output
+fi
+
+rm tmp.vapor tmp.out 2> /dev/null
+
 for filename in testFiles/*.java; do
 	echo "Testing file: "$filename""
-	diff -y <(cat "$filename" | java Typecheck) <(cat typeCheck/$(basename $filename .java).out)
+	java J2V < $filename > tmp.vapor
+	java -jar vapor.jar run tmp.vapor 1> tmp.out 2> /dev/null
+	diff -y tmp.out testOutputs/$(basename $filename .java).out
+	rm tmp.vapor tmp.out 2> /dev/null
 	echo ""
 done
 

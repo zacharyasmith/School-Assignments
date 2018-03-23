@@ -25,6 +25,7 @@ public class EMethod extends EFunction {
         // convert all elements
         ret += super.toVapor(tab, 1);
         ret += return_expr.toVapor(tab, 2);
+        ret += return_expr.getAccessor().toVapor(tab, 2);
         ret += tab + "ret " + return_expr.getAccessor() + "\n";
         return ret + "\n";
     }

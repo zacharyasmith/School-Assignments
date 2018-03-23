@@ -3,6 +3,7 @@ package elements;
 public class EEqualComparisonExpression extends EExpression {
     private EExpression left;
     private EExpression right;
+
     public EEqualComparisonExpression(EExpression left, EExpression right) {
         super(new ETemporarySymbol());
         this.left = left;
@@ -14,6 +15,8 @@ public class EEqualComparisonExpression extends EExpression {
         String ret = left.toVapor(tab, depth);
         ret += right.toVapor(tab, depth);
         String tab_ = Element.repeatTab(tab, depth);
+        ret += getAccessor().toVapor(tab, depth) + left.getAccessor().toVapor(tab, depth) +
+                right.getAccessor().toVapor(tab, depth);
         ret += tab_ + getAccessor() + " = Eq(" + left.getAccessor() + " " + right.getAccessor() + ")\n";
         return ret;
     }

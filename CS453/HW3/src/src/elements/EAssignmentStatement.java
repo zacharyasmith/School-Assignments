@@ -16,6 +16,7 @@ public class EAssignmentStatement extends EStatement {
     public String toVapor(String tab, int depth) {
         // TODO finish identifier computing
         String ret = expr.toVapor(tab, depth);
+        ret += expr.getAccessor().toVapor(tab, depth);
         ret += Element.repeatTab(tab, depth) + tmp + " = " + expr.getAccessor() + "\n";
         return ret;
     }
