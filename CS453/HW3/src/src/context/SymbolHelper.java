@@ -107,6 +107,31 @@ public class SymbolHelper {
         return -1;
     }
 
+    /**
+     * @return offset in bytes (not words) [class, method]
+     */
+    public int[] methodToOffset(ContextObject c) {
+        HashMap<ContextObject, ArrayList<Symbol>> search = searchSigt(c.classObject);
+        ClassObject parent = c.classObject;
+        int class_offset = 0;
+        int method_offset = 0;
+        boolean found = false;
+        while (!found) {
+            for (Map.Entry<ContextObject, ArrayList<Symbol>> curr : search.entrySet()) {
+                method_offset += 4;
+                if (curr.getKey().methodName.equals(c.methodName)) {
+                    found = true;
+                    break;
+                }
+            }
+            if (parent.extends_ == null || found) break;
+            class_offset += parent.numWordsSelf() * 4;
+            parent = parent.extends_;
+            search = searchSigt(parent);
+        }
+        return new int[]{class_offset, method_offset};
+    }
+
     public ESymbol identifierToSymbol (ContextObject c, Identifier i) {
         Symbol sym = searchSymt(c, i);
         ESymbol assignment;

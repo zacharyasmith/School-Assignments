@@ -1,39 +1,29 @@
 class Temp {
     public static void main(String[] args) {
         One f;
-        int a;
-        int b;
-        int c;
-
-//        f = new Three();
-//        f = new Two();
-//        f = new One();
-//        if ()
-        if (!false)
-            System.out.println(1);
-        else
-            System.out.println(0);
+        Two g;
+        
+        f = new Two();
+        g = new Two();
+        System.out.println(f.foo(10));
+        System.out.println(g.bar(1));
+        System.out.println(g.foo(10));
     }
 }
 
 class One {
     int a;
     public int foo(int tmp) {
-        int[] b;
-        b = new int[1];
-        b[0] = 1;
-        return 1;
+        return tmp * 2;
+    }
+
+    public int bar(int tmp) {
+        return tmp;
     }
 }
 
 class Two extends One {
-    public int bar() {
-        return 2;
-    }
-}
-
-class Three extends Two {
-    public int foo() {
-        return 3;
+    public int foo(int tmp) {
+        return tmp;
     }
 }

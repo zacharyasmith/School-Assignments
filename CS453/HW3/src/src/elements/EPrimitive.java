@@ -9,11 +9,11 @@ public class EPrimitive extends ESymbol {
 
     @Override
     public String toVapor(String tab, int depth) {
-        return String.valueOf(val);
+        return "";
     }
 
     @Override
     public String toString() {
-        return toVapor(null, 0);
+        return String.valueOf(val);
     }
 }

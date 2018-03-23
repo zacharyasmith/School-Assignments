@@ -160,8 +160,9 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f3 -> ";"
      */
     public EExpression visit(AssignmentStatement n, EContainer argu) {
-        argu.add(new EAssignmentStatement(argu.c, n.f2.accept(this, argu),
-                sh.identifierToSymbol(argu.c, n.f0)));
+        // tell SymbolHelper what I assigned this as
+        ESymbol id = sh.identifierToSymbol(argu.c, n.f0);
+        argu.add(new EAssignmentStatement(argu.c, n.f2.accept(this, argu), id));
         return null;
     }
 
@@ -319,12 +320,31 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f5 -> ")"
      */
     public EExpression visit(MessageSend n, EContainer argu) {
-        // TODO message send
-        n.f0.accept(this, argu);
-        n.f2.accept(this, argu);
-        // pass an expression container
-        n.f4.accept(this, argu);
         return null;
+        // Allocation | this | symbol
+//        EExpression obj_expr = n.f0.accept(this, argu);
+//        EExpression obj = null;
+//        EExpression method = null;
+//        if (obj_expr instanceof EAllocationExpression) {
+//            ClassObject obj_class = ((EAllocationExpression) obj_expr).c;
+//            Map.Entry<ContextObject, ArrayList<Symbol>> sig =
+//                    sh.searchSigt(obj_class, n.f2.f0.tokenImage);
+//            // [class, method]
+//            int[] offsets = sh.methodToOffset(sig.getKey());
+////            obj = new EAccessorExpression();
+//        } else if (obj_expr instanceof EThisExpression) {
+//            // TODO
+//
+//        } else {
+//            // symbol needs to be accessed
+//            // TODO
+//        }
+//        n.f2.accept(this, argu);
+//        // pass an expression container
+//        EContainer<EExpression> args = new EContainer<>(argu.c);
+//        n.f4.accept(this, args);
+//        // get method and object
+//        return new EMessageSend(args, method, obj);
     }
 
     /**
@@ -332,8 +352,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f1 -> ( ExpressionRest() )*
      */
     public EExpression visit(ExpressionList n, EContainer argu) {
-        // TODO expr list
-        n.f0.accept(this, argu);
+        argu.add(n.f0.accept(this, argu));
         n.f1.accept(this, argu);
         return null;
     }
@@ -343,8 +362,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f1 -> Expression()
      */
     public EExpression visit(ExpressionRest n, EContainer argu) {
-        // TODO expression rest
-        n.f1.accept(this, argu);
+        argu.add(n.f1.accept(this, argu));
         return null;
     }
 

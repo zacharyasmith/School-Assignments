@@ -2,7 +2,7 @@ package elements;
 import context.*;
 
 public class EAllocationExpression extends EExpression {
-    private ClassObject c;
+    public ClassObject c;
     private String ft_prefix;
 
     public EAllocationExpression(ClassObject c, String ft_prefix) {
