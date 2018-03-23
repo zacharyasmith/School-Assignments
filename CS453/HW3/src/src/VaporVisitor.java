@@ -36,8 +36,9 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
         ret += const_list.toVapor(TAB, 0);
         // Funcs
         ret += methods.toVapor(TAB, 0);
-        // alloc array helper
+        // helpers
         ret += new EArrayAllocHelper().toVapor(TAB, 0);
+        ret += new EArrayIndexHelper().toVapor(TAB, 0);
         // Main method
         ret += main_method.toVapor(TAB, 0);
         return ret;
@@ -174,10 +175,9 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f6 -> ";"
      */
     public EExpression visit(ArrayAssignmentStatement n, EContainer argu) {
-        // TODO ArrayAssignmentStatement 
-        n.f0.accept(this, argu);
-        n.f2.accept(this, argu);
-        n.f5.accept(this, argu);
+        argu.add(new EArrayAssignmentStatement(n.f2.accept(this, argu),
+                n.f5.accept(this, argu),
+                sh.identifierToSymbol(argu.c, n.f0)));
         return null;
     }
 

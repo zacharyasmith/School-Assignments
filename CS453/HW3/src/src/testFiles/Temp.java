@@ -20,8 +20,8 @@ class One {
     int a;
     public int foo(int tmp) {
         int[] b;
-        b = new int[1]; // t.0 = 1
-        a = 1; // [this + 4] = 1
+        b = new int[1];
+        b[0] = 1;
         return 1;
     }
 }

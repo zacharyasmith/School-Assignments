@@ -10,7 +10,9 @@ const ft_Three
 func One.foo(this t.5)
   t.11 = call :AllocArray(1)
   t.6 = t.11
-  [this + 4] = 1
+  t.12 = call :ArrayIndexHelper(0)
+  t.12 = Add(t.6 t.12)
+  [t.12] = 1
   ret 1
 
 func Two.bar(this)
@@ -25,6 +27,11 @@ func AllocArray(size)
   v = HeapAllocZ(bytes)
   [v] = size
   ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
 
 func Main()
   t.10 = Eq(0 0)
