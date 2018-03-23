@@ -253,7 +253,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f2 -> PrimaryExpression()
      */
     public EExpression visit(AndExpression n, EContainer argu) {
-        return new EAndExpression(n.f0.accept(this, argu), n.f0.accept(this, argu));
+        return new EAndExpression(n.f0.accept(this, argu), n.f2.accept(this, argu));
     }
 
     /**
@@ -262,10 +262,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f2 -> PrimaryExpression()
      */
     public EExpression visit(CompareExpression n, EContainer argu) {
-        // TODO compare
-        n.f0.accept(this, argu);
-        n.f2.accept(this, argu);
-        return null;
+        return new ECompareExpression(n.f0.accept(this, argu), n.f2.accept(this, argu));
     }
 
     /**
@@ -274,10 +271,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f2 -> PrimaryExpression()
      */
     public EExpression visit(PlusExpression n, EContainer argu) {
-        // TODO plus
-        n.f0.accept(this, argu);
-        n.f2.accept(this, argu);
-        return null;
+        return new EPlusExpression(n.f0.accept(this, argu), n.f2.accept(this, argu));
     }
 
     /**
@@ -286,10 +280,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f2 -> PrimaryExpression()
      */
     public EExpression visit(MinusExpression n, EContainer argu) {
-        // TODO minus
-        n.f0.accept(this, argu);
-        n.f2.accept(this, argu);
-        return null;
+        return new EMinusExpression(n.f0.accept(this, argu), n.f2.accept(this, argu));
     }
 
     /**
@@ -298,10 +289,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f2 -> PrimaryExpression()
      */
     public EExpression visit(TimesExpression n, EContainer argu) {
-        // TODO multiply
-        n.f0.accept(this, argu);
-        n.f2.accept(this, argu);
-        return null;
+        return new ETimesExpression(n.f0.accept(this, argu), n.f2.accept(this, argu));
     }
 
     /**
@@ -378,7 +366,12 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      *       | BracketExpression()
      */
     public EExpression visit(PrimaryExpression n, EContainer argu) {
-        return n.f0.accept(this, argu);
+        if (n.f0.which == 3) {
+            // TODO
+            return null;
+        } else {
+            return n.f0.accept(this, argu);
+        }
     }
 
     /**

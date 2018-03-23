@@ -2,12 +2,16 @@ class MultiInheritance {
     public static void main(String[] args) {
         One f;
         int a;
+        int b;
+        int c;
 
 //        f = new Three();
 //        f = new Two();
 //        f = new One();
-        a = 5;
-        if (true && true)
+        a = 1 * 2;
+        b = a - 2;
+        c = a + b;
+        if (1 < 2)
             System.out.println(1);
         else
             System.out.println(0);
