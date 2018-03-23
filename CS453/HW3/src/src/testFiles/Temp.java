@@ -8,10 +8,8 @@ class MultiInheritance {
 //        f = new Three();
 //        f = new Two();
 //        f = new One();
-        a = 1 * 2;
-        b = a - 2;
-        c = a + b;
-        if (1 < 2)
+//        if ()
+        if (!false)
             System.out.println(1);
         else
             System.out.println(0);

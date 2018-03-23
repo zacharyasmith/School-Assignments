@@ -1,5 +1,7 @@
 package context;
 
+import elements.EAccessorSymbol;
+import elements.ESymbol;
 import sun.jvm.hotspot.debugger.cdbg.Sym;
 import syntaxtree.Identifier;
 
@@ -104,6 +106,17 @@ public class SymbolHelper {
             return 4 * (location.classObject.funcOffset() + searchSymt(location.classObject).indexOf(sym));
         // TODO for inheritance
         return -1;
+    }
+
+    public ESymbol identifierToSymbol (ContextObject c, Identifier i) {
+        Symbol sym = searchSymt(c, i);
+        ESymbol assignment;
+        if (sym.context.methodName == null) {
+            assignment = new EAccessorSymbol(getOffset(c, sym));
+        } else {
+            assignment = sym.tmp;
+        }
+        return assignment;
     }
 
     public void normalize() {

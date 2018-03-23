@@ -159,14 +159,8 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f3 -> ";"
      */
     public EExpression visit(AssignmentStatement n, EContainer argu) {
-        Symbol sym = sh.searchSymt(argu.c, n.f0);
-        ESymbol assignment;
-        if (sym.context.methodName == null) {
-            assignment = new EAccessorSymbol(sh.getOffset(argu.c, sym));
-        } else {
-            assignment = sym.tmp;
-        }
-        argu.add(new EAssignmentStatement(argu.c, n.f2.accept(this, argu), assignment));
+        argu.add(new EAssignmentStatement(argu.c, n.f2.accept(this, argu),
+                sh.identifierToSymbol(argu.c, n.f0)));
         return null;
     }
 
@@ -198,7 +192,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      */
     public EExpression visit(IfStatement n, EContainer argu) {
         EExpression conditional = n.f2.accept(this, argu);
-        EIf if_container = new EIf(argu.c, conditional);
+        EIf if_container = new EIf(conditional);
         n.f4.accept(this, if_container.true_statements);
         n.f6.accept(this, if_container.false_statements);
         argu.add(if_container);
@@ -367,8 +361,8 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      */
     public EExpression visit(PrimaryExpression n, EContainer argu) {
         if (n.f0.which == 3) {
-            // TODO
-            return null;
+            // identifier
+            return new EExpression(sh.identifierToSymbol(argu.c, (Identifier) n.f0.choice));
         } else {
             return n.f0.accept(this, argu);
         }
@@ -399,9 +393,6 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f0 -> <IDENTIFIER>
      */
     public EExpression visit(Identifier n, EContainer argu) {
-        // TODO uncomment following
-        assert false;
-        n.f0.accept(this, argu);
         return null;
     }
 
@@ -409,9 +400,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f0 -> "this"
      */
     public EExpression visit(ThisExpression n, EContainer argu) {
-        // TODO this
-        n.f0.accept(this, argu);
-        return null;
+        return new EExpression(new EThisSymbol());
     }
 
     /**
@@ -441,9 +430,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f1 -> Expression()
      */
     public EExpression visit(NotExpression n, EContainer argu) {
-        // TODO not expression
-        n.f1.accept(this, argu);
-        return null;
+        return new ENotExpression(n.f1.accept(this, argu));
     }
 
     /**
@@ -452,8 +439,6 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f2 -> ")"
      */
     public EExpression visit(BracketExpression n, EContainer argu) {
-        // TODO bracket
-        n.f1.accept(this, argu);
-        return null;
+        return n.f1.accept(this, argu);
     }
 }
