@@ -117,12 +117,13 @@ public class SymbolHelper {
         int method_offset = 0;
         boolean found = false;
         while (!found) {
+            method_offset = 0;
             for (Map.Entry<ContextObject, ArrayList<Symbol>> curr : search.entrySet()) {
-                method_offset += 4;
                 if (curr.getKey().methodName.equals(c.methodName)) {
                     found = true;
                     break;
                 }
+                method_offset += 4;
             }
             if (parent.extends_ == null || found) break;
             class_offset += parent.numWordsSelf() * 4;

@@ -10,7 +10,7 @@ public class EAccessorSymbol extends ESymbol {
     @Override
     public String toVapor(String tab, int depth) {
         // TODO FIX
-        return "[!!! + " + offset + "]";
+        return "[this + " + offset + "]";
     }
 
     @Override

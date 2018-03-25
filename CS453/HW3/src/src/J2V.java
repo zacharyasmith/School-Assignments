@@ -44,8 +44,8 @@ public class J2V {
                     System.out.println(e.getMessage());
                 }
             }
-        } catch (ParseException | FileNotFoundException e) {
-            System.err.println(e.toString());
+        } catch (ParseException | FileNotFoundException | RuntimeException e) {
+            System.err.println(e.getMessage());
             System.exit(1);
         }
     }

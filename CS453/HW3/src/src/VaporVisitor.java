@@ -297,7 +297,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
         // TODO array lookup
         n.f0.accept(this, argu);
         n.f2.accept(this, argu);
-        return null;
+        return new EExpression();
     }
 
     /**
@@ -308,7 +308,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
     public EExpression visit(ArrayLength n, EContainer argu) {
         // TODO array length
         n.f0.accept(this, argu);
-        return null;
+        return new EExpression();
     }
 
     /**
@@ -320,31 +320,58 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f5 -> ")"
      */
     public EExpression visit(MessageSend n, EContainer argu) {
-        return null;
         // Allocation | this | symbol
-//        EExpression obj_expr = n.f0.accept(this, argu);
-//        EExpression obj = null;
-//        EExpression method = null;
-//        if (obj_expr instanceof EAllocationExpression) {
-//            ClassObject obj_class = ((EAllocationExpression) obj_expr).c;
-//            Map.Entry<ContextObject, ArrayList<Symbol>> sig =
-//                    sh.searchSigt(obj_class, n.f2.f0.tokenImage);
-//            // [class, method]
-//            int[] offsets = sh.methodToOffset(sig.getKey());
-////            obj = new EAccessorExpression();
-//        } else if (obj_expr instanceof EThisExpression) {
-//            // TODO
-//
-//        } else {
-//            // symbol needs to be accessed
-//            // TODO
-//        }
-//        n.f2.accept(this, argu);
-//        // pass an expression container
-//        EContainer<EExpression> args = new EContainer<>(argu.c);
-//        n.f4.accept(this, args);
-//        // get method and object
-//        return new EMessageSend(args, method, obj);
+        EExpression obj_expr = n.f0.accept(this, argu);
+        EExpression obj = null;
+        EExpression method = null;
+        if (obj_expr instanceof EAllocationExpression) {
+            /**
+             * EALLOCATION
+             * t.42 = heapAllocZ(4)
+             * if0 t.42 goto :error
+             * [t.42] = :functable_A
+             * OBJ ACCESSOR
+             * t.43 = [t.42]
+             * METHOD ACCESSOR
+             * t.44 = [t.43]
+             * call t.44(t.42)
+             */
+            ClassObject obj_class = ((EAllocationExpression) obj_expr).c;
+            Map.Entry<ContextObject, ArrayList<Symbol>> sig =
+                    sh.searchSigt(obj_class, n.f2.f0.tokenImage);
+            // [class, method]
+            int[] offsets = sh.methodToOffset(sig.getKey());
+            // OBJ ACCESSOR
+            obj = new EAccessorExpression(obj_expr.getAccessor(), offsets[0]);
+            // METHOD ACCESSOR
+            method = new EAccessorExpression(obj.getAccessor(), offsets[1]);
+        } else if (obj_expr instanceof EThisExpression) {
+            /**
+             * ETHISEXPRESSION
+             * OBJ ACCESSOR
+             * t.43 = [this + {offset}]
+             * METHOD ACCESSOR
+             * t.44 = [t.43]
+             * call t.44(t.42)
+             */
+        } else { // symbol expression
+            /**
+             * ESYMBOL EXPR
+             * t.1 = [{symbol} + {offset}]
+             * OBJ ACCESSOR
+             * t.43 = [t.1 + {offset}]
+             * METHOD ACCESSOR
+             * t.44 = [t.43]
+             * call t.44(t.42)
+             */
+            // symbol needs to be accessed
+            // TODO
+        }
+        // pass an expression container
+        EContainer<EExpression> args = new EContainer<>(argu.c);
+        n.f4.accept(this, args);
+        // get method and object
+        return new EMessageSend(obj_expr, args, method, obj);
     }
 
     /**
@@ -411,14 +438,14 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f0 -> <IDENTIFIER>
      */
     public EExpression visit(Identifier n, EContainer argu) {
-        return null;
+        throw new RuntimeException("Identifier: Should not be here");
     }
 
     /**
      * f0 -> "this"
      */
     public EExpression visit(ThisExpression n, EContainer argu) {
-        return new EExpression(new EThisSymbol());
+        return new EThisExpression();
     }
 
     /**
