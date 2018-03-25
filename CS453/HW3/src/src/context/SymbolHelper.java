@@ -126,8 +126,7 @@ public class SymbolHelper {
     public int getOffset(ContextObject location, Symbol sym) {
         if (sym.context.classObject.equals(sym.context.classObject))
             return 4 * (location.classObject.funcOffset() + searchSymt(location.classObject).indexOf(sym));
-        // TODO for inheritance
-        return -1;
+        throw new RuntimeException("Got here! Told ya so.");
     }
 
     /**

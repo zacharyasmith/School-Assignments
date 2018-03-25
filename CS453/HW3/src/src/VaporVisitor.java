@@ -300,10 +300,9 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f3 -> "]"
      */
     public EExpression visit(ArrayLookup n, EContainer argu) {
-        // Allocation | this | symbol | EMessageSend
-        n.f0.accept(this, argu);
-        n.f2.accept(this, argu);
-        return new EExpression();
+        EExpression obj_expr = n.f0.accept(this, argu);
+        EExpression offset_expr = n.f2.accept(this, argu);
+        return new EArrayLookupExpression(obj_expr, offset_expr);
     }
 
     /**
@@ -312,9 +311,8 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f2 -> "length"
      */
     public EExpression visit(ArrayLength n, EContainer argu) {
-        // TODO array length
-        n.f0.accept(this, argu);
-        return new EExpression();
+        EExpression obj_expr = n.f0.accept(this, argu);
+        return new EArrayLengthExpression(obj_expr);
     }
 
     /**
