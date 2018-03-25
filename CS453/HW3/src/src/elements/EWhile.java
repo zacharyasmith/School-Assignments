@@ -23,7 +23,7 @@ public class EWhile implements Element {
                 expr.getAccessor() + " goto :while" + id + "_end\n";
         ret += Element.repeatTab(tab, depth) + "while" + id + "_body:\n";
         ret += statements.toVapor(tab, depth + 1);
-        ret += Element.repeatTab(tab, depth + 1) + "goto :while" + id + "_test";
+        ret += Element.repeatTab(tab, depth + 1) + "goto :while" + id + "_test\n";
         ret += Element.repeatTab(tab, depth) + "while" + id + "_end:\n";
         return ret;
     }

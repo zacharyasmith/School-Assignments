@@ -2,6 +2,7 @@ package elements;
 
 public class EAccessorSymbol extends ESymbol {
     private int offset;
+    private ETemporarySymbol s = new ETemporarySymbol();
 
     public EAccessorSymbol(int offset) {
         this.offset = offset;
@@ -9,12 +10,11 @@ public class EAccessorSymbol extends ESymbol {
 
     @Override
     public String toVapor(String tab, int depth) {
-        // TODO FIX
-        return "[this + " + offset + "]";
+        return Element.repeatTab(tab, depth) + s + " = [this + " + offset + "]\n";
     }
 
     @Override
     public String toString() {
-        return toVapor(null, 0);
+        return s.toString();
     }
 }

@@ -3,11 +3,11 @@ package elements;
 public class EThisSymbol extends ESymbol {
     @Override
     public String toVapor(String tab, int depth) {
-        return "this";
+        return "";
     }
 
     @Override
     public String toString() {
-        return toVapor(null, 0);
+        return "this";
     }
 }

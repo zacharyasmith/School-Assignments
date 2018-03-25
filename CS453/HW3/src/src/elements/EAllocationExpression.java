@@ -17,7 +17,6 @@ public class EAllocationExpression extends EExpression {
         String ret = getAccessor().toVapor(tab, depth);
         ret += tab_ + getAccessor() +
                 " = HeapAllocZ(" + 4 * c.numWords() + ")\n";
-        ret += tab_ + "if0 " + getAccessor() + " goto :mem_error\n";
         // assign the function tables
         // [t.42] = :functable_A
         ret += tab_ + "[" + getAccessor() + "] = :" + ft_prefix + c.className + "\n";

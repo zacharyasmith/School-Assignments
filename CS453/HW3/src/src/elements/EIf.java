@@ -9,10 +9,10 @@ public class EIf implements Element {
     public EContainer<EStatement> false_statements;
     private EExpression conditional;
 
-    public EIf(EExpression conditional) {
+    public EIf(EExpression conditional, ContextObject c) {
         this.conditional = conditional;
-        true_statements = new EContainer<>(null);
-        false_statements = new EContainer<>(null);
+        true_statements = new EContainer<>(c);
+        false_statements = new EContainer<>(c);
     }
 
     private String elseLabel (int colon) {

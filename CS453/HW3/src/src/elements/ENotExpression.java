@@ -9,7 +9,7 @@ public class ENotExpression extends EExpression {
         // conditional
         EEqualComparisonExpression cond = new EEqualComparisonExpression(
                 expr, new EExpression(new EPrimitive(0)));
-        if_ = new EIf(cond);
+        if_ = new EIf(cond, null);
         if_.true_statements.add(new EAssignmentStatement(null,
                 new EExpression(new EPrimitive(1)), getAccessor()));
         if_.false_statements.add(new EAssignmentStatement(null,

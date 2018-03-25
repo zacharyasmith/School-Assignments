@@ -29,16 +29,25 @@ public class SymbolHelper {
         // depth-first initialization
         boolean inherits = c instanceof InheritedContextObject;
         ClassObject inherited_class = null;
-//        int wordsFromParents = 0;
         if (inherits) {
             initClass(((InheritedContextObject) c).inheritsFrom);
             inherited_class = ((InheritedContextObject) c).inheritsFrom.classObject;
-//            wordsFromParents = ((InheritedContextObject) c).inheritsFrom.classObject.numWords();
         }
         // proceed to calculate class var count and function presence
         HashMap<ContextObject, ArrayList<Symbol>> funcs = searchSigt(c.classObject);
         ArrayList<Symbol> syms = searchSymt(c.classObject);
         c.classObject.init(syms.size(), !funcs.isEmpty(), inherited_class);
+        // normalize symbol types
+        ArrayList<Symbol> all = searchSymt(c);
+        for (Map.Entry<ContextObject, ArrayList<Symbol>> f : funcs.entrySet())
+            for (Symbol s : f.getValue())
+                all.add(s);
+        // for each in `all` deal only with Identifiers
+        for (Symbol s : all) {
+            if (s.type.type != TypeHelper.Type.Identifier)
+                continue;
+            s.class_type = searchObjs(s.type.objName).classObject;
+        }
     }
 
     public ContextObject searchObjs(String class_name) {
@@ -75,6 +84,14 @@ public class SymbolHelper {
         return null;
     }
 
+    public ArrayList<Symbol> searchSymt(ContextObject c) {
+        ArrayList<Symbol> ret = new ArrayList<>();
+        for (Symbol curr : symt)
+            if (curr.context.classObject.equals(c.classObject))
+                ret.add(curr);
+        return ret;
+    }
+
     public ArrayList<Symbol> searchSymt(ClassObject c) {
         ArrayList<Symbol> ret = new ArrayList<>();
         for (Symbol curr : symt)
@@ -84,17 +101,23 @@ public class SymbolHelper {
         return ret;
     }
 
+    public Symbol searchSymt(ClassObject c, Identifier i, boolean recurse) {
+        for (Symbol s : searchSymt(c))
+            if (s.symbol.equals(i.f0.tokenImage))
+                return s;
+        if (recurse && c.extends_ != null)
+            return searchSymt(c.extends_, i, true);
+        return null;
+    }
+
     public Symbol searchSymt(ContextObject c, Identifier i) {
         for (Symbol curr : symt) {
             if (curr.context.equals(c) && curr.symbol == i.f0.tokenImage) {
                 return curr;
             }
         }
-        for (Symbol curr : searchSymt(c.classObject)) {
-            if (curr.symbol == i.f0.tokenImage)
-                return curr;
-        }
-        return null;
+        // go through inheritance and class level
+        return searchSymt(c.classObject, i, true);
     }
 
     /**
@@ -110,25 +133,25 @@ public class SymbolHelper {
     /**
      * @return offset in bytes (not words) [class, method]
      */
-    public int[] methodToOffset(ContextObject c) {
-        HashMap<ContextObject, ArrayList<Symbol>> search = searchSigt(c.classObject);
-        ClassObject parent = c.classObject;
+    public int[] methodToOffset(ClassObject c, String method) {
+        HashMap<ContextObject, ArrayList<Symbol>> search = searchSigt(c);
+        ClassObject current_class = c;
         int class_offset = 0;
         int method_offset = 0;
         boolean found = false;
         while (!found) {
             method_offset = 0;
             for (Map.Entry<ContextObject, ArrayList<Symbol>> curr : search.entrySet()) {
-                if (curr.getKey().methodName.equals(c.methodName)) {
+                if (curr.getKey().methodName.equals(method)) {
                     found = true;
                     break;
                 }
                 method_offset += 4;
             }
-            if (parent.extends_ == null || found) break;
-            class_offset += parent.numWordsSelf() * 4;
-            parent = parent.extends_;
-            search = searchSigt(parent);
+            if (current_class.extends_ == null || found) break;
+            class_offset += current_class.numWordsSelf() * 4;
+            current_class = current_class.extends_;
+            search = searchSigt(current_class);
         }
         return new int[]{class_offset, method_offset};
     }

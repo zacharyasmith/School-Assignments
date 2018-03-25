@@ -6,6 +6,7 @@ public class Symbol {
     public ContextObject context;
     public String symbol;
     public TypeHelper type;
+    public ClassObject class_type = null;
     public ETemporarySymbol tmp = null;
 
     public Symbol(ContextObject c, String symbol, TypeHelper t) {
@@ -13,6 +14,7 @@ public class Symbol {
         this.symbol = symbol;
         if (c.methodName != null)
             tmp = new ETemporarySymbol();
+        this.type = t;
     }
 
     @Override
@@ -37,6 +39,8 @@ public class Symbol {
 
     @Override
     public String toString() {
-        return context + " Symbol::" + symbol + (tmp != null ? "[" + tmp + "] " : " ") + type;
+        return context + " Symbol::" + symbol +
+                (tmp != null ? "[" + tmp + "] " : " ") +
+                (class_type != null ? class_type : type);
     }
 }

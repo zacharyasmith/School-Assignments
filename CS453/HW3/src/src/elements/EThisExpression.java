@@ -1,9 +1,8 @@
 package elements;
 
 public class EThisExpression extends EExpression {
-    @Override
-    public String toString() {
-        return "this";
+    public EThisExpression() {
+        super(new EThisSymbol());
     }
 
     @Override

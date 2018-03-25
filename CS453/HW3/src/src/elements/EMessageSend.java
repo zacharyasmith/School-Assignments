@@ -1,7 +1,7 @@
 package elements;
 
 public class EMessageSend extends EExpression {
-    private EContainer<EExpression> args;
+    public EContainer<EExpression> args;
     private EExpression obj;
     private EExpression method;
     private EExpression primary;

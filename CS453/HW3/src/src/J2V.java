@@ -34,7 +34,7 @@ public class J2V {
             VaporVisitor vv = new VaporVisitor(sh, debug);
             root.accept(vv, null);
             String vapor = vv.toVapor();
-            System.out.println(vapor);
+            System.out.print(vapor);
             if (debug) {
                 try {
                     BufferedWriter writer = new BufferedWriter(new FileWriter("tmp.vapor"));
@@ -44,7 +44,7 @@ public class J2V {
                     System.out.println(e.getMessage());
                 }
             }
-        } catch (ParseException | FileNotFoundException | RuntimeException e) {
+        } catch (ParseException | FileNotFoundException e) {
             System.err.println(e.getMessage());
             System.exit(1);
         }
