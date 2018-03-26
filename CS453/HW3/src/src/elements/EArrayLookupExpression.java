@@ -2,21 +2,25 @@ package elements;
 
 public class EArrayLookupExpression extends EExpression{
     private EExpression accessor;
-    private EExpression offset;
+    private EExpression index_expr;
     public EArrayLookupExpression(EExpression accessor, EExpression offset) {
         super(new ETemporarySymbol());
         this.accessor = accessor;
-        this.offset = new EPlusExpression(offset, new EExpression(new EPrimitive(1)));
+        this.index_expr = offset;
     }
 
     @Override
     public String toVapor(String tab, int depth) {
-        String ret = accessor.toVapor(tab, depth);
-        ret += accessor.getAccessor().toVapor(tab, depth);
-        ret += offset.toVapor(tab, depth);
-        ret += offset.getAccessor().toVapor(tab, depth);
+        // add 1, multiply 4
+        ESymbol offset = new ETemporarySymbol();
+        String ret = index_expr.getAccessor().toVapor(tab, depth);
+        ret += Element.repeatTab(tab, depth) + offset + " = call :ArrayIndexHelper(" +
+                index_expr.getAccessor() + ")\n";
+        EPlusExpression final_offset = new EPlusExpression(accessor, new EExpression(offset));
+        ret += final_offset.toVapor(tab, depth);
+        ret += final_offset.getAccessor().toVapor(tab, depth);
         ret += Element.repeatTab(tab, depth) + getAccessor() +
-                " = [" + accessor.getAccessor() + " + " + offset.getAccessor() + "]\n";
+                " = [" + final_offset.getAccessor() + "]\n";
         return ret;
     }
 }
