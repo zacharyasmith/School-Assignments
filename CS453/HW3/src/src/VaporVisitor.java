@@ -142,11 +142,11 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
 
     /**
      * f0 -> Block()
-     *       | AssignmentStatement()
-     *       | ArrayAssignmentStatement()
-     *       | IfStatement()
-     *       | WhileStatement()
-     *       | PrintStatement()
+     * | AssignmentStatement()
+     * | ArrayAssignmentStatement()
+     * | IfStatement()
+     * | WhileStatement()
+     * | PrintStatement()
      */
     public EExpression visit(Statement n, EContainer argu) {
         n.f0.accept(this, argu);
@@ -160,11 +160,18 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f3 -> ";"
      */
     public EExpression visit(AssignmentStatement n, EContainer argu) {
-        // tell SymbolHelper what I assigned this as
-        ESymbolExpression symbol = (ESymbolExpression) n.f0.accept(this, argu);
         EExpression assigned = n.f2.accept(this, argu);
+        // tell SymbolHelper what I assigned this as
+        EExpression symbol = n.f0.accept(this, argu);
         if (assigned instanceof EAllocationExpression)
-            symbol.c = ((EAllocationExpression) assigned).c;
+            if (symbol instanceof ESymbolExpression)
+                ((ESymbolExpression) symbol).c = ((EAllocationExpression) assigned).c;
+            else // symbol is an EAccessorExpression AND is member variable assignment
+                sh.searchSymt(argu.c, n.f0).class_type = ((EAllocationExpression) assigned).c;
+        if (symbol instanceof EAccessorExpression) {
+            // recompute symbol to be a [this + offset] = ...
+//            argu.add(new EAssignmentStatement(argu.c, assigned));
+        }
         argu.add(symbol);
         argu.add(new EAssignmentStatement(argu.c, assigned, symbol.getAccessor()));
         return null;
@@ -180,7 +187,7 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
      * f6 -> ";"
      */
     public EExpression visit(ArrayAssignmentStatement n, EContainer argu) {
-        ESymbolExpression sym = (ESymbolExpression) n.f0.accept(this, argu);
+        EExpression sym = n.f0.accept(this, argu);
         argu.add(sym);
         argu.add(new EArrayAssignmentStatement(n.f2.accept(this, argu),
                 n.f5.accept(this, argu),
@@ -235,14 +242,14 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
 
     /**
      * f0 -> AndExpression()
-     *       | CompareExpression()
-     *       | PlusExpression()
-     *       | MinusExpression()
-     *       | TimesExpression()
-     *       | ArrayLookup()
-     *       | ArrayLength()
-     *       | MessageSend()
-     *       | PrimaryExpression()
+     * | CompareExpression()
+     * | PlusExpression()
+     * | MinusExpression()
+     * | TimesExpression()
+     * | ArrayLookup()
+     * | ArrayLength()
+     * | MessageSend()
+     * | PrimaryExpression()
      */
     public EExpression visit(Expression n, EContainer argu) {
         return n.f0.accept(this, argu);
@@ -391,6 +398,15 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
             obj = new EAccessorExpression(obj_expr.getAccessor(), offsets[0]);
             // METHOD ACCESSOR
             method = new EAccessorExpression(obj.getAccessor(), offsets[1]);
+        } else if (obj_expr instanceof EAccessorExpression) {
+            // symbol needs to be accessed
+            ClassObject obj_class = ((EAccessorExpression) obj_expr).c;
+            // [class, method]
+            int[] offsets = sh.methodToOffset(obj_class, n.f2.f0.tokenImage);
+            // OBJ ACCESSOR
+            obj = new EAccessorExpression(obj_expr.getAccessor(), offsets[0]);
+            // METHOD ACCESSOR
+            method = new EAccessorExpression(obj.getAccessor(), offsets[1]);
         } else {
             throw new RuntimeException("Unexpected behavior");
         }
@@ -422,14 +438,14 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
 
     /**
      * f0 -> IntegerLiteral()
-     *       | TrueLiteral()
-     *       | FalseLiteral()
-     *       | Identifier()
-     *       | ThisExpression()
-     *       | ArrayAllocationExpression()
-     *       | AllocationExpression()
-     *       | NotExpression()
-     *       | BracketExpression()
+     * | TrueLiteral()
+     * | FalseLiteral()
+     * | Identifier()
+     * | ThisExpression()
+     * | ArrayAllocationExpression()
+     * | AllocationExpression()
+     * | NotExpression()
+     * | BracketExpression()
      */
     public EExpression visit(PrimaryExpression n, EContainer argu) {
         return n.f0.accept(this, argu);
@@ -462,6 +478,12 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
     public EExpression visit(Identifier n, EContainer argu) {
         Symbol s = sh.searchSymt(argu.c, n);
         assert s.class_type != null;
+        if (s.context.methodName == null) {
+            EAccessorExpression ret = new EAccessorExpression(new EThisSymbol(),
+                    sh.varToOffset(argu.c.classObject, n.f0.tokenImage));
+            ret.c = s.class_type;
+            return ret;
+        }
         return new ESymbolExpression(sh.identifierToSymbol(argu.c, n), s.class_type);
     }
 

@@ -1,8 +1,12 @@
 package elements;
 
+import context.ClassObject;
+
 public class EAccessorExpression extends EExpression {
     private ESymbol sym;
     private int offset;
+    public ClassObject c;
+    public boolean assignment = false;
     /**
      * @param offset int bytes
      */
@@ -12,11 +16,17 @@ public class EAccessorExpression extends EExpression {
         this.offset = offset;
     }
 
+    public void setAssignment() {
+        assignment = true;
+    }
+
     @Override
     public String toVapor(String tab, int depth) {
         String ret = "";
         ret += sym.toVapor(tab, depth);
-        ret += Element.repeatTab(tab, depth) + getAccessor() + " = [" + sym + " + " + offset + "]\n";
+        if (!assignment)
+            ret += Element.repeatTab(tab, depth) + getAccessor() + " = [" + sym + " + " + offset + "]\n";
+        // else sym should output [sym + offset] = ...
         return ret;
     }
 }

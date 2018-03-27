@@ -129,6 +129,29 @@ public class SymbolHelper {
         throw new RuntimeException("Got here! Told ya so.");
     }
 
+    public int varToOffset(ClassObject c, String symbol) {
+        ArrayList<Symbol> search = searchSymt(c);
+        ClassObject current_class = c;
+        int class_offset = 0;
+        int var_offset = 0;
+        boolean found = false;
+        while (!found) {
+            var_offset = 4;
+            for (Symbol curr : search) {
+                if (curr.symbol.equals(symbol)) {
+                    found = true;
+                    break;
+                }
+                var_offset += 4;
+            }
+            if (current_class.extends_ == null || found) break;
+            class_offset += current_class.numWordsSelf() * 4;
+            current_class = current_class.extends_;
+            search = searchSymt(current_class);
+        }
+        return class_offset + var_offset;
+    }
+
     /**
      * @return offset in bytes (not words) [class, method]
      */
