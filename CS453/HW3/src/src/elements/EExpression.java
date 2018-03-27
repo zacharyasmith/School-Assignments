@@ -16,6 +16,10 @@ public class EExpression implements Element {
         return accessor;
     }
 
+    public void setAccessor(ESymbol accessor) {
+        this.accessor = accessor;
+    }
+
     @Override
     public String toVapor(String tab, int depth) {
         return "";

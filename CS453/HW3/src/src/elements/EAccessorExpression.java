@@ -6,7 +6,7 @@ public class EAccessorExpression extends EExpression {
     private ESymbol sym;
     private int offset;
     public ClassObject c;
-    public boolean assignment = false;
+    private boolean assignment = false;
     /**
      * @param offset int bytes
      */
@@ -18,15 +18,16 @@ public class EAccessorExpression extends EExpression {
 
     public void setAssignment() {
         assignment = true;
+        setAccessor(new EAssignmentSymbol(sym, offset));
     }
 
     @Override
     public String toVapor(String tab, int depth) {
         String ret = "";
-        ret += sym.toVapor(tab, depth);
-        if (!assignment)
+        if (!assignment) {
+            ret += sym.toVapor(tab, depth);
             ret += Element.repeatTab(tab, depth) + getAccessor() + " = [" + sym + " + " + offset + "]\n";
-        // else sym should output [sym + offset] = ...
+        }
         return ret;
     }
 }

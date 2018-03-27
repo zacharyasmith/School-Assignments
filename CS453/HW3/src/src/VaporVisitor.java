@@ -169,8 +169,8 @@ public class VaporVisitor extends GJDepthFirst<EExpression, EContainer> {
             else // symbol is an EAccessorExpression AND is member variable assignment
                 sh.searchSymt(argu.c, n.f0).class_type = ((EAllocationExpression) assigned).c;
         if (symbol instanceof EAccessorExpression) {
-            // recompute symbol to be a [this + offset] = ...
-//            argu.add(new EAssignmentStatement(argu.c, assigned));
+            // recompute symbol to be a [sym + offset] = ...
+            ((EAccessorExpression) symbol).setAssignment();
         }
         argu.add(symbol);
         argu.add(new EAssignmentStatement(argu.c, assigned, symbol.getAccessor()));

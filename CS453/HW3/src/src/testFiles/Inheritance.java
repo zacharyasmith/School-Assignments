@@ -8,7 +8,7 @@ class Inheritance {
 
         f2 = new Foo_1();
         a = f2.setBar1(2);
-        b = f2.setBar(true);
+        b = f2.setBar(true); // tricky
         if (f2.getBar())
             System.out.println(f2.getBar1());
         else
