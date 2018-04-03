@@ -18,13 +18,16 @@ public class EAllocationExpression extends EExpression {
         ret += tab_ + getAccessor() +
                 " = HeapAllocZ(" + 4 * c.numWords() + ")\n";
         // assign the function tables
-        // [t.42] = :functable_A
-        ret += tab_ + "[" + getAccessor() + "] = :" + ft_prefix + c.className + "\n";
+        if (c.hasFunctions())
+            // [t.42] = :functable_A
+            ret += tab_ + "[" + getAccessor() + "] = :" + ft_prefix + c.className + "\n";
         ClassObject parent = c.extends_;
         int offset_counter = c.numWordsSelf();
         while (parent != null) {
-            ret += tab_ + "[" + getAccessor() + " + " + (4 * offset_counter) +
-                    "] = :" + ft_prefix + parent.className + "\n";
+            if (parent.hasFunctions())
+                // Assign parent's func table
+                ret += tab_ + "[" + getAccessor() + " + " + (4 * offset_counter) +
+                        "] = :" + ft_prefix + parent.className + "\n";
             offset_counter += parent.numWordsSelf();
             parent = parent.extends_;
         }
