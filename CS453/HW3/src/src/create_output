@@ -1,14 +1,12 @@
 #!/bin/bash
 # Compile the programs
 
+javac J2V.java
+
 for filename in testFiles/*.java; do
-	echo "Computing file: "$filename""
-	javac $filename
-	cd testFiles
-	rm ../testOutputs/$(basename $filename .java).out
-	java $(basename $filename .java) >> ../testOutputs/$(basename $filename .java).out
-	cd ..
-	rm testFiles/*.class
+	echo "Creating vapor for "$filename""
+	java J2V < $filename > testVapor/$(basename $filename .java).vapor
 	echo ""
 done
 
+make clean

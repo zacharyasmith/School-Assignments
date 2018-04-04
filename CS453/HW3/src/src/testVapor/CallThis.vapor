@@ -1,0 +1,34 @@
+const ft_A
+  :A.go
+  :A.go2
+
+func A.go(this)
+  t.6 = [this + 0]
+  t.7 = [t.6 + 4]
+  t.8 = call t.7(this)
+  ret t.8
+
+func A.go2(this)
+  ret 1337
+
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.2 = HeapAllocZ(4)
+  [t.2] = :ft_A
+  t.3 = [t.2 + 0]
+  t.4 = [t.3 + 0]
+  t.5 = call t.4(t.2)
+  PrintIntS(t.5)
+  ret
+

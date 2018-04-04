@@ -1,0 +1,42 @@
+const ft_Class
+  :Class.Meth
+
+func Class.Meth(this t.1)
+  t.8 = Eq(t.1 0)
+  if0 t.8 goto :if0_else
+    t.7 = 1
+  goto :if0_end
+  if0_else:
+    t.7 = 0
+  if0_end:
+  t.2 = t.7
+  if0 t.1 goto :if1_else
+    [this + 4] = 0
+  goto :if1_end
+  if1_else:
+    [this + 4] = 1
+  if1_end:
+  t.11 = [this + 4]
+  ret t.11
+
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.3 = HeapAllocZ(8)
+  [t.3] = :ft_Class
+  t.4 = [t.3 + 0]
+  t.5 = [t.4 + 0]
+  t.6 = call t.5(t.3 1)
+  PrintIntS(t.6)
+  ret
+

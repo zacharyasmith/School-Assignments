@@ -1,0 +1,29 @@
+const ft_Operator
+  :Operator.compute
+
+func Operator.compute(this)
+  t.5 = MulS(1 0)
+  [this + 4] = t.5
+  ret 0
+
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.1 = HeapAllocZ(8)
+  [t.1] = :ft_Operator
+  t.2 = [t.1 + 0]
+  t.3 = [t.2 + 0]
+  t.4 = call t.3(t.1)
+  PrintIntS(t.4)
+  ret
+

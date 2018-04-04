@@ -1,0 +1,69 @@
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.0 = 0
+  t.2 = Eq(t.0 0)
+  if0 t.2 goto :if0_else
+    t.1 = 1
+  goto :if0_end
+  if0_else:
+    t.1 = 0
+  if0_end:
+  if0 t.1 goto :if1_else
+    PrintIntS(1)
+    t.4 = Eq(t.0 0)
+    if0 t.4 goto :if2_else
+      t.3 = 1
+    goto :if2_end
+    if2_else:
+      t.3 = 0
+    if2_end:
+    if0 t.3 goto :if3_else
+      PrintIntS(2)
+      t.6 = Eq(t.0 0)
+      if0 t.6 goto :if4_else
+        t.5 = 1
+      goto :if4_end
+      if4_else:
+        t.5 = 0
+      if4_end:
+      if0 t.5 goto :if5_else
+        PrintIntS(3)
+        while0_test:
+          t.8 = Eq(t.0 0)
+          if0 t.8 goto :if6_else
+            t.7 = 1
+          goto :if6_end
+          if6_else:
+            t.7 = 0
+          if6_end:
+          if0 t.7 goto :while0_end
+        while0_body:
+          PrintIntS(99)
+          t.0 = 1
+          goto :while0_test
+        while0_end:
+      goto :if5_end
+      if5_else:
+        PrintIntS(4)
+      if5_end:
+    goto :if3_end
+    if3_else:
+      PrintIntS(5)
+    if3_end:
+  goto :if1_end
+  if1_else:
+    PrintIntS(6)
+  if1_end:
+  ret
+

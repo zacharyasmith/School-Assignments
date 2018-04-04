@@ -1,0 +1,65 @@
+const ft_One
+  :One.foo
+
+const ft_Two
+  :Two.foo
+  :Two.bar
+
+func One.foo(this)
+  [this + 8] = 1
+  t.22 = [this + 8]
+  ret t.22
+
+func Two.bar(this)
+  [this + 12] = 2
+  t.24 = [this + 12]
+  ret t.24
+
+func Two.foo(this)
+  [this + 12] = 3
+  t.26 = [this + 12]
+  t.27 = MulS(2 t.26)
+  ret t.27
+
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.6 = HeapAllocZ(12)
+  [t.6] = :ft_One
+  t.0 = t.6
+  t.7 = [t.0 + 0]
+  t.8 = [t.7 + 0]
+  t.9 = call t.8(t.0)
+  PrintIntS(t.9)
+  t.10 = HeapAllocZ(16)
+  [t.10] = :ft_Two
+  [t.10 + 4] = :ft_One
+  t.1 = t.10
+  t.11 = [t.1 + 0]
+  t.12 = [t.11 + 0]
+  t.13 = call t.12(t.1)
+  PrintIntS(t.13)
+  t.14 = HeapAllocZ(16)
+  [t.14] = :ft_Two
+  [t.14 + 4] = :ft_One
+  t.2 = t.14
+  t.15 = [t.2 + 0]
+  t.16 = [t.15 + 4]
+  t.17 = call t.16(t.2)
+  PrintIntS(t.17)
+  t.18 = [t.2 + 0]
+  t.19 = [t.18 + 0]
+  t.20 = call t.19(t.2)
+  PrintIntS(t.20)
+  ret
+

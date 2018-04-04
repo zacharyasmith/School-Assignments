@@ -1,0 +1,695 @@
+const ft_TV
+  :TV.Start
+
+const ft_Tree
+  :Tree.Remove
+  :Tree.SetKey
+  :Tree.Init
+  :Tree.RecPrint
+  :Tree.GetKey
+  :Tree.SetHas_Right
+  :Tree.GetHas_Right
+  :Tree.GetRight
+  :Tree.Delete
+  :Tree.SetRight
+  :Tree.GetHas_Left
+  :Tree.GetLeft
+  :Tree.SetLeft
+  :Tree.Insert
+  :Tree.RemoveLeft
+  :Tree.Compare
+  :Tree.SetHas_Left
+  :Tree.accept
+  :Tree.RemoveRight
+  :Tree.Search
+  :Tree.Print
+
+const ft_Visitor
+  :Visitor.visit
+
+const ft_MyVisitor
+  :MyVisitor.visit
+
+func TV.Start(this)
+  t.82 = HeapAllocZ(28)
+  [t.82] = :ft_Tree
+  t.1 = t.82
+  t.83 = [t.1 + 0]
+  t.84 = [t.83 + 8]
+  t.85 = call t.84(t.1 16)
+  t.2 = t.85
+  t.86 = [t.1 + 0]
+  t.87 = [t.86 + 80]
+  t.88 = call t.87(t.1)
+  t.2 = t.88
+  PrintIntS(100000000)
+  t.89 = [t.1 + 0]
+  t.90 = [t.89 + 52]
+  t.91 = call t.90(t.1 8)
+  t.2 = t.91
+  t.92 = [t.1 + 0]
+  t.93 = [t.92 + 52]
+  t.94 = call t.93(t.1 24)
+  t.2 = t.94
+  t.95 = [t.1 + 0]
+  t.96 = [t.95 + 52]
+  t.97 = call t.96(t.1 4)
+  t.2 = t.97
+  t.98 = [t.1 + 0]
+  t.99 = [t.98 + 52]
+  t.100 = call t.99(t.1 12)
+  t.2 = t.100
+  t.101 = [t.1 + 0]
+  t.102 = [t.101 + 52]
+  t.103 = call t.102(t.1 20)
+  t.2 = t.103
+  t.104 = [t.1 + 0]
+  t.105 = [t.104 + 52]
+  t.106 = call t.105(t.1 28)
+  t.2 = t.106
+  t.107 = [t.1 + 0]
+  t.108 = [t.107 + 52]
+  t.109 = call t.108(t.1 14)
+  t.2 = t.109
+  t.110 = [t.1 + 0]
+  t.111 = [t.110 + 80]
+  t.112 = call t.111(t.1)
+  t.2 = t.112
+  PrintIntS(100000000)
+  t.113 = HeapAllocZ(16)
+  [t.113] = :ft_MyVisitor
+  [t.113 + 4] = :ft_Visitor
+  t.4 = t.113
+  PrintIntS(50000000)
+  t.114 = [t.1 + 0]
+  t.115 = [t.114 + 68]
+  t.116 = call t.115(t.1 t.4)
+  t.3 = t.116
+  PrintIntS(100000000)
+  t.117 = [t.1 + 0]
+  t.118 = [t.117 + 76]
+  t.119 = call t.118(t.1 24)
+  PrintIntS(t.119)
+  t.120 = [t.1 + 0]
+  t.121 = [t.120 + 76]
+  t.122 = call t.121(t.1 12)
+  PrintIntS(t.122)
+  t.123 = [t.1 + 0]
+  t.124 = [t.123 + 76]
+  t.125 = call t.124(t.1 16)
+  PrintIntS(t.125)
+  t.126 = [t.1 + 0]
+  t.127 = [t.126 + 76]
+  t.128 = call t.127(t.1 50)
+  PrintIntS(t.128)
+  t.129 = [t.1 + 0]
+  t.130 = [t.129 + 76]
+  t.131 = call t.130(t.1 12)
+  PrintIntS(t.131)
+  t.132 = [t.1 + 0]
+  t.133 = [t.132 + 32]
+  t.134 = call t.133(t.1 12)
+  t.2 = t.134
+  t.135 = [t.1 + 0]
+  t.136 = [t.135 + 80]
+  t.137 = call t.136(t.1)
+  t.2 = t.137
+  t.138 = [t.1 + 0]
+  t.139 = [t.138 + 76]
+  t.140 = call t.139(t.1 12)
+  PrintIntS(t.140)
+  ret 0
+
+func Tree.Init(this t.6)
+  [this + 12] = t.6
+  [this + 16] = 0
+  [this + 20] = 0
+  ret 1
+
+func Tree.SetRight(this t.8)
+  [this + 8] = t.8
+  ret 1
+
+func Tree.SetLeft(this t.10)
+  [this + 4] = t.10
+  ret 1
+
+func Tree.GetRight(this)
+  t.146 = [this + 8]
+  ret t.146
+
+func Tree.GetLeft(this)
+  t.147 = [this + 4]
+  ret t.147
+
+func Tree.GetKey(this)
+  t.148 = [this + 12]
+  ret t.148
+
+func Tree.SetKey(this t.15)
+  [this + 12] = t.15
+  ret 1
+
+func Tree.GetHas_Right(this)
+  t.150 = [this + 20]
+  ret t.150
+
+func Tree.GetHas_Left(this)
+  t.151 = [this + 16]
+  ret t.151
+
+func Tree.SetHas_Left(this t.19)
+  [this + 16] = t.19
+  ret 1
+
+func Tree.SetHas_Right(this t.21)
+  [this + 20] = t.21
+  ret 1
+
+func Tree.Compare(this t.23 t.24)
+  t.25 = 0
+  t.154 = Add(t.24 1)
+  t.26 = t.154
+  t.155 = LtS(t.23 t.24)
+  if0 t.155 goto :if0_else
+    t.25 = 0
+  goto :if0_end
+  if0_else:
+    t.156 = LtS(t.23 t.26)
+    t.156 = LtS(t.23 t.26)
+    t.158 = Eq(t.156 0)
+    if0 t.158 goto :if1_else
+      t.157 = 1
+    goto :if1_end
+    if1_else:
+      t.157 = 0
+    if1_end:
+    if0 t.157 goto :if2_else
+      t.25 = 0
+    goto :if2_end
+    if2_else:
+      t.25 = 1
+    if2_end:
+  if0_end:
+  ret t.25
+
+func Tree.Insert(this t.28)
+  t.159 = HeapAllocZ(28)
+  [t.159] = :ft_Tree
+  t.29 = t.159
+  t.160 = [t.29 + 0]
+  t.161 = [t.160 + 8]
+  t.162 = call t.161(t.29 t.28)
+  t.30 = t.162
+  t.31 = this
+  t.32 = 1
+  while0_test:
+    if0 t.32 goto :while0_end
+  while0_body:
+    t.163 = [t.31 + 0]
+    t.164 = [t.163 + 16]
+    t.165 = call t.164(t.31)
+    t.33 = t.165
+    t.166 = LtS(t.28 t.33)
+    if0 t.166 goto :if3_else
+      t.167 = [t.31 + 0]
+      t.168 = [t.167 + 40]
+      t.169 = call t.168(t.31)
+      if0 t.169 goto :if4_else
+        t.170 = [t.31 + 0]
+        t.171 = [t.170 + 44]
+        t.172 = call t.171(t.31)
+        t.31 = t.172
+      goto :if4_end
+      if4_else:
+        t.32 = 0
+        t.173 = [t.31 + 0]
+        t.174 = [t.173 + 64]
+        t.175 = call t.174(t.31 1)
+        t.30 = t.175
+        t.176 = [t.31 + 0]
+        t.177 = [t.176 + 48]
+        t.178 = call t.177(t.31 t.29)
+        t.30 = t.178
+      if4_end:
+    goto :if3_end
+    if3_else:
+      t.179 = [t.31 + 0]
+      t.180 = [t.179 + 24]
+      t.181 = call t.180(t.31)
+      if0 t.181 goto :if5_else
+        t.182 = [t.31 + 0]
+        t.183 = [t.182 + 28]
+        t.184 = call t.183(t.31)
+        t.31 = t.184
+      goto :if5_end
+      if5_else:
+        t.32 = 0
+        t.185 = [t.31 + 0]
+        t.186 = [t.185 + 20]
+        t.187 = call t.186(t.31 1)
+        t.30 = t.187
+        t.188 = [t.31 + 0]
+        t.189 = [t.188 + 36]
+        t.190 = call t.189(t.31 t.29)
+        t.30 = t.190
+      if5_end:
+    if3_end:
+    goto :while0_test
+  while0_end:
+  ret 1
+
+func Tree.Delete(this t.35)
+  t.36 = this
+  t.37 = this
+  t.38 = 1
+  t.39 = 0
+  t.41 = 1
+  while1_test:
+    if0 t.38 goto :while1_end
+  while1_body:
+    t.191 = [t.36 + 0]
+    t.192 = [t.191 + 16]
+    t.193 = call t.192(t.36)
+    t.42 = t.193
+    t.194 = LtS(t.35 t.42)
+    if0 t.194 goto :if6_else
+      t.195 = [t.36 + 0]
+      t.196 = [t.195 + 40]
+      t.197 = call t.196(t.36)
+      if0 t.197 goto :if7_else
+        t.37 = t.36
+        t.198 = [t.36 + 0]
+        t.199 = [t.198 + 44]
+        t.200 = call t.199(t.36)
+        t.36 = t.200
+      goto :if7_end
+      if7_else:
+        t.38 = 0
+      if7_end:
+    goto :if6_end
+    if6_else:
+      t.201 = LtS(t.42 t.35)
+      if0 t.201 goto :if8_else
+        t.202 = [t.36 + 0]
+        t.203 = [t.202 + 24]
+        t.204 = call t.203(t.36)
+        if0 t.204 goto :if9_else
+          t.37 = t.36
+          t.205 = [t.36 + 0]
+          t.206 = [t.205 + 28]
+          t.207 = call t.206(t.36)
+          t.36 = t.207
+        goto :if9_end
+        if9_else:
+          t.38 = 0
+        if9_end:
+      goto :if8_end
+      if8_else:
+        if0 t.41 goto :if10_else
+          t.208 = [t.36 + 0]
+          t.209 = [t.208 + 24]
+          t.210 = call t.209(t.36)
+          t.208 = [t.36 + 0]
+          t.209 = [t.208 + 24]
+          t.210 = call t.209(t.36)
+          t.212 = Eq(t.210 0)
+          if0 t.212 goto :if11_else
+            t.211 = 1
+          goto :if11_end
+          if11_else:
+            t.211 = 0
+          if11_end:
+          t.213 = [t.36 + 0]
+          t.214 = [t.213 + 40]
+          t.215 = call t.214(t.36)
+          t.213 = [t.36 + 0]
+          t.214 = [t.213 + 40]
+          t.215 = call t.214(t.36)
+          t.217 = Eq(t.215 0)
+          if0 t.217 goto :if12_else
+            t.216 = 1
+          goto :if12_end
+          if12_else:
+            t.216 = 0
+          if12_end:
+          t.218 = MulS(t.211 t.216)
+          if0 t.218 goto :if13_else
+            t.40 = 1
+          goto :if13_end
+          if13_else:
+            t.219 = [this + 0]
+            t.220 = [t.219 + 0]
+            t.221 = call t.220(this t.37 t.36)
+            t.40 = t.221
+          if13_end:
+        goto :if10_end
+        if10_else:
+          t.222 = [this + 0]
+          t.223 = [t.222 + 0]
+          t.224 = call t.223(this t.37 t.36)
+          t.40 = t.224
+        if10_end:
+        t.39 = 1
+        t.38 = 0
+      if8_end:
+    if6_end:
+    t.41 = 0
+    goto :while1_test
+  while1_end:
+  ret t.39
+
+func Tree.Remove(this t.44 t.45)
+  t.225 = [t.45 + 0]
+  t.226 = [t.225 + 40]
+  t.227 = call t.226(t.45)
+  if0 t.227 goto :if14_else
+    t.228 = [this + 0]
+    t.229 = [t.228 + 56]
+    t.230 = call t.229(this t.44 t.45)
+    t.46 = t.230
+  goto :if14_end
+  if14_else:
+    t.231 = [t.45 + 0]
+    t.232 = [t.231 + 24]
+    t.233 = call t.232(t.45)
+    if0 t.233 goto :if15_else
+      t.234 = [this + 0]
+      t.235 = [t.234 + 72]
+      t.236 = call t.235(this t.44 t.45)
+      t.46 = t.236
+    goto :if15_end
+    if15_else:
+      t.237 = [t.45 + 0]
+      t.238 = [t.237 + 16]
+      t.239 = call t.238(t.45)
+      t.47 = t.239
+      t.240 = [t.44 + 0]
+      t.241 = [t.240 + 44]
+      t.242 = call t.241(t.44)
+      t.243 = [t.242 + 0]
+      t.244 = [t.243 + 16]
+      t.245 = call t.244(t.242)
+      t.48 = t.245
+      t.246 = [this + 0]
+      t.247 = [t.246 + 60]
+      t.248 = call t.247(this t.47 t.48)
+      if0 t.248 goto :if16_else
+        t.249 = [t.44 + 0]
+        t.250 = [t.249 + 48]
+        t.251 = [this + 24]
+        t.252 = call t.250(t.44 t.251)
+        t.46 = t.252
+        t.253 = [t.44 + 0]
+        t.254 = [t.253 + 64]
+        t.255 = call t.254(t.44 0)
+        t.46 = t.255
+      goto :if16_end
+      if16_else:
+        t.256 = [t.44 + 0]
+        t.257 = [t.256 + 36]
+        t.258 = [this + 24]
+        t.259 = call t.257(t.44 t.258)
+        t.46 = t.259
+        t.260 = [t.44 + 0]
+        t.261 = [t.260 + 20]
+        t.262 = call t.261(t.44 0)
+        t.46 = t.262
+      if16_end:
+    if15_end:
+  if14_end:
+  ret 1
+
+func Tree.RemoveRight(this t.50 t.51)
+  while2_test:
+    t.263 = [t.51 + 0]
+    t.264 = [t.263 + 24]
+    t.265 = call t.264(t.51)
+    if0 t.265 goto :while2_end
+  while2_body:
+    t.266 = [t.51 + 0]
+    t.267 = [t.266 + 4]
+    t.268 = [t.51 + 0]
+    t.269 = [t.268 + 28]
+    t.270 = call t.269(t.51)
+    t.271 = [t.270 + 0]
+    t.272 = [t.271 + 16]
+    t.273 = call t.272(t.270)
+    t.274 = call t.267(t.51 t.273)
+    t.52 = t.274
+    t.50 = t.51
+    t.275 = [t.51 + 0]
+    t.276 = [t.275 + 28]
+    t.277 = call t.276(t.51)
+    t.51 = t.277
+    goto :while2_test
+  while2_end:
+  t.278 = [t.50 + 0]
+  t.279 = [t.278 + 36]
+  t.280 = [this + 24]
+  t.281 = call t.279(t.50 t.280)
+  t.52 = t.281
+  t.282 = [t.50 + 0]
+  t.283 = [t.282 + 20]
+  t.284 = call t.283(t.50 0)
+  t.52 = t.284
+  ret 1
+
+func Tree.RemoveLeft(this t.54 t.55)
+  while3_test:
+    t.285 = [t.55 + 0]
+    t.286 = [t.285 + 40]
+    t.287 = call t.286(t.55)
+    if0 t.287 goto :while3_end
+  while3_body:
+    t.288 = [t.55 + 0]
+    t.289 = [t.288 + 4]
+    t.290 = [t.55 + 0]
+    t.291 = [t.290 + 44]
+    t.292 = call t.291(t.55)
+    t.293 = [t.292 + 0]
+    t.294 = [t.293 + 16]
+    t.295 = call t.294(t.292)
+    t.296 = call t.289(t.55 t.295)
+    t.56 = t.296
+    t.54 = t.55
+    t.297 = [t.55 + 0]
+    t.298 = [t.297 + 44]
+    t.299 = call t.298(t.55)
+    t.55 = t.299
+    goto :while3_test
+  while3_end:
+  t.300 = [t.54 + 0]
+  t.301 = [t.300 + 48]
+  t.302 = [this + 24]
+  t.303 = call t.301(t.54 t.302)
+  t.56 = t.303
+  t.304 = [t.54 + 0]
+  t.305 = [t.304 + 64]
+  t.306 = call t.305(t.54 0)
+  t.56 = t.306
+  ret 1
+
+func Tree.Search(this t.58)
+  t.59 = this
+  t.61 = 1
+  t.60 = 0
+  while4_test:
+    if0 t.61 goto :while4_end
+  while4_body:
+    t.307 = [t.59 + 0]
+    t.308 = [t.307 + 16]
+    t.309 = call t.308(t.59)
+    t.62 = t.309
+    t.310 = LtS(t.58 t.62)
+    if0 t.310 goto :if17_else
+      t.311 = [t.59 + 0]
+      t.312 = [t.311 + 40]
+      t.313 = call t.312(t.59)
+      if0 t.313 goto :if18_else
+        t.314 = [t.59 + 0]
+        t.315 = [t.314 + 44]
+        t.316 = call t.315(t.59)
+        t.59 = t.316
+      goto :if18_end
+      if18_else:
+        t.61 = 0
+      if18_end:
+    goto :if17_end
+    if17_else:
+      t.317 = LtS(t.62 t.58)
+      if0 t.317 goto :if19_else
+        t.318 = [t.59 + 0]
+        t.319 = [t.318 + 24]
+        t.320 = call t.319(t.59)
+        if0 t.320 goto :if20_else
+          t.321 = [t.59 + 0]
+          t.322 = [t.321 + 28]
+          t.323 = call t.322(t.59)
+          t.59 = t.323
+        goto :if20_end
+        if20_else:
+          t.61 = 0
+        if20_end:
+      goto :if19_end
+      if19_else:
+        t.60 = 1
+        t.61 = 0
+      if19_end:
+    if17_end:
+    goto :while4_test
+  while4_end:
+  ret t.60
+
+func Tree.Print(this)
+  t.65 = this
+  t.324 = [this + 0]
+  t.325 = [t.324 + 12]
+  t.326 = call t.325(this t.65)
+  t.64 = t.326
+  ret 1
+
+func Tree.RecPrint(this t.67)
+  t.327 = [t.67 + 0]
+  t.328 = [t.327 + 40]
+  t.329 = call t.328(t.67)
+  if0 t.329 goto :if21_else
+    t.330 = [this + 0]
+    t.331 = [t.330 + 12]
+    t.332 = [t.67 + 0]
+    t.333 = [t.332 + 44]
+    t.334 = call t.333(t.67)
+    t.335 = call t.331(this t.334)
+    t.68 = t.335
+  goto :if21_end
+  if21_else:
+    t.68 = 1
+  if21_end:
+  t.336 = [t.67 + 0]
+  t.337 = [t.336 + 16]
+  t.338 = call t.337(t.67)
+  PrintIntS(t.338)
+  t.339 = [t.67 + 0]
+  t.340 = [t.339 + 24]
+  t.341 = call t.340(t.67)
+  if0 t.341 goto :if22_else
+    t.342 = [this + 0]
+    t.343 = [t.342 + 12]
+    t.344 = [t.67 + 0]
+    t.345 = [t.344 + 28]
+    t.346 = call t.345(t.67)
+    t.347 = call t.343(this t.346)
+    t.68 = t.347
+  goto :if22_end
+  if22_else:
+    t.68 = 1
+  if22_end:
+  ret 1
+
+func Tree.accept(this t.70)
+  PrintIntS(333)
+  t.348 = [t.70 + 0]
+  t.349 = [t.348 + 0]
+  t.350 = call t.349(t.70 this)
+  t.71 = t.350
+  ret 0
+
+func Visitor.visit(this t.73)
+  t.351 = [t.73 + 0]
+  t.352 = [t.351 + 24]
+  t.353 = call t.352(t.73)
+  if0 t.353 goto :if23_else
+    t.354 = [t.73 + 0]
+    t.355 = [t.354 + 28]
+    t.356 = call t.355(t.73)
+    [this + 8] = t.356
+    t.358 = [this + 8]
+    t.359 = [t.358 + 0]
+    t.360 = [t.359 + 68]
+    t.361 = call t.360(t.358 this)
+    t.74 = t.361
+  goto :if23_end
+  if23_else:
+    t.74 = 0
+  if23_end:
+  t.362 = [t.73 + 0]
+  t.363 = [t.362 + 40]
+  t.364 = call t.363(t.73)
+  if0 t.364 goto :if24_else
+    t.365 = [t.73 + 0]
+    t.366 = [t.365 + 44]
+    t.367 = call t.366(t.73)
+    [this + 4] = t.367
+    t.369 = [this + 4]
+    t.370 = [t.369 + 0]
+    t.371 = [t.370 + 68]
+    t.372 = call t.371(t.369 this)
+    t.74 = t.372
+  goto :if24_end
+  if24_else:
+    t.74 = 0
+  if24_end:
+  ret 0
+
+func MyVisitor.visit(this t.76)
+  t.373 = [t.76 + 0]
+  t.374 = [t.373 + 24]
+  t.375 = call t.374(t.76)
+  if0 t.375 goto :if25_else
+    t.376 = [t.76 + 0]
+    t.377 = [t.376 + 28]
+    t.378 = call t.377(t.76)
+    [this + 12] = t.378
+    t.380 = [this + 12]
+    t.381 = [t.380 + 0]
+    t.382 = [t.381 + 68]
+    t.383 = call t.382(t.380 this)
+    t.77 = t.383
+  goto :if25_end
+  if25_else:
+    t.77 = 0
+  if25_end:
+  t.384 = [t.76 + 0]
+  t.385 = [t.384 + 16]
+  t.386 = call t.385(t.76)
+  PrintIntS(t.386)
+  t.387 = [t.76 + 0]
+  t.388 = [t.387 + 40]
+  t.389 = call t.388(t.76)
+  if0 t.389 goto :if26_else
+    t.390 = [t.76 + 0]
+    t.391 = [t.390 + 44]
+    t.392 = call t.391(t.76)
+    [this + 8] = t.392
+    t.394 = [this + 8]
+    t.395 = [t.394 + 0]
+    t.396 = [t.395 + 68]
+    t.397 = call t.396(t.394 this)
+    t.77 = t.397
+  goto :if26_end
+  if26_else:
+    t.77 = 0
+  if26_end:
+  ret 0
+
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.78 = HeapAllocZ(4)
+  [t.78] = :ft_TV
+  t.79 = [t.78 + 0]
+  t.80 = [t.79 + 0]
+  t.81 = call t.80(t.78)
+  PrintIntS(t.81)
+  ret
+

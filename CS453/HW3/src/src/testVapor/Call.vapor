@@ -1,3 +1,9 @@
+const ft_A
+  :A.go
+
+func A.go(this)
+  ret 1337
+
 func AllocArray(size)
   bytes = MulS(size 4)
   bytes = Add(bytes 4)
@@ -11,15 +17,11 @@ func ArrayIndexHelper(index)
   ret addr
 
 func Main()
-  t.0 = 0
-  while0_test:
-    t.1 = LtS(t.0 5)
-    if0 t.1 goto :while0_end
-  while0_body:
-    PrintIntS(t.0)
-    t.2 = Add(t.0 1)
-    t.0 = t.2
-    goto :while0_test
-  while0_end:
+  t.1 = HeapAllocZ(4)
+  [t.1] = :ft_A
+  t.2 = [t.1 + 0]
+  t.3 = [t.2 + 0]
+  t.4 = call t.3(t.1)
+  PrintIntS(t.4)
   ret
 

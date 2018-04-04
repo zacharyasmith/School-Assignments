@@ -1,0 +1,39 @@
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.1 = 5
+  t.3 = call :AllocArray(10)
+  t.0 = t.3
+  t.2 = 0
+  while0_test:
+    t.4 = LtS(t.2 5)
+    if0 t.4 goto :while0_end
+  while0_body:
+    t.11 = call :ArrayIndexHelper(t.2)
+    t.11 = Add(t.0 t.11)
+    t.5 = Add(t.2 1)
+    t.6 = MulS(t.5 2)
+    t.7 = Add(t.6 1)
+    [t.11] = t.7
+    t.12 = call :ArrayIndexHelper(t.2)
+    t.13 = Add(t.0 t.12)
+    t.8 = [t.13]
+    PrintIntS(t.8)
+    t.9 = Add(t.2 1)
+    t.2 = t.9
+    goto :while0_test
+  while0_end:
+  t.10 = [t.0]
+  PrintIntS(t.10)
+  ret
+

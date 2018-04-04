@@ -1,0 +1,174 @@
+const ft_BBS
+  :BBS.Print
+  :BBS.Start
+  :BBS.Init
+  :BBS.Sort
+
+func BBS.Start(this t.1)
+  t.21 = [this + 0]
+  t.22 = [t.21 + 8]
+  t.23 = call t.22(this t.1)
+  t.2 = t.23
+  t.24 = [this + 0]
+  t.25 = [t.24 + 0]
+  t.26 = call t.25(this)
+  t.2 = t.26
+  PrintIntS(99999)
+  t.27 = [this + 0]
+  t.28 = [t.27 + 12]
+  t.29 = call t.28(this)
+  t.2 = t.29
+  t.30 = [this + 0]
+  t.31 = [t.30 + 0]
+  t.32 = call t.31(this)
+  t.2 = t.32
+  ret 0
+
+func BBS.Sort(this)
+  t.33 = [this + 8]
+  t.34 = Sub(t.33 1)
+  t.5 = t.34
+  t.35 = Sub(0 1)
+  t.6 = t.35
+  while0_test:
+    t.36 = LtS(t.6 t.5)
+    if0 t.36 goto :while0_end
+  while0_body:
+    t.11 = 1
+    while1_test:
+      t.37 = Add(t.5 1)
+      t.38 = LtS(t.11 t.37)
+      if0 t.38 goto :while1_end
+    while1_body:
+      t.39 = Sub(t.11 1)
+      t.10 = t.39
+      t.72 = call :ArrayIndexHelper(t.10)
+      t.40 = [this + 4]
+      t.73 = Add(t.40 t.72)
+      t.41 = [t.73]
+      t.7 = t.41
+      t.74 = call :ArrayIndexHelper(t.11)
+      t.42 = [this + 4]
+      t.75 = Add(t.42 t.74)
+      t.43 = [t.75]
+      t.8 = t.43
+      t.44 = LtS(t.8 t.7)
+      if0 t.44 goto :if0_else
+        t.45 = Sub(t.11 1)
+        t.9 = t.45
+        t.76 = call :ArrayIndexHelper(t.9)
+        t.46 = [this + 4]
+        t.77 = Add(t.46 t.76)
+        t.47 = [t.77]
+        t.12 = t.47
+        t.48 = [this + 4]
+        t.78 = call :ArrayIndexHelper(t.9)
+        t.78 = Add(t.48 t.78)
+        t.79 = call :ArrayIndexHelper(t.11)
+        t.49 = [this + 4]
+        t.80 = Add(t.49 t.79)
+        t.50 = [t.80]
+        [t.78] = t.50
+        t.51 = [this + 4]
+        t.81 = call :ArrayIndexHelper(t.11)
+        t.81 = Add(t.51 t.81)
+        [t.81] = t.12
+      goto :if0_end
+      if0_else:
+        t.4 = 0
+      if0_end:
+      t.52 = Add(t.11 1)
+      t.11 = t.52
+      goto :while1_test
+    while1_end:
+    t.53 = Sub(t.5 1)
+    t.5 = t.53
+    goto :while0_test
+  while0_end:
+  ret 0
+
+func BBS.Print(this)
+  t.14 = 0
+  while2_test:
+    t.54 = [this + 8]
+    t.55 = LtS(t.14 t.54)
+    if0 t.55 goto :while2_end
+  while2_body:
+    t.82 = call :ArrayIndexHelper(t.14)
+    t.56 = [this + 4]
+    t.83 = Add(t.56 t.82)
+    t.57 = [t.83]
+    PrintIntS(t.57)
+    t.58 = Add(t.14 1)
+    t.14 = t.58
+    goto :while2_test
+  while2_end:
+  ret 0
+
+func BBS.Init(this t.16)
+  [this + 8] = t.16
+  t.60 = call :AllocArray(t.16)
+  [this + 4] = t.60
+  t.62 = [this + 4]
+  t.84 = call :ArrayIndexHelper(0)
+  t.84 = Add(t.62 t.84)
+  [t.84] = 20
+  t.63 = [this + 4]
+  t.85 = call :ArrayIndexHelper(1)
+  t.85 = Add(t.63 t.85)
+  [t.85] = 7
+  t.64 = [this + 4]
+  t.86 = call :ArrayIndexHelper(2)
+  t.86 = Add(t.64 t.86)
+  [t.86] = 12
+  t.65 = [this + 4]
+  t.87 = call :ArrayIndexHelper(3)
+  t.87 = Add(t.65 t.87)
+  [t.87] = 18
+  t.66 = [this + 4]
+  t.88 = call :ArrayIndexHelper(4)
+  t.88 = Add(t.66 t.88)
+  [t.88] = 2
+  t.67 = [this + 4]
+  t.89 = call :ArrayIndexHelper(5)
+  t.89 = Add(t.67 t.89)
+  [t.89] = 11
+  t.68 = [this + 4]
+  t.90 = call :ArrayIndexHelper(6)
+  t.90 = Add(t.68 t.90)
+  [t.90] = 6
+  t.69 = [this + 4]
+  t.91 = call :ArrayIndexHelper(7)
+  t.91 = Add(t.69 t.91)
+  [t.91] = 9
+  t.70 = [this + 4]
+  t.92 = call :ArrayIndexHelper(8)
+  t.92 = Add(t.70 t.92)
+  [t.92] = 19
+  t.71 = [this + 4]
+  t.93 = call :ArrayIndexHelper(9)
+  t.93 = Add(t.71 t.93)
+  [t.93] = 5
+  ret 0
+
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.17 = HeapAllocZ(12)
+  [t.17] = :ft_BBS
+  t.18 = [t.17 + 0]
+  t.19 = [t.18 + 4]
+  t.20 = call t.19(t.17 10)
+  PrintIntS(t.20)
+  ret
+

@@ -1,0 +1,149 @@
+const ft_LS
+  :LS.Search
+  :LS.Start
+  :LS.Print
+  :LS.Init
+
+func LS.Start(this t.1)
+  t.24 = [this + 0]
+  t.25 = [t.24 + 12]
+  t.26 = call t.25(this t.1)
+  t.2 = t.26
+  t.27 = [this + 0]
+  t.28 = [t.27 + 8]
+  t.29 = call t.28(this)
+  t.3 = t.29
+  PrintIntS(9999)
+  t.30 = [this + 0]
+  t.31 = [t.30 + 0]
+  t.32 = call t.31(this 8)
+  PrintIntS(t.32)
+  t.33 = [this + 0]
+  t.34 = [t.33 + 0]
+  t.35 = call t.34(this 12)
+  PrintIntS(t.35)
+  t.36 = [this + 0]
+  t.37 = [t.36 + 0]
+  t.38 = call t.37(this 17)
+  PrintIntS(t.38)
+  t.39 = [this + 0]
+  t.40 = [t.39 + 0]
+  t.41 = call t.40(this 50)
+  PrintIntS(t.41)
+  ret 55
+
+func LS.Print(this)
+  t.5 = 1
+  while0_test:
+    t.42 = [this + 8]
+    t.43 = LtS(t.5 t.42)
+    if0 t.43 goto :while0_end
+  while0_body:
+    t.71 = call :ArrayIndexHelper(t.5)
+    t.44 = [this + 4]
+    t.72 = Add(t.44 t.71)
+    t.45 = [t.72]
+    PrintIntS(t.45)
+    t.46 = Add(t.5 1)
+    t.5 = t.46
+    goto :while0_test
+  while0_end:
+  ret 0
+
+func LS.Search(this t.7)
+  t.8 = 1
+  t.9 = 0
+  t.10 = 0
+  while1_test:
+    t.47 = [this + 8]
+    t.48 = LtS(t.8 t.47)
+    if0 t.48 goto :while1_end
+  while1_body:
+    t.73 = call :ArrayIndexHelper(t.8)
+    t.49 = [this + 4]
+    t.74 = Add(t.49 t.73)
+    t.50 = [t.74]
+    t.11 = t.50
+    t.51 = Add(t.7 1)
+    t.12 = t.51
+    t.52 = LtS(t.11 t.7)
+    if0 t.52 goto :if0_else
+      t.13 = 0
+    goto :if0_end
+    if0_else:
+      t.53 = LtS(t.11 t.12)
+      t.53 = LtS(t.11 t.12)
+      t.55 = Eq(t.53 0)
+      if0 t.55 goto :if1_else
+        t.54 = 1
+      goto :if1_end
+      if1_else:
+        t.54 = 0
+      if1_end:
+      if0 t.54 goto :if2_else
+        t.13 = 0
+      goto :if2_end
+      if2_else:
+        t.9 = 1
+        t.10 = 1
+        t.56 = [this + 8]
+        t.8 = t.56
+      if2_end:
+    if0_end:
+    t.57 = Add(t.8 1)
+    t.8 = t.57
+    goto :while1_test
+  while1_end:
+  ret t.10
+
+func LS.Init(this t.15)
+  [this + 8] = t.15
+  t.59 = call :AllocArray(t.15)
+  [this + 4] = t.59
+  t.16 = 1
+  t.61 = [this + 8]
+  t.62 = Add(t.61 1)
+  t.17 = t.62
+  while2_test:
+    t.63 = [this + 8]
+    t.64 = LtS(t.16 t.63)
+    if0 t.64 goto :while2_end
+  while2_body:
+    t.65 = MulS(2 t.16)
+    t.18 = t.65
+    t.66 = Sub(t.17 3)
+    t.19 = t.66
+    t.67 = [this + 4]
+    t.75 = call :ArrayIndexHelper(t.16)
+    t.75 = Add(t.67 t.75)
+    t.68 = Add(t.18 t.19)
+    [t.75] = t.68
+    t.69 = Add(t.16 1)
+    t.16 = t.69
+    t.70 = Sub(t.17 1)
+    t.17 = t.70
+    goto :while2_test
+  while2_end:
+  ret 0
+
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.20 = HeapAllocZ(12)
+  [t.20] = :ft_LS
+  t.21 = [t.20 + 0]
+  t.22 = [t.21 + 4]
+  t.23 = call t.22(t.20 10)
+  PrintIntS(t.23)
+  ret
+

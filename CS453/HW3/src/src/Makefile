@@ -6,7 +6,7 @@ JC = javac
 default: .java.class
 
 clean:
-	$(RM) *.class context/*.class elements/*.class
+	$(RM) *.class J2V/*.class J2V/context/*.class J2V/elements/*.class
 
 package:
 	-rm smithza.zip

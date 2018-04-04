@@ -1,0 +1,494 @@
+const ft_Element
+  :Element.GetMarried
+  :Element.Compare
+  :Element.Equal
+  :Element.GetAge
+  :Element.Init
+  :Element.GetSalary
+
+const ft_List
+  :List.GetElem
+  :List.GetNext
+  :List.Init
+  :List.SetNext
+  :List.Print
+  :List.Search
+  :List.Delete
+  :List.GetEnd
+  :List.InitNew
+  :List.Insert
+
+const ft_LL
+  :LL.Start
+
+func Element.Init(this t.1 t.2 t.3)
+  [this + 4] = t.1
+  [this + 8] = t.2
+  [this + 12] = t.3
+  ret 1
+
+func Element.GetAge(this)
+  t.69 = [this + 4]
+  ret t.69
+
+func Element.GetSalary(this)
+  t.70 = [this + 8]
+  ret t.70
+
+func Element.GetMarried(this)
+  t.71 = [this + 12]
+  ret t.71
+
+func Element.Equal(this t.8)
+  t.9 = 1
+  t.72 = [t.8 + 0]
+  t.73 = [t.72 + 12]
+  t.74 = call t.73(t.8)
+  t.10 = t.74
+  t.75 = [this + 0]
+  t.76 = [t.75 + 4]
+  t.77 = [this + 4]
+  t.78 = call t.76(this t.10 t.77)
+  t.75 = [this + 0]
+  t.76 = [t.75 + 4]
+  t.77 = [this + 4]
+  t.78 = call t.76(this t.10 t.77)
+  t.80 = Eq(t.78 0)
+  if0 t.80 goto :if0_else
+    t.79 = 1
+  goto :if0_end
+  if0_else:
+    t.79 = 0
+  if0_end:
+  if0 t.79 goto :if1_else
+    t.9 = 0
+  goto :if1_end
+  if1_else:
+    t.81 = [t.8 + 0]
+    t.82 = [t.81 + 20]
+    t.83 = call t.82(t.8)
+    t.11 = t.83
+    t.84 = [this + 0]
+    t.85 = [t.84 + 4]
+    t.86 = [this + 8]
+    t.87 = call t.85(this t.11 t.86)
+    t.84 = [this + 0]
+    t.85 = [t.84 + 4]
+    t.86 = [this + 8]
+    t.87 = call t.85(this t.11 t.86)
+    t.89 = Eq(t.87 0)
+    if0 t.89 goto :if2_else
+      t.88 = 1
+    goto :if2_end
+    if2_else:
+      t.88 = 0
+    if2_end:
+    if0 t.88 goto :if3_else
+      t.9 = 0
+    goto :if3_end
+    if3_else:
+      t.90 = [this + 12]
+      if0 t.90 goto :if4_else
+        t.91 = [t.8 + 0]
+        t.92 = [t.91 + 0]
+        t.93 = call t.92(t.8)
+        t.91 = [t.8 + 0]
+        t.92 = [t.91 + 0]
+        t.93 = call t.92(t.8)
+        t.95 = Eq(t.93 0)
+        if0 t.95 goto :if5_else
+          t.94 = 1
+        goto :if5_end
+        if5_else:
+          t.94 = 0
+        if5_end:
+        if0 t.94 goto :if6_else
+          t.9 = 0
+        goto :if6_end
+        if6_else:
+          t.12 = 0
+        if6_end:
+      goto :if4_end
+      if4_else:
+        t.96 = [t.8 + 0]
+        t.97 = [t.96 + 0]
+        t.98 = call t.97(t.8)
+        if0 t.98 goto :if7_else
+          t.9 = 0
+        goto :if7_end
+        if7_else:
+          t.12 = 0
+        if7_end:
+      if4_end:
+    if3_end:
+  if1_end:
+  ret t.9
+
+func Element.Compare(this t.14 t.15)
+  t.16 = 0
+  t.99 = Add(t.15 1)
+  t.17 = t.99
+  t.100 = LtS(t.14 t.15)
+  if0 t.100 goto :if8_else
+    t.16 = 0
+  goto :if8_end
+  if8_else:
+    t.101 = LtS(t.14 t.17)
+    t.101 = LtS(t.14 t.17)
+    t.103 = Eq(t.101 0)
+    if0 t.103 goto :if9_else
+      t.102 = 1
+    goto :if9_end
+    if9_else:
+      t.102 = 0
+    if9_end:
+    if0 t.102 goto :if10_else
+      t.16 = 0
+    goto :if10_end
+    if10_else:
+      t.16 = 1
+    if10_end:
+  if8_end:
+  ret t.16
+
+func List.Init(this)
+  [this + 12] = 1
+  ret 1
+
+func List.InitNew(this t.20 t.21 t.22)
+  [this + 12] = t.22
+  [this + 4] = t.20
+  [this + 8] = t.21
+  ret 1
+
+func List.Insert(this t.24)
+  t.26 = this
+  t.108 = HeapAllocZ(16)
+  [t.108] = :ft_List
+  t.27 = t.108
+  t.109 = [t.27 + 0]
+  t.110 = [t.109 + 32]
+  t.111 = call t.110(t.27 t.24 t.26 0)
+  t.25 = t.111
+  ret t.27
+
+func List.SetNext(this t.29)
+  [this + 8] = t.29
+  ret 1
+
+func List.Delete(this t.31)
+  t.32 = this
+  t.33 = 0
+  t.113 = Sub(0 1)
+  t.39 = t.113
+  t.35 = this
+  t.36 = this
+  t.114 = [this + 12]
+  t.37 = t.114
+  t.115 = [this + 4]
+  t.38 = t.115
+  while0_test:
+    t.117 = Eq(t.37 0)
+    if0 t.117 goto :if11_else
+      t.116 = 1
+    goto :if11_end
+    if11_else:
+      t.116 = 0
+    if11_end:
+    t.119 = Eq(t.33 0)
+    if0 t.119 goto :if12_else
+      t.118 = 1
+    goto :if12_end
+    if12_else:
+      t.118 = 0
+    if12_end:
+    t.120 = MulS(t.116 t.118)
+    if0 t.120 goto :while0_end
+  while0_body:
+    t.121 = [t.31 + 0]
+    t.122 = [t.121 + 8]
+    t.123 = call t.122(t.31 t.38)
+    if0 t.123 goto :if13_else
+      t.33 = 1
+      t.124 = LtS(t.39 0)
+      if0 t.124 goto :if14_else
+        t.125 = [t.35 + 0]
+        t.126 = [t.125 + 4]
+        t.127 = call t.126(t.35)
+        t.32 = t.127
+      goto :if14_end
+      if14_else:
+        t.128 = Sub(0 555)
+        PrintIntS(t.128)
+        t.129 = [t.36 + 0]
+        t.130 = [t.129 + 12]
+        t.131 = [t.35 + 0]
+        t.132 = [t.131 + 4]
+        t.133 = call t.132(t.35)
+        t.134 = call t.130(t.36 t.133)
+        t.34 = t.134
+        t.135 = Sub(0 555)
+        PrintIntS(t.135)
+      if14_end:
+    goto :if13_end
+    if13_else:
+      t.40 = 0
+    if13_end:
+    t.137 = Eq(t.33 0)
+    if0 t.137 goto :if15_else
+      t.136 = 1
+    goto :if15_end
+    if15_else:
+      t.136 = 0
+    if15_end:
+    if0 t.136 goto :if16_else
+      t.36 = t.35
+      t.138 = [t.35 + 0]
+      t.139 = [t.138 + 4]
+      t.140 = call t.139(t.35)
+      t.35 = t.140
+      t.141 = [t.35 + 0]
+      t.142 = [t.141 + 28]
+      t.143 = call t.142(t.35)
+      t.37 = t.143
+      t.144 = [t.35 + 0]
+      t.145 = [t.144 + 0]
+      t.146 = call t.145(t.35)
+      t.38 = t.146
+      t.39 = 1
+    goto :if16_end
+    if16_else:
+      t.40 = 0
+    if16_end:
+    goto :while0_test
+  while0_end:
+  ret t.32
+
+func List.Search(this t.42)
+  t.43 = 0
+  t.44 = this
+  t.147 = [this + 12]
+  t.46 = t.147
+  t.148 = [this + 4]
+  t.45 = t.148
+  while1_test:
+    t.150 = Eq(t.46 0)
+    if0 t.150 goto :if17_else
+      t.149 = 1
+    goto :if17_end
+    if17_else:
+      t.149 = 0
+    if17_end:
+    if0 t.149 goto :while1_end
+  while1_body:
+    t.151 = [t.42 + 0]
+    t.152 = [t.151 + 8]
+    t.153 = call t.152(t.42 t.45)
+    if0 t.153 goto :if18_else
+      t.43 = 1
+    goto :if18_end
+    if18_else:
+      t.47 = 0
+    if18_end:
+    t.154 = [t.44 + 0]
+    t.155 = [t.154 + 4]
+    t.156 = call t.155(t.44)
+    t.44 = t.156
+    t.157 = [t.44 + 0]
+    t.158 = [t.157 + 28]
+    t.159 = call t.158(t.44)
+    t.46 = t.159
+    t.160 = [t.44 + 0]
+    t.161 = [t.160 + 0]
+    t.162 = call t.161(t.44)
+    t.45 = t.162
+    goto :while1_test
+  while1_end:
+  ret t.43
+
+func List.GetEnd(this)
+  t.163 = [this + 12]
+  ret t.163
+
+func List.GetElem(this)
+  t.164 = [this + 4]
+  ret t.164
+
+func List.GetNext(this)
+  t.165 = [this + 8]
+  ret t.165
+
+func List.Print(this)
+  t.52 = this
+  t.166 = [this + 12]
+  t.53 = t.166
+  t.167 = [this + 4]
+  t.54 = t.167
+  while2_test:
+    t.169 = Eq(t.53 0)
+    if0 t.169 goto :if19_else
+      t.168 = 1
+    goto :if19_end
+    if19_else:
+      t.168 = 0
+    if19_end:
+    if0 t.168 goto :while2_end
+  while2_body:
+    t.170 = [t.54 + 0]
+    t.171 = [t.170 + 12]
+    t.172 = call t.171(t.54)
+    PrintIntS(t.172)
+    t.173 = [t.52 + 0]
+    t.174 = [t.173 + 4]
+    t.175 = call t.174(t.52)
+    t.52 = t.175
+    t.176 = [t.52 + 0]
+    t.177 = [t.176 + 28]
+    t.178 = call t.177(t.52)
+    t.53 = t.178
+    t.179 = [t.52 + 0]
+    t.180 = [t.179 + 0]
+    t.181 = call t.180(t.52)
+    t.54 = t.181
+    goto :while2_test
+  while2_end:
+  ret 1
+
+func LL.Start(this)
+  t.182 = HeapAllocZ(16)
+  [t.182] = :ft_List
+  t.57 = t.182
+  t.183 = [t.57 + 0]
+  t.184 = [t.183 + 8]
+  t.185 = call t.184(t.57)
+  t.58 = t.185
+  t.56 = t.57
+  t.186 = [t.56 + 0]
+  t.187 = [t.186 + 8]
+  t.188 = call t.187(t.56)
+  t.58 = t.188
+  t.189 = [t.56 + 0]
+  t.190 = [t.189 + 16]
+  t.191 = call t.190(t.56)
+  t.58 = t.191
+  t.192 = HeapAllocZ(16)
+  [t.192] = :ft_Element
+  t.59 = t.192
+  t.193 = [t.59 + 0]
+  t.194 = [t.193 + 16]
+  t.195 = call t.194(t.59 25 37000 0)
+  t.58 = t.195
+  t.196 = [t.56 + 0]
+  t.197 = [t.196 + 36]
+  t.198 = call t.197(t.56 t.59)
+  t.56 = t.198
+  t.199 = [t.56 + 0]
+  t.200 = [t.199 + 16]
+  t.201 = call t.200(t.56)
+  t.58 = t.201
+  PrintIntS(10000000)
+  t.202 = HeapAllocZ(16)
+  [t.202] = :ft_Element
+  t.59 = t.202
+  t.203 = [t.59 + 0]
+  t.204 = [t.203 + 16]
+  t.205 = call t.204(t.59 39 42000 1)
+  t.58 = t.205
+  t.60 = t.59
+  t.206 = [t.56 + 0]
+  t.207 = [t.206 + 36]
+  t.208 = call t.207(t.56 t.59)
+  t.56 = t.208
+  t.209 = [t.56 + 0]
+  t.210 = [t.209 + 16]
+  t.211 = call t.210(t.56)
+  t.58 = t.211
+  PrintIntS(10000000)
+  t.212 = HeapAllocZ(16)
+  [t.212] = :ft_Element
+  t.59 = t.212
+  t.213 = [t.59 + 0]
+  t.214 = [t.213 + 16]
+  t.215 = call t.214(t.59 22 34000 0)
+  t.58 = t.215
+  t.216 = [t.56 + 0]
+  t.217 = [t.216 + 36]
+  t.218 = call t.217(t.56 t.59)
+  t.56 = t.218
+  t.219 = [t.56 + 0]
+  t.220 = [t.219 + 16]
+  t.221 = call t.220(t.56)
+  t.58 = t.221
+  t.222 = HeapAllocZ(16)
+  [t.222] = :ft_Element
+  t.61 = t.222
+  t.223 = [t.61 + 0]
+  t.224 = [t.223 + 16]
+  t.225 = call t.224(t.61 27 34000 0)
+  t.58 = t.225
+  t.226 = [t.56 + 0]
+  t.227 = [t.226 + 20]
+  t.228 = call t.227(t.56 t.60)
+  PrintIntS(t.228)
+  t.229 = [t.56 + 0]
+  t.230 = [t.229 + 20]
+  t.231 = call t.230(t.56 t.61)
+  PrintIntS(t.231)
+  PrintIntS(10000000)
+  t.232 = HeapAllocZ(16)
+  [t.232] = :ft_Element
+  t.59 = t.232
+  t.233 = [t.59 + 0]
+  t.234 = [t.233 + 16]
+  t.235 = call t.234(t.59 28 35000 0)
+  t.58 = t.235
+  t.236 = [t.56 + 0]
+  t.237 = [t.236 + 36]
+  t.238 = call t.237(t.56 t.59)
+  t.56 = t.238
+  t.239 = [t.56 + 0]
+  t.240 = [t.239 + 16]
+  t.241 = call t.240(t.56)
+  t.58 = t.241
+  PrintIntS(2220000)
+  t.242 = [t.56 + 0]
+  t.243 = [t.242 + 24]
+  t.244 = call t.243(t.56 t.60)
+  t.56 = t.244
+  t.245 = [t.56 + 0]
+  t.246 = [t.245 + 16]
+  t.247 = call t.246(t.56)
+  t.58 = t.247
+  PrintIntS(33300000)
+  t.248 = [t.56 + 0]
+  t.249 = [t.248 + 24]
+  t.250 = call t.249(t.56 t.59)
+  t.56 = t.250
+  t.251 = [t.56 + 0]
+  t.252 = [t.251 + 16]
+  t.253 = call t.252(t.56)
+  t.58 = t.253
+  PrintIntS(44440000)
+  ret 0
+
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.62 = HeapAllocZ(4)
+  [t.62] = :ft_LL
+  t.63 = [t.62 + 0]
+  t.64 = [t.63 + 0]
+  t.65 = call t.64(t.62)
+  PrintIntS(t.65)
+  ret
+

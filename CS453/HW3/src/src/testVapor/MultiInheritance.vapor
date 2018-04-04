@@ -1,0 +1,45 @@
+const ft_One
+  :One.foo
+
+const ft_Two
+  :Two.bar
+
+const ft_Three
+  :Three.foo
+
+func One.foo(this)
+  ret 1
+
+func Two.bar(this)
+  ret 2
+
+func Three.foo(this)
+  ret 3
+
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.5 = HeapAllocZ(16)
+  [t.5] = :ft_Three
+  [t.5 + 4] = :ft_Two
+  [t.5 + 8] = :ft_One
+  t.0 = t.5
+  t.6 = HeapAllocZ(12)
+  [t.6] = :ft_Two
+  [t.6 + 4] = :ft_One
+  t.0 = t.6
+  t.7 = HeapAllocZ(8)
+  [t.7] = :ft_One
+  t.0 = t.7
+  ret
+

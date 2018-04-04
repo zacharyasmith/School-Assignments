@@ -1,48 +1,39 @@
-class Factorial{
-    public static void main(String[] a){
-        System.out.println(new Fac().ComputeFac(10));
-    }
-}
-
-class Fac {
-    public int ComputeFac(int num){
-        int num_aux ;
-        if (num < 1)
-            num_aux = 1 ;
-        else
-            num_aux = num * (this.ComputeFac(num-1)) ;
-        return num_aux ;
-    }
-}
----------
-const ft_Fac:
+const ft_Fac
   :Fac.ComputeFac
 
-func Main()
-  t.0 = HeapAllocZ(4)
-  if0 t.0 goto :mem_error
-  [t.0] = :ft_Fac
-  t.1 = [t.0]
-  t.1 = [t.1+0]
-  t.2 = call t.1(t.0 10)
-  PrintIntS(t.2)
-  goto :exit
-  mem_error:
-    Error(“Mem exhausted”)
-    goto :exit
-  exit:
-    ret
+func Fac.ComputeFac(this t.1)
+  t.7 = LtS(t.1 1)
+  if0 t.7 goto :if0_else
+    t.2 = 1
+  goto :if0_end
+  if0_else:
+    t.8 = [this + 0]
+    t.9 = [t.8 + 0]
+    t.10 = Sub(t.1 1)
+    t.11 = call t.9(this t.10)
+    t.12 = MulS(t.1 t.11)
+    t.2 = t.12
+  if0_end:
+  ret t.2
 
-func Fac.ComputeFac(this num)
-  t.0 = LtS(num 1)
-  if0 t.0 goto :if1_else
-    num_aux = 1
-    goto :if1_end
-  if1_else:
-    t.1 = [this]
-    t.1 = [t.1+0]
-    t.2 = Sub(num 1)
-    t.3 = call t.1(this t.2)
-    num_aux = MulS(num t.3)
-  if1_end:
-  ret num_aux
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.3 = HeapAllocZ(4)
+  [t.3] = :ft_Fac
+  t.4 = [t.3 + 0]
+  t.5 = [t.4 + 0]
+  t.6 = call t.5(t.3 10)
+  PrintIntS(t.6)
+  ret
+

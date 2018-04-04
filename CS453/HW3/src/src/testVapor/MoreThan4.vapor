@@ -1,0 +1,47 @@
+const ft_MT4
+  :MT4.Change
+  :MT4.Start
+
+func MT4.Start(this t.1 t.2 t.3 t.4 t.5 t.6)
+  PrintIntS(t.1)
+  PrintIntS(t.2)
+  PrintIntS(t.3)
+  PrintIntS(t.4)
+  PrintIntS(t.5)
+  PrintIntS(t.6)
+  t.19 = [this + 0]
+  t.20 = [t.19 + 0]
+  t.21 = call t.20(this t.6 t.5 t.4 t.3 t.2 t.1)
+  t.7 = t.21
+  ret t.7
+
+func MT4.Change(this t.9 t.10 t.11 t.12 t.13 t.14)
+  PrintIntS(t.9)
+  PrintIntS(t.10)
+  PrintIntS(t.11)
+  PrintIntS(t.12)
+  PrintIntS(t.13)
+  PrintIntS(t.14)
+  ret 0
+
+func AllocArray(size)
+  bytes = MulS(size 4)
+  bytes = Add(bytes 4)
+  v = HeapAllocZ(bytes)
+  [v] = size
+  ret v
+
+func ArrayIndexHelper(index)
+  loc = Add(index 1)
+  addr = MulS(loc 4)
+  ret addr
+
+func Main()
+  t.15 = HeapAllocZ(4)
+  [t.15] = :ft_MT4
+  t.16 = [t.15 + 0]
+  t.17 = [t.16 + 4]
+  t.18 = call t.17(t.15 1 2 3 4 5 6)
+  PrintIntS(t.18)
+  ret
+
