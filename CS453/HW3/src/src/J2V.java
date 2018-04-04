@@ -1,9 +1,9 @@
-import java.io.*;
-import java.util.*;
+import J2V.context.SymTableVisitor;
+import J2V.context.SymbolHelper;
+import syntaxtree.Node;
 
-import context.SymTableVisitor;
-import context.SymbolHelper;
-import syntaxtree.*;
+import java.io.*;
+import java.util.Scanner;
 
 public class J2V {
     private static void _J2V() {
@@ -31,7 +31,7 @@ public class J2V {
                 System.out.println(sh);
 
             // Java -> Vapor
-            VaporVisitor vv = new VaporVisitor(sh, debug);
+            J2V.VaporVisitor vv = new J2V.VaporVisitor(sh, debug);
             root.accept(vv, null);
             String vapor = vv.toVapor();
             System.out.print(vapor);

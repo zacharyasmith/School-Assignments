@@ -20,7 +20,7 @@ public class V2VM {
         else
             v = parseVapor(System.in, System.err);
 
-        
+
     }
 
     public static VaporProgram parseVapor(String file) {
