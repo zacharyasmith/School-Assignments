@@ -1,3 +1,5 @@
+import V2VM.CFG.CFG;
+import V2VM.CFGVisitor;
 import cs132.util.ProblemException;
 import cs132.vapor.ast.VBuiltIn;
 import cs132.vapor.ast.VBuiltIn.Op;
@@ -6,9 +8,8 @@ import cs132.vapor.ast.VInstr;
 import cs132.vapor.ast.VaporProgram;
 import cs132.vapor.parser.VaporParser;
 
-import V2VM.VaporVisitor;
-
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 public class V2VM {
@@ -24,21 +25,32 @@ public class V2VM {
         else
             v = parseVapor(System.in, System.err);
 
-        VaporVisitor vv = new VaporVisitor();
-
         // Pretty Print
+//        for (VFunction f : v.functions) {
+//            PrettyPrintVisitor ppv = new PrettyPrintVisitor(f);
+//            if (f.ident.equals("ArrayIndexHelper") || f.ident.equals("AllocArray"))
+//                continue;
+//            System.out.println("FUNCTION : " + f.ident);
+//            System.out.println("BODY------------------");
+//            for (VInstr i : f.body) {
+//                i.accept(ppv);
+//                System.out.println();
+//            }
+//            System.out.println();
+//        }
+
+        // generate CFGs
+        ArrayList<CFG> cfgs = new ArrayList<>();
         for (VFunction f : v.functions) {
-            System.out.println("FUNCTION : " + f.ident);
-            System.out.println("VARS------------------");
-            for (String var : f.vars)
-                System.out.println(var);
-            System.out.println();
-            System.out.println("BODY------------------");
+            CFG cfg = new CFG(f.vars, f.ident);
+            CFGVisitor cfgv = new CFGVisitor(cfg);
             for (VInstr i : f.body) {
-                i.accept(vv);
-                System.out.println();
+                i.accept(cfgv);
             }
-            System.out.println();
+            cfg.normalize();
+            System.out.println(cfg);
+            // add it to the list
+            cfgs.add(cfg);
         }
 
     }
