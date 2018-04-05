@@ -1,8 +1,12 @@
-import cs132.vapor.ast.VBuiltIn;
-import cs132.vapor.ast.VaporProgram;
-import cs132.vapor.ast.VBuiltIn.*;
-import cs132.vapor.parser.VaporParser;
 import cs132.util.ProblemException;
+import cs132.vapor.ast.VBuiltIn;
+import cs132.vapor.ast.VBuiltIn.Op;
+import cs132.vapor.ast.VFunction;
+import cs132.vapor.ast.VInstr;
+import cs132.vapor.ast.VaporProgram;
+import cs132.vapor.parser.VaporParser;
+
+import V2VM.VaporVisitor;
 
 import java.io.*;
 import java.util.Scanner;
@@ -13,13 +17,29 @@ public class V2VM {
         if (args.length > 0)
             if (args[0].equals("--manual")) {
                 Scanner reader = new Scanner(System.in);
-                System.out.print("File: testFiles/");
-                v = parseVapor("testFiles/" + reader.next());
+                System.out.print("File: testVapor/");
+                v = parseVapor("testVapor/" + reader.next());
             } else
                 v = parseVapor(args[0]);
         else
             v = parseVapor(System.in, System.err);
 
+        VaporVisitor vv = new VaporVisitor();
+
+        // Pretty Print
+        for (VFunction f : v.functions) {
+            System.out.println("FUNCTION : " + f.ident);
+            System.out.println("VARS------------------");
+            for (String var : f.vars)
+                System.out.println(var);
+            System.out.println();
+            System.out.println("BODY------------------");
+            for (VInstr i : f.body) {
+                i.accept(vv);
+                System.out.println();
+            }
+            System.out.println();
+        }
 
     }
 

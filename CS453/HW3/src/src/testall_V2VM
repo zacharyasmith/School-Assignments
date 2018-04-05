@@ -1,0 +1,24 @@
+#!/bin/bash
+# Compile the programs
+if [[ $* == *--make* ]]; then
+	make hw4
+fi
+
+if [[ $* == *--out* ]]; then
+	sh create_output_V2VM
+fi
+
+rm tmp.vapor tmp.out 2> /dev/null
+
+for filename in testVapor/*.vapor; do
+	echo "Testing file: "$filename""
+	java -cp ".:vapor-parser.jar" V2VM < $filename > tmp.vaporm
+	java -jar vapor.jar run -mips tmp.vaporm 1> tmp.out 2> /dev/null
+	diff -y tmp.out testVaporOutput/$(basename $filename .vapor).out
+	rm tmp.vaporm tmp.out 2> /dev/null
+	echo ""
+done
+
+if [[ $* == *--make* ]]; then
+	make clean
+fi
