@@ -15,13 +15,16 @@ import java.util.Scanner;
 public class V2VM {
     public static void main(String[] args) {
         VaporProgram v;
-        if (args.length > 0)
+        boolean debug = false;
+        if (args.length > 0) {
             if (args[0].equals("--manual")) {
                 Scanner reader = new Scanner(System.in);
                 System.out.print("File: testVapor/");
                 v = parseVapor("testVapor/" + reader.next());
             } else
                 v = parseVapor(args[0]);
+            debug = true;
+        }
         else
             v = parseVapor(System.in, System.err);
 
@@ -34,11 +37,13 @@ public class V2VM {
                 i.accept(cfgv);
             }
             cfg.normalize();
-            System.out.println(cfg);
+            if (debug)
+                System.out.println(cfg);
             // add it to the list
             cfgs.add(cfg);
         }
 
+        // TODO print vaporm
     }
 
     public static VaporProgram parseVapor(String file) {

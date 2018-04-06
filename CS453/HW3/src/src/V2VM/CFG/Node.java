@@ -49,7 +49,6 @@ public class Node {
             ret += next.line_number;
         if (branch_out != null)
             ret += " " + branch_out.line_number;
-        ret += '\n';
         return ret;
     }
 }

@@ -82,14 +82,19 @@ public class CFG {
                 br.branch_in = curr;
             }
         }
+        for (Variable v : vars)
+            v.normalize();
     }
 
     @Override
     public String toString() {
         String ret = "CFG for " + fname + "\n";
+        ret += "Vars:\n";
+        for (Variable v : vars)
+            ret += v + "\n";
         Node curr = start;
         while (curr != null) {
-            ret += curr;
+            ret += curr + "\n";
             curr = curr.next;
         }
         return ret;
