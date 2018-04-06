@@ -25,24 +25,10 @@ public class V2VM {
         else
             v = parseVapor(System.in, System.err);
 
-        // Pretty Print
-//        for (VFunction f : v.functions) {
-//            PrettyPrintVisitor ppv = new PrettyPrintVisitor(f);
-//            if (f.ident.equals("ArrayIndexHelper") || f.ident.equals("AllocArray"))
-//                continue;
-//            System.out.println("FUNCTION : " + f.ident);
-//            System.out.println("BODY------------------");
-//            for (VInstr i : f.body) {
-//                i.accept(ppv);
-//                System.out.println();
-//            }
-//            System.out.println();
-//        }
-
         // generate CFGs
         ArrayList<CFG> cfgs = new ArrayList<>();
         for (VFunction f : v.functions) {
-            CFG cfg = new CFG(f.vars, f.ident);
+            CFG cfg = new CFG(f.vars, f);
             CFGVisitor cfgv = new CFGVisitor(cfg);
             for (VInstr i : f.body) {
                 i.accept(cfgv);

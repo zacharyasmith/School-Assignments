@@ -17,11 +17,21 @@ public class Node {
     public Node next = null;
     public Node branch_out = null;
     public int line_number;
-    public ArrayList<Variable> accessor_vars = new ArrayList<>();
-    public Variable assignment = null;
+    private ArrayList<Variable> accessor_vars = new ArrayList<>();
+    private Variable assignment = null;
     public Node(VInstr instr, int line) {
         this.instr = instr;
         this.line_number = line;
+    }
+
+    public void setAssignment(Variable v) {
+        v.assign.add(line_number);
+        assignment = v;
+    }
+
+    public void addAccessor(Variable v) {
+        v.access.add(line_number);
+        accessor_vars.add(v);
     }
 
     @Override

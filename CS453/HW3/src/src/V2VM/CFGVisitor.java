@@ -12,41 +12,76 @@ public class CFGVisitor extends VInstr.Visitor {
 
     @Override
     public void visit(VAssign curr) throws Throwable {
-        cfg.addLast(new Node(curr, curr.sourcePos.line));
+        Node n = new Node(curr, curr.sourcePos.line);
+        n.setAssignment(cfg.searchVar(curr.dest.toString()));
+        if (curr.source instanceof VVarRef.Local)
+            n.addAccessor(cfg.searchVar(((VVarRef.Local) curr.source).ident));
+        cfg.addLast(n);
     }
 
     @Override
     public void visit(VCall curr) throws Throwable {
-        cfg.addLast(new Node(curr, curr.sourcePos.line));
+        Node n = new Node(curr, curr.sourcePos.line);
+        if (curr.dest != null)
+            n.setAssignment(cfg.searchVar(curr.dest.ident));
+        if (curr.addr instanceof VAddr.Var)
+            n.addAccessor(cfg.searchVar(((VAddr.Var) curr.addr).var.toString()));
+        for (VOperand o : curr.args)
+            if (o instanceof VVarRef.Local)
+                n.addAccessor(cfg.searchVar(((VVarRef.Local) o).ident));
+        cfg.addLast(n);
     }
 
     @Override
     public void visit(VBuiltIn curr) throws Throwable {
-        cfg.addLast(new Node(curr, curr.sourcePos.line));
+        Node n = new Node(curr, curr.sourcePos.line);
+        if (curr.dest != null)
+            n.setAssignment(cfg.searchVar(curr.dest.toString()));
+        for (VOperand o : curr.args)
+            if (o instanceof VVarRef.Local)
+                n.addAccessor(cfg.searchVar(((VVarRef.Local) o).ident));
+        cfg.addLast(n);
     }
 
     @Override
     public void visit(VMemWrite curr) throws Throwable {
-        cfg.addLast(new Node(curr, curr.sourcePos.line));
+        Node n = new Node(curr, curr.sourcePos.line);
+        if (curr.dest instanceof VMemRef.Global && ((VMemRef.Global) curr.dest).base instanceof VAddr.Var)
+            n.addAccessor(cfg.searchVar(((VAddr.Var) ((VMemRef.Global) curr.dest).base).var.toString()));
+        if (curr.source instanceof VVarRef.Local)
+            n.addAccessor(cfg.searchVar(((VVarRef.Local) curr.source).ident));
+        cfg.addLast(n);
     }
 
     @Override
     public void visit(VMemRead curr) throws Throwable {
-        cfg.addLast(new Node(curr, curr.sourcePos.line));
+        Node n = new Node(curr, curr.sourcePos.line);
+        if (curr.dest != null)
+            n.setAssignment(cfg.searchVar(curr.dest.toString()));
+        if (curr.source instanceof VMemRef.Global && ((VMemRef.Global) curr.source).base instanceof VAddr.Var)
+            n.addAccessor(cfg.searchVar(((VAddr.Var) ((VMemRef.Global) curr.source).base).var.toString()));
+        cfg.addLast(n);
     }
 
     @Override
     public void visit(VBranch curr) throws Throwable {
-        cfg.addLast(new Node(curr, curr.sourcePos.line));
+        Node n = new Node(curr, curr.sourcePos.line);
+        if (curr.value instanceof VVarRef.Local)
+            n.addAccessor(cfg.searchVar(((VVarRef.Local) curr.value).ident));
+        cfg.addLast(n);
     }
 
     @Override
     public void visit(VGoto curr) throws Throwable {
-        cfg.addLast(new Node(curr, curr.sourcePos.line));
+        Node n = new Node(curr, curr.sourcePos.line);
+        cfg.addLast(n);
     }
 
     @Override
     public void visit(VReturn curr) throws Throwable {
-        cfg.addLast(new Node(curr, curr.sourcePos.line));
+        Node n = new Node(curr, curr.sourcePos.line);
+        if (curr.value != null && curr.value instanceof VVarRef.Local)
+            n.addAccessor(cfg.searchVar(((VVarRef.Local) curr.value).ident));
+        cfg.addLast(n);
     }
 }

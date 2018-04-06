@@ -1,7 +1,7 @@
 package V2VM.CFG;
 
 import V2VM.Variable;
-import cs132.vapor.ast.VBranch;
+import cs132.vapor.ast.*;
 
 import java.util.ArrayList;
 
@@ -11,13 +11,31 @@ import java.util.ArrayList;
 public class CFG {
     public ArrayList<Variable> vars = new ArrayList<>();
     public String fname;
-    private Node start = null;
     public int size = 0;
-    public CFG(String[] vars, String fname) {
-        this.fname = fname;
+    private VFunction function;
+    private Node start = null;
+    public CFG(String[] vars, VFunction function) {
+        this.fname = function.ident;
+        this.function = function;
         for (int i = 0; i < vars.length; i++) {
             this.vars.add(new Variable(vars[i]));
         }
+    }
+
+    public int instrIndexOfLabel(String label) {
+        for (VCodeLabel l : function.labels) {
+            if (l.ident.equals(label))
+                return l.instrIndex;
+        }
+        return -1;
+    }
+
+    public Variable searchVar(String var) {
+        for (Variable v : vars) {
+            if (v.name.equals(var))
+                return v;
+        }
+        return null;
     }
 
     public void addLast(Node n) {
@@ -56,6 +74,10 @@ public class CFG {
             Node curr = get(i);
             if (curr.instr instanceof VBranch) {
                 Node br = get(((VBranch) curr.instr).target.getTarget().instrIndex);
+                curr.branch_out = br;
+                br.branch_in = curr;
+            } else if (curr.instr instanceof VGoto && ((VGoto) curr.instr).target instanceof VAddr.Label) {
+                Node br = get(instrIndexOfLabel(((VAddr.Label) ((VGoto) curr.instr).target).label.ident));
                 curr.branch_out = br;
                 br.branch_in = curr;
             }
