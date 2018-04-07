@@ -43,21 +43,21 @@ public class V2VM {
             cfgs.add(cfg);
         }
 
-//        String[] registers = {
-//            "v0", "v1",
-//            "a0", "a1", "a2", "a3",
-//            "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
-//            "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
-//            "t8"
-//        };
+        String[] registers = {
+            "v0", "v1",
+            "a0", "a1", "a2", "a3",
+            "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
+            "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
+            "t8"
+        };
         // allocate registers for each function
-        String[] reg_array = {"r0", "r1", "r2", "r2"};
-        ArrayList<String> regs = new ArrayList<>(Arrays.asList(reg_array));
+//        String[] reg_array = {"r0", "r1", "r2", "r3", "r4", "r5", "r6", "r7"};
+        ArrayList<String> regs = new ArrayList<>(Arrays.asList(registers));
         for (CFG cfg : cfgs) {
-            if (debug)
-                System.out.println(cfg);
             RegisterAllocator reg_alloc = new RegisterAllocator(cfg.vars, regs);
             reg_alloc.LinearScanRegisterAllocation();
+            if (debug)
+                System.out.println(cfg);
         }
 
         // TODO print vaporm

@@ -11,8 +11,25 @@ public class Variable {
     public int begin = -1;
     public int end = -1;
     public String name;
+    public Register reg = null;
+    public int stack_location = -1;
     public Variable (String name) {
         this.name = name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Variable variable = (Variable) o;
+
+        return name.equals(variable.name);
+    }
+
+    @Override
+    public int hashCode() {
+        return name.hashCode();
     }
 
     public void normalize() {
@@ -26,15 +43,21 @@ public class Variable {
             end = begin;
             return;
         }
-        if (!access.isEmpty())
-            // treat as global
+        if (!access.isEmpty()) {
+            // global or parameter
+            begin = 0;
+            end = access.get(access.size() - 1);
             return;
+        }
+        // parameter that was not used
         begin = 0;
+        end = 0;
     }
 
     @Override
     public String toString() {
-        String ret = name + "[" + begin + "," + end + "]" + ": Assign: ";
+        String ret = (reg == null ? "" : reg  + ": ");
+        ret += name + "[" + begin + "," + end + "," + stack_location + "]" + ": Assign: ";
         for (Integer i : assign)
             ret += i.toString() + " ";
         ret += "Access: ";
@@ -42,18 +65,18 @@ public class Variable {
             ret += i.toString() + " ";
         return ret;
     }
-}
 
-class VariableStartComparator implements Comparator<Variable> {
-    @Override
-    public int compare(Variable o1, Variable o2) {
-        return o1.begin - o2.begin;
+    public static class VariableEndComparator implements Comparator<Variable> {
+        @Override
+        public int compare(Variable o1, Variable o2) {
+            return o1.end - o2.end;
+        }
     }
-}
 
-class VariableEndComparator implements Comparator<Variable> {
-    @Override
-    public int compare(Variable o1, Variable o2) {
-        return o1.end - o2.end;
+    public static class VariableStartComparator implements Comparator<Variable> {
+        @Override
+        public int compare(Variable o1, Variable o2) {
+            return o1.begin - o2.begin;
+        }
     }
 }
