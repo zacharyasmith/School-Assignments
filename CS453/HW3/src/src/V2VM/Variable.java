@@ -1,6 +1,7 @@
 package V2VM;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class Variable {
     public ArrayList<Integer> assign = new ArrayList<>();
@@ -40,5 +41,19 @@ public class Variable {
         for (Integer i : access)
             ret += i.toString() + " ";
         return ret;
+    }
+}
+
+class VariableStartComparator implements Comparator<Variable> {
+    @Override
+    public int compare(Variable o1, Variable o2) {
+        return o1.begin - o2.begin;
+    }
+}
+
+class VariableEndComparator implements Comparator<Variable> {
+    @Override
+    public int compare(Variable o1, Variable o2) {
+        return o1.end - o2.end;
     }
 }

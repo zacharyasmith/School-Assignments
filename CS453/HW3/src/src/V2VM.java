@@ -1,5 +1,6 @@
 import V2VM.CFG.CFG;
 import V2VM.CFGVisitor;
+import V2VM.RegisterAllocator;
 import cs132.util.ProblemException;
 import cs132.vapor.ast.VBuiltIn;
 import cs132.vapor.ast.VBuiltIn.Op;
@@ -10,12 +11,15 @@ import cs132.vapor.parser.VaporParser;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
 
 public class V2VM {
     public static void main(String[] args) {
         VaporProgram v;
         boolean debug = false;
+
+        // parse the vapor code
         if (args.length > 0) {
             if (args[0].equals("--manual")) {
                 Scanner reader = new Scanner(System.in);
@@ -33,14 +37,27 @@ public class V2VM {
         for (VFunction f : v.functions) {
             CFG cfg = new CFG(f.vars, f);
             CFGVisitor cfgv = new CFGVisitor(cfg);
-            for (VInstr i : f.body) {
+            for (VInstr i : f.body)
                 i.accept(cfgv);
-            }
             cfg.normalize();
+            cfgs.add(cfg);
+        }
+
+//        String[] registers = {
+//            "v0", "v1",
+//            "a0", "a1", "a2", "a3",
+//            "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
+//            "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
+//            "t8"
+//        };
+        // allocate registers for each function
+        String[] reg_array = {"r0", "r1", "r2", "r2"};
+        ArrayList<String> regs = new ArrayList<>(Arrays.asList(reg_array));
+        for (CFG cfg : cfgs) {
             if (debug)
                 System.out.println(cfg);
-            // add it to the list
-            cfgs.add(cfg);
+            RegisterAllocator reg_alloc = new RegisterAllocator(cfg.vars, regs);
+            reg_alloc.LinearScanRegisterAllocation();
         }
 
         // TODO print vaporm
