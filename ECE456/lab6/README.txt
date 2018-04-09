@@ -7,5 +7,5 @@ This lab has been written entirely in Python3. It will need to be installed to r
 Make the files executable by running `chmod +x <file>` on each python file.
 
 Run the following:
-    `./rcmdd <port no.>`
-    `./rcmd <hostname> <port no.> <execution count> <time delay (s)> <command>`
+    `./rcmdd (-tcp | -udp) <port no.>`
+    `./rcmd (-tcp | -udp) <hostname> <port no.> <execution count> <time delay (s)> <command>`
