@@ -1,10 +1,13 @@
 package V2VM;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 public class RegisterAllocator {
     private ArrayList<Variable> vars;
     private ArrayList<Register> regs;
+    public HashSet<Register> used_regs = new HashSet<>();
+    private int regs_count;
     // Sorted by increasing endpoint
     private ArrayList<Variable> active;
     int stack = 0;
@@ -12,14 +15,21 @@ public class RegisterAllocator {
         this.vars = vars;
         this.regs = new ArrayList<>();
         for (String r : regs)
-            this.regs.add(new Register(r));
+            enableRegister(new Register(r));
+        this.regs_count = this.regs.size();
         // order by increasing start point
         this.vars.sort(new Variable.VariableStartComparator());
+    }
+
+    private void enableRegister(Register r) {
+        regs.add(r);
+        regs.sort(new Register.RegisterSort());
     }
 
     private Register getNextRegister() {
         assert !regs.isEmpty();
         Register ret = regs.get(0);
+        used_regs.add(ret);
         regs.remove(0);
         return ret;
     }
@@ -33,7 +43,7 @@ public class RegisterAllocator {
         active = new ArrayList<>();
         for (Variable v : vars) {
             ExpireOldIntervals(v);
-            if (active.size() == regs.size())
+            if (active.size() == regs_count)
                 SpillAtInterval(v);
             else {
                 v.reg = getNextRegister();
@@ -47,7 +57,7 @@ public class RegisterAllocator {
             if (v.end < 0 || v.end > i.begin)
                 return;
             active.remove(v);
-            regs.add(v.reg);
+            enableRegister(v.reg);
         }
     }
 
