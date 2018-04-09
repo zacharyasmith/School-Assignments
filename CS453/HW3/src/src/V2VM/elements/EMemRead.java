@@ -3,7 +3,7 @@ package V2VM.elements;
 import V2VM.CFG.CFG;
 import cs132.vapor.ast.VMemRead;
 
-public class EMemRead implements Element {
+public class EMemRead extends Element {
     VMemRead statement;
     public EMemRead(VMemRead statement) {
         this.statement = statement;

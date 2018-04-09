@@ -23,6 +23,7 @@ public class Node {
     private Variable assignment = null;
     public Node(int line, Element e) {
         this.element = e;
+        this.element.n = this;
         this.line_number = line;
     }
 

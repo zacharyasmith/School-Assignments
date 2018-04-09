@@ -3,7 +3,7 @@ package V2VM.elements;
 import V2VM.CFG.CFG;
 import cs132.vapor.ast.VReturn;
 
-public class EReturn implements Element {
+public class EReturn extends Element {
     VReturn statement;
     public EReturn(VReturn statement) {
         this.statement = statement;
