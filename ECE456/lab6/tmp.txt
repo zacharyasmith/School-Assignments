@@ -1,0 +1,9 @@
+total 48
+-rw-r--r--  1 Zach-Admin  staff   259 Mar  3 21:31 Exceptions.py
+-rw-r--r--  1 Zach-Admin  staff   354 Apr  7 16:46 README.txt
+-rw-r--r--  1 Zach-Admin  staff   620 Apr  8 21:12 Test.py
+drwxr-xr-x  4 Zach-Admin  staff   128 Apr  8 20:50 __pycache__
+-rwxr-xr-x  1 Zach-Admin  staff  2050 Apr  8 21:54 rcmd.py
+-rwxr-xr-x  1 Zach-Admin  staff  3475 Apr  8 21:56 rcmdd.py
+-rw-r--r--  1 Zach-Admin  staff     0 Apr  8 21:56 tmp.txt
+-rw-r--r--  1 Zach-Admin  staff  1000 Apr  8 20:49 tools.py
