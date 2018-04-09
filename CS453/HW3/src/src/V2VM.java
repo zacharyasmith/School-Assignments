@@ -43,13 +43,6 @@ public class V2VM {
             cfgs.add(cfg);
         }
 
-//        String[] registers = {
-//            "v0", "v1",
-//            "a0", "a1", "a2", "a3",
-//            "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
-//            "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
-//            "t8"
-//        };
         // allocate registers for each function
         String[] registers = {"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8"};
         ArrayList<String> regs = new ArrayList<>(Arrays.asList(registers));
@@ -60,7 +53,17 @@ public class V2VM {
                 System.out.println(cfg);
         }
 
-        // TODO print vaporm
+//        String[] registers = {
+//            "v0", "v1",
+//            "a0", "a1", "a2", "a3",
+//            "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
+//            "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
+//            "t8"
+//        };
+        // TODO copy function tables
+        for (CFG cfg : cfgs) {
+
+        }
     }
 
     public static VaporProgram parseVapor(String file) {

@@ -1,5 +1,6 @@
 package V2VM.CFG;
 
+import V2VM.elements.Element;
 import V2VM.Variable;
 import cs132.vapor.ast.VInstr;
 
@@ -17,10 +18,11 @@ public class Node {
     public Node next = null;
     public Node branch_out = null;
     public int line_number;
+    public Element element;
     private ArrayList<Variable> accessor_vars = new ArrayList<>();
     private Variable assignment = null;
-    public Node(VInstr instr, int line) {
-        this.instr = instr;
+    public Node(int line, Element e) {
+        this.element = e;
         this.line_number = line;
     }
 
