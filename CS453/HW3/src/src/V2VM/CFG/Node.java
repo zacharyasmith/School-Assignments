@@ -19,9 +19,10 @@ public class Node {
     public Node branch_out = null;
     public int line_number;
     public Element element;
-    private ArrayList<Variable> accessor_vars = new ArrayList<>();
-    private Variable assignment = null;
+    public ArrayList<Variable> accessor_vars = new ArrayList<>();
+    public Variable assignment = null;
     public Node(int line, Element e) {
+        this.instr = e.i;
         this.element = e;
         this.element.n = this;
         this.line_number = line;

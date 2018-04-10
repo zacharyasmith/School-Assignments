@@ -17,7 +17,7 @@ public class Register {
 
     @Override
     public String toString() {
-        return reg;
+        return "$" + reg;
     }
 
     public static class RegisterSort implements Comparator<Register> {

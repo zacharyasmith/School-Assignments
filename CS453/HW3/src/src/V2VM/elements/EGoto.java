@@ -6,11 +6,12 @@ import cs132.vapor.ast.VGoto;
 public class EGoto extends Element {
     VGoto statement;
     public EGoto(VGoto statement) {
+        super(statement);
         this.statement = statement;
     }
 
     @Override
     public String toVapor(CFG cfg) {
-        return null;
+        return super.toVapor(cfg) + tab + "goto " + statement.target + "\n";
     }
 }

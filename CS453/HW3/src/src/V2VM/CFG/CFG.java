@@ -1,5 +1,6 @@
 package V2VM.CFG;
 
+import V2VM.Register;
 import V2VM.Variable;
 import cs132.vapor.ast.*;
 
@@ -9,7 +10,7 @@ import java.util.ArrayList;
  * One CFG for each function.
  */
 public class CFG {
-    public ArrayList<Variable> vars = new ArrayList<>();
+    public ArrayList<Variable> vars;
     public String fname;
     public int size = 0;
     private VFunction function;
@@ -17,9 +18,23 @@ public class CFG {
     public CFG(String[] vars, VFunction function) {
         this.fname = function.ident;
         this.function = function;
+        this.vars = arrToVars(vars);
+    }
+
+    public static ArrayList<Variable> arrToVars(String[] vars) {
+        ArrayList<Variable> ret = new ArrayList<>();
         for (int i = 0; i < vars.length; i++) {
-            this.vars.add(new Variable(vars[i]));
+            ret.add(new Variable(vars[i]));
         }
+        return ret;
+    }
+
+    public static ArrayList<Register> arrToRegs(String[] regs) {
+        ArrayList<Register> ret = new ArrayList<>();
+        for (int i = 0; i < regs.length; i++) {
+            ret.add(new Register(regs[i]));
+        }
+        return ret;
     }
 
     public int instrIndexOfLabel(String label) {
@@ -98,5 +113,12 @@ public class CFG {
             curr = curr.next;
         }
         return ret;
+    }
+
+    public static int indexOfHelper(Object[] list, Object i) {
+        for (int j = 0; j < list.length; j++)
+            if (list[j].equals(i))
+                return j;
+        return -1;
     }
 }

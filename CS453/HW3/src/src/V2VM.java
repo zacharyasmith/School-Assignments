@@ -2,11 +2,8 @@ import V2VM.CFG.CFG;
 import V2VM.CFGVisitor;
 import V2VM.RegisterAllocator;
 import cs132.util.ProblemException;
-import cs132.vapor.ast.VBuiltIn;
+import cs132.vapor.ast.*;
 import cs132.vapor.ast.VBuiltIn.Op;
-import cs132.vapor.ast.VFunction;
-import cs132.vapor.ast.VInstr;
-import cs132.vapor.ast.VaporProgram;
 import cs132.vapor.parser.VaporParser;
 
 import java.io.*;
@@ -49,21 +46,30 @@ public class V2VM {
         for (CFG cfg : cfgs) {
             RegisterAllocator reg_alloc = new RegisterAllocator(cfg.vars, regs);
             reg_alloc.LinearScanRegisterAllocation();
-            if (debug)
-                System.out.println(cfg);
         }
 
 //        String[] registers = {
-//            "v0", "v1",
-//            "a0", "a1", "a2", "a3",
-//            "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7",
-//            "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7",
-//            "t8"
+//            "v0", "v1", // for return and stack pop temporary
+//            "a0", "a1", "a2", "a3", // argument passing
+//            "t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8"
+//            "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7"
 //        };
         // TODO copy function tables
-        for (CFG cfg : cfgs) {
-
+        StringBuilder vaporm = new StringBuilder();
+        for (VDataSegment d : v.dataSegments) {
+            vaporm.append("const " + d.ident + "\n");
+            for (VOperand.Static n : d.values)
+                vaporm.append("  " + n + "\n");
+            vaporm.append('\n');
         }
+        for (CFG cfg : cfgs) {
+            vaporm.append("func " + cfg.fname + " []\n");
+            for (int i = 0; i < cfg.size; i++) {
+                vaporm.append(cfg.get(i).element.toVapor(cfg));
+            }
+            vaporm.append("\n");
+        }
+        System.out.println(vaporm);
     }
 
     public static VaporProgram parseVapor(String file) {

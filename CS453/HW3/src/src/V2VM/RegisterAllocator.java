@@ -42,8 +42,6 @@ public class RegisterAllocator {
     public void LinearScanRegisterAllocation() {
         active = new ArrayList<>();
         for (Variable v : vars) {
-            if (v.begin == v.end)
-                continue;
             ExpireOldIntervals(v);
             if (active.size() == regs_count)
                 SpillAtInterval(v);
