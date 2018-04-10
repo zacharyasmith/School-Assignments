@@ -9,7 +9,9 @@ hw4:
 	$(JC) -cp ".:vapor-parser.jar" V2VM.java
 
 clean:
-	-rm smithza.zip *.class J2V/*.class J2V/context/*.class J2V/elements/*.class V2VM/*.class
+	-rm smithza.zip *.class
+	-rm J2V/*.class J2V/context/*.class J2V/elements/*.class
+	-rm V2VM/*.class V2VM/elements/*.class V2VM/CFG/*.class
 
 packhw3:
 	-rm smithza.zip
