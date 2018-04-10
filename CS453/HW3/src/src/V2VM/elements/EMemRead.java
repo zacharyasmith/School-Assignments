@@ -23,7 +23,7 @@ public class EMemRead extends Element {
             else
                 ret += ((VMemRef.Global) statement.source).base.toString();
             if (((VMemRef.Global) statement.source).byteOffset != 0)
-                ret += " + " + ((VMemRef.Global) statement.source).byteOffset / 4;
+                ret += " + " + ((VMemRef.Global) statement.source).byteOffset;
         }
         ret += "]\n";
         return ret;

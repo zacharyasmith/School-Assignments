@@ -30,6 +30,8 @@ public class CFGVisitor extends VInstr.Visitor {
         for (VOperand o : curr.args)
             if (o instanceof VVarRef.Local)
                 n.addAccessor(cfg.searchVar(((VVarRef.Local) o).ident));
+        cfg.out_count = Math.max(curr.args.length - RegisterAllocator.arg_regs.size(), cfg.out_count);
+        cfg.calls_func = true;
         cfg.addLast(n);
     }
 

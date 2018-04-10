@@ -13,6 +13,7 @@ public class Variable {
     public String name;
     public Register reg = null;
     public int stack_location = -1;
+    public Register arg = null;
     public Variable (String name) {
         this.name = name;
     }

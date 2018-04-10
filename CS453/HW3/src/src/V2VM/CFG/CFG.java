@@ -1,10 +1,12 @@
 package V2VM.CFG;
 
 import V2VM.Register;
+import V2VM.RegisterAllocator;
 import V2VM.Variable;
 import cs132.vapor.ast.*;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 
 /**
  * One CFG for each function.
@@ -13,12 +15,18 @@ public class CFG {
     public ArrayList<Variable> vars;
     public String fname;
     public int size = 0;
-    private VFunction function;
+    public int extra_params = 0;
+    public int out_count = 0;
+    public VFunction function;
+    public HashSet<Register> used_regs;
+    public boolean calls_func = false;
     private Node start = null;
     public CFG(String[] vars, VFunction function) {
         this.fname = function.ident;
         this.function = function;
         this.vars = arrToVars(vars);
+        if (function.params.length - RegisterAllocator.arg_regs.size() > 0)
+            this.extra_params = function.params.length - RegisterAllocator.arg_regs.size();
     }
 
     public static ArrayList<Variable> arrToVars(String[] vars) {

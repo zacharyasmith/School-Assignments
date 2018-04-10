@@ -2,12 +2,11 @@ package V2VM.elements;
 
 import V2VM.CFG.CFG;
 import V2VM.Register;
+import V2VM.RegisterAllocator;
 import cs132.vapor.ast.VAddr;
 import cs132.vapor.ast.VCall;
 import cs132.vapor.ast.VOperand;
 import cs132.vapor.ast.VVarRef;
-
-import java.util.ArrayList;
 
 public class ECall extends Element {
     VCall statement;
@@ -18,8 +17,6 @@ public class ECall extends Element {
 
     @Override
     public String toVapor(CFG cfg) {
-        // TODO switch to vapor m
-        // TODO callee stuff
         String ret = super.toVapor(cfg);
         // handle the call
         String call = tab + "call ";
@@ -29,14 +26,18 @@ public class ECall extends Element {
         else
             call += this.statement.addr.toString();
         call += "\n";
-        // handle args
+        // backup all 8 vars in local
+        int j = 0;
+        for (Register r : cfg.used_regs)
+            ret += tab + "local[" + j++ + "] = " + r + "\n";
         // args list
-        String[] regs = {"a0", "a1", "a2", "a3"};
-        ArrayList<Register> vars = CFG.arrToRegs(regs);
         int v_index = 0;
+        int out_count = 0;
         for (VOperand o : this.statement.args) {
-            if (v_index < vars.size())
-                ret += tab + vars.get(v_index++) + " = ";
+            if (v_index < RegisterAllocator.arg_regs.size())
+                ret += tab + RegisterAllocator.arg_regs.get(v_index++) + " = ";
+            else
+                ret += tab + "out[" + out_count++ + "] = ";
             if (o instanceof VVarRef.Local)
                 ret += n.accessor_vars.get(accessor_index++).reg;
             else
@@ -45,6 +46,10 @@ public class ECall extends Element {
         }
         if (this.statement.dest != null)
             call += tab + n.assignment.reg + " = $v0\n";
+        // restore all 8 vars in local
+        j = 0;
+        for (Register r : cfg.used_regs)
+            ret += tab + r + " = local[" + j++ + "]\n";
         return ret + call;
     }
 }

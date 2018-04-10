@@ -23,7 +23,7 @@ public class EMemWrite extends Element {
             else
                 ret += statement.dest.toString();
             if (((VMemRef.Global) statement.dest).byteOffset != 0)
-                ret += " + " + ((VMemRef.Global) statement.dest).byteOffset / 4;
+                ret += " + " + ((VMemRef.Global) statement.dest).byteOffset;
         }
         ret += "] = ";
         if (statement.source instanceof VVarRef.Local)
