@@ -98,11 +98,14 @@ public class CFG {
             if (curr.instr instanceof VBranch) {
                 Node br = get(((VBranch) curr.instr).target.getTarget().instrIndex);
                 curr.branch_out = br;
-                br.branch_in = curr;
-            } else if (curr.instr instanceof VGoto && ((VGoto) curr.instr).target instanceof VAddr.Label) {
+                br.branch_in.add(curr);
+                br.branch_in_ident.add(((VBranch) curr.instr).target.ident);
+            } else if (curr.instr instanceof VGoto
+                    && ((VGoto) curr.instr).target instanceof VAddr.Label) {
                 Node br = get(instrIndexOfLabel(((VAddr.Label) ((VGoto) curr.instr).target).label.ident));
                 curr.branch_out = br;
-                br.branch_in = curr;
+                br.branch_in.add(curr);
+                br.branch_in_ident.add(((VAddr.Label) ((VGoto) curr.instr).target).label.ident);
             }
         }
         for (Variable v : vars)

@@ -13,12 +13,12 @@ public class EAssign extends Element {
 
     @Override
     public String toVapor(CFG cfg) {
-        String ret = super.toVapor(cfg) + tab + n.assignment.reg + " = ";
+        String ret = super.toVapor(cfg);
         if (statement.source instanceof VVarRef.Local) {
-            if (n.assignment.reg.equals(n.accessor_vars.get(0).reg)) return "";
-            ret += n.accessor_vars.get(0).reg;
+            if (n.assignment.reg.equals(n.accessor_vars.get(0).reg)) return ret;
+            ret += tab + n.assignment.reg + " = " + n.accessor_vars.get(0).reg;
         } else
-            ret += statement.source;
+            ret += tab + n.assignment.reg + " = " + statement.source;
         ret += "\n";
         return ret;
     }

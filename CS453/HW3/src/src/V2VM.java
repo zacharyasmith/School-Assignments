@@ -31,12 +31,13 @@ public class V2VM {
         else
             v = parseVapor(System.in, System.err);
 
+        // callee-saved : "s0", "s1", "s2", "s3", "s4", "s5", "s6", "s7"
         // registers
         // allocate registers for each function
-        String[] temp_regs_list = {"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8", "s0", "s1", "s2", "s3"};
+        String[] temp_regs_list = {"t0", "t1", "t2", "t3", "t4", "t5", "t6", "t7", "t8"};
         RegisterAllocator.regs = CFG.arrToRegs(temp_regs_list);
         // arguments registers
-        String[] arg_regs_list = {"a0", "a1", "a2", "a3", "s4", "s5", "s6", "s7"};
+        String[] arg_regs_list = {"a0", "a1", "a2", "a3"};
         RegisterAllocator.arg_regs = CFG.arrToRegs(arg_regs_list);
 
         // generate CFGs
@@ -55,6 +56,8 @@ public class V2VM {
             RegisterAllocator reg_alloc = new RegisterAllocator(cfg.vars);
             reg_alloc.LinearScanRegisterAllocation();
             cfg.used_regs = reg_alloc.used_regs;
+            if (debug)
+                System.out.println(cfg);
         }
 
         /**

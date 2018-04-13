@@ -14,7 +14,8 @@ import java.util.ArrayList;
 public class Node {
     public VInstr instr;
     public Node in = null;
-    public Node branch_in = null;
+    public ArrayList<Node> branch_in = new ArrayList<>();
+    public ArrayList<String> branch_in_ident = new ArrayList<>();
     public Node next = null;
     public Node branch_out = null;
     public int line_number;
@@ -45,8 +46,12 @@ public class Node {
             ret += in.line_number + " ";
         else
             ret += "start ";
-        if (branch_in != null)
-            ret += branch_in.line_number + " ";
+        if (!branch_in.isEmpty()) {
+            ret += "{";
+            for (Node n : branch_in)
+                ret += n.line_number + " ";
+            ret += "}";
+        }
         ret +=  "-> " + line_number +
                 (next != null || branch_out != null ? " -> " : "");
         if (next != null)
