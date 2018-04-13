@@ -13,7 +13,7 @@ rm tmp.vapor tmp.out 2> /dev/null
 for filename in testVapor/*.vapor; do
 	echo "Testing file: "$filename""
 	java -cp ".:vapor-parser.jar" V2VM < $filename > tmp.vaporm
-	java -jar vapor.jar run -mips tmp.vaporm 1> tmp.out 2> /dev/null
+	java -jar vapor.jar run -mips tmp.vaporm > tmp.out
 	diff -y tmp.out testVaporOutput/$(basename $filename .vapor).out
 	rm tmp.vaporm tmp.out 2> /dev/null
 	echo ""
