@@ -1,5 +1,6 @@
 package V2VM.CFG;
 
+import V2VM.elements.EGoto;
 import V2VM.elements.Element;
 import V2VM.Variable;
 import cs132.vapor.ast.VInstr;
@@ -22,11 +23,17 @@ public class Node {
     public Element element;
     public ArrayList<Variable> accessor_vars = new ArrayList<>();
     public Variable assignment = null;
+    // goto placeholder
+    public boolean is_goto = false;
+    public Node goto_next = null;
+    public Node goto_in = null;
     public Node(int line, Element e) {
         this.instr = e.i;
         this.element = e;
         this.element.n = this;
         this.line_number = line;
+        if (e instanceof EGoto)
+            is_goto = true;
     }
 
     public void setAssignment(Variable v) {
@@ -40,24 +47,48 @@ public class Node {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Node node = (Node) o;
+
+        return line_number == node.line_number;
+    }
+
+    @Override
+    public int hashCode() {
+        return line_number;
+    }
+
+    @Override
     public String toString() {
-        String ret = "";
+        String ret = element.getClass().getSimpleName() + " ";
+        // Inputs
         if (in != null)
             ret += in.line_number + " ";
-        else
+        if (goto_in != null)
+            ret += "[" + goto_in.line_number + "] ";
+        if (in == null && goto_in == null)
             ret += "start ";
         if (!branch_in.isEmpty()) {
             ret += "{";
             for (Node n : branch_in)
-                ret += n.line_number + " ";
+                ret += n.line_number + ",";
             ret += "}";
         }
-        ret +=  "-> " + line_number +
-                (next != null || branch_out != null ? " -> " : "");
-        if (next != null)
-            ret += next.line_number;
-        if (branch_out != null)
-            ret += " " + branch_out.line_number;
+        // node line number
+        ret +=  "-> " + line_number;
+        if (next != null || branch_out != null || goto_next != null) {
+            ret += " ->";
+            // outputs
+            if (next != null)
+                ret += " " + next.line_number;
+            if (branch_out != null)
+                ret += " {" + branch_out.line_number + "}";
+            if (goto_next != null)
+                ret += " [" + goto_next.line_number + "]";
+        }
         return ret;
     }
 }

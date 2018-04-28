@@ -21,6 +21,7 @@ public class CFG {
     public HashSet<Register> used_regs;
     public boolean calls_func = false;
     private Node start = null;
+    public BasicBlockContainer bbc = new BasicBlockContainer();
     public CFG(String[] vars, VFunction function) {
         this.fname = function.ident;
         this.function = function;
@@ -80,10 +81,14 @@ public class CFG {
         if (size == 0 || i < 0 || i >= size)
             return null;
         Node ret = start;
+        Node test;
         int curr = 0;
         while (curr != i) {
             curr++;
-            ret = ret.next;
+            test = ret.next;
+            if (test == null)
+                test = ret.goto_next;
+            ret = test;
         }
         return ret;
     }
@@ -93,6 +98,7 @@ public class CFG {
     }
 
     public void normalize() {
+        // normalize in/out flow
         for (int i = 0; i < size; i++) {
             Node curr = get(i);
             if (curr.instr instanceof VBranch) {
@@ -106,10 +112,85 @@ public class CFG {
                 curr.branch_out = br;
                 br.branch_in.add(curr);
                 br.branch_in_ident.add(((VAddr.Label) ((VGoto) curr.instr).target).label.ident);
+                // remove in/out
+                curr.goto_next = curr.next;
+                curr.next.goto_in = curr;
+                curr.next.in = null;
+                curr.next = null;
             }
         }
+
+        // create BBs
+        createBBs();
+
+        // normalize variables
         for (Variable v : vars)
             v.normalize();
+    }
+
+    private void createBBs() {
+        // create basic blocks
+        BasicBlock curr = new BasicBlock();
+        bbc.add(curr);
+        boolean bypass = false;
+        for (int i = 0; i < size; i++) {
+            // get current
+            Node n = get(i);
+            if (!n.branch_in.isEmpty()) {
+                // branched into
+                // make new basic block
+                BasicBlock next = new BasicBlock();
+                bbc.add(next);
+                if (curr.getLast() != null && curr.getLast().next != null) {
+                    curr.bb_out.add(next);
+                    next.bb_in.add(curr);
+                }
+                // move along
+                curr = next;
+                // add this to current
+                if (!bypass)
+                    curr.nodes.add(n);
+                bypass = true;
+                // process all inputs
+                for (Node in_n : n.branch_in) {
+                    // add each bb if being branched from behind
+                    BasicBlock branch_in = bbc.getAtLine(in_n.line_number);
+                    if (branch_in != null && !curr.bb_in.contains(branch_in)) {
+                        branch_in.bb_out.add(curr);
+                        curr.bb_in.add(curr);
+                    }
+                }
+            }
+
+            if (n.branch_out != null) {
+                // branching out of this
+                // finish this bb
+                // connect this bb to bb_out
+                BasicBlock bb_out = bbc.getAtLine(n.branch_out.line_number);
+                if (bb_out != null && !curr.bb_out.contains(bb_out)) {
+                    // add this to input
+                    bb_out.bb_in.add(curr);
+                    curr.bb_out.add(bb_out);
+                }
+                // add n to curr
+                if (!bypass)
+                    curr.nodes.add(n);
+                bypass = true;
+                if (n.next != null) {
+                    // create next
+                    BasicBlock next = new BasicBlock();
+                    bbc.add(next);
+                    curr.bb_out.add(next);
+                    next.bb_in.add(curr);
+                    curr = next;
+                }
+            }
+
+            if (!bypass)
+                // moving forwards, simply append
+                curr.nodes.add(n);
+            bypass = false;
+        }
     }
 
     @Override
@@ -118,11 +199,10 @@ public class CFG {
         ret += "Vars:\n";
         for (Variable v : vars)
             ret += v + "\n";
-        Node curr = start;
-        while (curr != null) {
-            ret += curr + "\n";
-            curr = curr.next;
-        }
+        ret += "Nodes:\n";
+        for (int i = 0; i < size; i++)
+            ret += get(i) + "\n";
+        ret += "Basic Blocks:\n" + bbc;
         return ret;
     }
 

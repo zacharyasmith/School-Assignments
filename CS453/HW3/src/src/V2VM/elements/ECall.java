@@ -44,12 +44,15 @@ public class ECall extends Element {
                 ret += o.toString();
             ret += "\n";
         }
-        if (this.statement.dest != null)
-            call += tab + n.assignment.reg + " = $v0\n";
-        // restore all 8 vars in local
+        // append call
+        ret += call;
+        // restore temps
         j = 0;
         for (Register r : cfg.used_regs)
             ret += tab + r + " = local[" + j++ + "]\n";
-        return ret + call;
+        // retrieve return val
+        if (this.statement.dest != null)
+            ret += tab + n.assignment.reg + " = $v0\n";
+        return ret;
     }
 }
