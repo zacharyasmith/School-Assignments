@@ -23,6 +23,8 @@ public class Node {
     public Element element;
     public ArrayList<Variable> accessor_vars = new ArrayList<>();
     public Variable assignment = null;
+    // basic block accessor
+    public BasicBlock bb = null;
     // goto placeholder
     public boolean is_goto = false;
     public Node goto_next = null;

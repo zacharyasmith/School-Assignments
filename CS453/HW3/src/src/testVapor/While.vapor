@@ -5,7 +5,7 @@ func AllocArray(size)
   [v] = size
   ret v
 
-func ArrayIndexHelper(index)
+func ArrayIndeWxHelper(index)
   loc = Add(index 1)
   addr = MulS(loc 4)
   ret addr

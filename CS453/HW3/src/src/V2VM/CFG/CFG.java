@@ -13,6 +13,7 @@ import java.util.HashSet;
  */
 public class CFG {
     public ArrayList<Variable> vars;
+    public ArrayList<Variable.Interval> intervals = new ArrayList<>();
     public String fname;
     public int size = 0;
     public int extra_params = 0;
@@ -22,10 +23,17 @@ public class CFG {
     public boolean calls_func = false;
     private Node start = null;
     public BasicBlockContainer bbc = new BasicBlockContainer();
+
     public CFG(String[] vars, VFunction function) {
         this.fname = function.ident;
         this.function = function;
         this.vars = arrToVars(vars);
+        // define parameters
+        for (int i = 0; i < function.params.length; i++) {
+            VVarRef.Local p = function.params[i];
+            searchVar(p.ident).is_paramater = true;
+        }
+        // define how many more params than param regs
         if (function.params.length - RegisterAllocator.arg_regs.size() > 0)
             this.extra_params = function.params.length - RegisterAllocator.arg_regs.size();
     }
@@ -122,10 +130,19 @@ public class CFG {
 
         // create BBs
         createBBs();
+        bbc.sortAsc();
+        
+        // liveness analysis
+        for (int i = bbc.size() - 1; i >= 0; i--) {
+            BasicBlock bb = bbc.get(i);
+            bb.computeLiveness();
+        }
 
         // normalize variables
-        for (Variable v : vars)
+        for (Variable v : vars) {
             v.normalize();
+            intervals.addAll(v.intervals);
+        }
     }
 
     private void createBBs() {
@@ -148,8 +165,10 @@ public class CFG {
                 // move along
                 curr = next;
                 // add this to current
-                if (!bypass)
-                    curr.nodes.add(n);
+                if (!bypass) {
+                    curr.add(n);
+                    n.bb = curr;
+                }
                 bypass = true;
                 // process all inputs
                 for (Node in_n : n.branch_in) {
@@ -157,7 +176,7 @@ public class CFG {
                     BasicBlock branch_in = bbc.getAtLine(in_n.line_number);
                     if (branch_in != null && !curr.bb_in.contains(branch_in)) {
                         branch_in.bb_out.add(curr);
-                        curr.bb_in.add(curr);
+                        curr.bb_in.add(branch_in);
                     }
                 }
             }
@@ -173,8 +192,10 @@ public class CFG {
                     curr.bb_out.add(bb_out);
                 }
                 // add n to curr
-                if (!bypass)
-                    curr.nodes.add(n);
+                if (!bypass) {
+                    curr.add(n);
+                    n.bb = curr;
+                }
                 bypass = true;
                 if (n.next != null) {
                     // create next
@@ -186,9 +207,10 @@ public class CFG {
                 }
             }
 
-            if (!bypass)
-                // moving forwards, simply append
-                curr.nodes.add(n);
+            if (!bypass) {
+                curr.add(n);
+                n.bb = curr;
+            }
             bypass = false;
         }
     }
@@ -199,9 +221,6 @@ public class CFG {
         ret += "Vars:\n";
         for (Variable v : vars)
             ret += v + "\n";
-        ret += "Nodes:\n";
-        for (int i = 0; i < size; i++)
-            ret += get(i) + "\n";
         ret += "Basic Blocks:\n" + bbc;
         return ret;
     }

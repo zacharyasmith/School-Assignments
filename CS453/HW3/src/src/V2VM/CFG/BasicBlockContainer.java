@@ -6,16 +6,34 @@ public class BasicBlockContainer {
     private ArrayList<BasicBlock> bbs = new ArrayList<>();
     private int counter = 1;
 
+    public BasicBlock get(int i) {
+        return bbs.get(i);
+    }
+
     public void add(BasicBlock b) {
         bbs.add(b);
         if (b.identifier == -1)
             b.identifier = counter++;
     }
 
+    public void sortAsc() {
+        bbs.sort(new BasicBlock.SortBBAsc());
+    }
+
+    public int size() {
+        return bbs.size();
+    }
+
     public BasicBlock getById(int id) {
         for(BasicBlock b : bbs)
             if (b.identifier == id)
                 return b;
+        return null;
+    }
+
+    public BasicBlock getLast() {
+        if (!bbs.isEmpty())
+            return bbs.get(bbs.size() - 1);
         return null;
     }
 
