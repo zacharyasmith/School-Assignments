@@ -1,0 +1,7 @@
+#!/bin/bash
+
+for filename in testVaporM/*.vaporm; do
+	echo "Creating output for file: "$filename""
+	java -jar vapor.jar run -mips $filename > testVaporMOutput/$(basename $filename .vaporm).out
+	echo ""
+done
