@@ -13,13 +13,14 @@ import java.util.HashSet;
  */
 public class CFG {
     public ArrayList<Variable> vars;
-    public ArrayList<Variable.Interval> intervals = new ArrayList<>();
+    public HashSet<Variable.Interval> intervals = new HashSet<>();
     public String fname;
     public int size = 0;
     public int extra_params = 0;
     public int out_count = 0;
     public VFunction function;
     public HashSet<Register> used_regs;
+    public int spill_stack_size;
     public boolean calls_func = false;
     private Node start = null;
     public BasicBlockContainer bbc = new BasicBlockContainer();

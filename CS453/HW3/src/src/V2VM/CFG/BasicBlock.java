@@ -56,7 +56,8 @@ public class BasicBlock {
                     out = i;
                     continue;
                 }
-                pass_through.add(i);
+                if (!pass_through.contains(i))
+                    pass_through.add(i);
             }
             ArrayList<Variable.Interval> intervals = v.computeLiveness(start, end, out);
             if (out != null && out.ackFlag())
@@ -69,16 +70,18 @@ public class BasicBlock {
                 live_in.add(i);
                 for (BasicBlock b : bb_in) {
                     b.live_out.add(i);
-                    i.setPassThroughRange(b.getRange());
+                    i.updateRange(b.getRange());
                     i.live_count++;
                 }
             }
         }
         for (Variable.Interval i : pass_through) {
+            if (!i.live_in)
+                continue;
             live_in.add(i);
             for (BasicBlock b : bb_in) {
                 b.live_out.add(i);
-                i.setPassThroughRange(b.getRange());
+                i.updateRange(b.getRange());
             }
         }
     }
