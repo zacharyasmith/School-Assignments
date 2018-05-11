@@ -1,7 +1,8 @@
 package VM2M.elements;
 
-import VM2M.CFG.CFG;
-import VM2M.CFG.Node;
+import VM2M.MipsFunction;
+import VM2M.Node;
+import cs132.vapor.ast.VCodeLabel;
 import cs132.vapor.ast.VInstr;
 
 public abstract class Element {
@@ -12,10 +13,20 @@ public abstract class Element {
         this.i = i;
     }
 
-    public String toVapor(CFG cfg) {
+    public String toMIPS(MipsFunction f) {
         String ret = "";
-        for (String ident : n.branch_in_ident)
-            ret += ident + ":\n";
+        int index = 0;
+        for (VInstr i : f.f.body) {
+            if (i.equals(this.i))
+                break;
+            index++;
+        }
+        for (VCodeLabel l : f.f.labels) {
+            if (l.instrIndex > index)
+                break;
+            if (l.instrIndex == index)
+                ret += l.ident + ":\n";
+        }
         return ret;
     }
 }

@@ -1,12 +1,13 @@
-import VM2M.PrettyPrintVisitor;
+import VM2M.elements.Element;
 import cs132.util.ProblemException;
+import cs132.vapor.ast.*;
 import cs132.vapor.ast.VBuiltIn.Op;
-import cs132.vapor.ast.VFunction;
-import cs132.vapor.ast.VInstr;
-import cs132.vapor.ast.VaporProgram;
 import cs132.vapor.parser.VaporParser;
+import VM2M.ElementsVisitor;
+import VM2M.MipsFunction;
 
 import java.io.*;
+import java.util.ArrayList;
 import java.util.Scanner;
 
 import static java.lang.System.exit;
@@ -43,16 +44,12 @@ public class VM2M {
         /**
          * Build AST
          */
+        ArrayList<MipsFunction> mfs = new ArrayList<>();
         for (VFunction f : v.functions) {
-            System.out.println(f.ident);
-            System.out.println("in " + f.stack.in);
-            System.out.println("out " + f.stack.out);
-            System.out.println("local " + f.stack.local);
-            System.out.println("INSTRUCTIONS");
-            PrettyPrintVisitor ppv = new PrettyPrintVisitor(f);
+            ElementsVisitor ev = new ElementsVisitor(new MipsFunction(f));
             for (VInstr i : f.body)
-                i.accept(ppv);
-            System.out.println();
+                i.accept(ev);
+            mfs.add(ev.f);
         }
 
 
@@ -62,17 +59,40 @@ public class VM2M {
         StringBuilder mips = new StringBuilder();
 
         // Copying function tables
+        mips.append(".data\n\n");
+        for (VDataSegment d : v.dataSegments) {
+            mips.append(d.ident + ":\n");
+            System.out.println(d.values[0].getClass());
+            for (VOperand.Static s : d.values)
+                mips.append("  " + ((VLabelRef)s).ident + "\n");
+            mips.append('\n');
+        }
 
+        // Begin execution section
+        mips.append(".text\n\n  jal Main\n  li $v0 10\n  syscall\n\n");
 
         // Process each function
+        for (MipsFunction f : mfs) {
+            mips.append(f.f.ident + ":\n");
+            mips.append(f.prologue());
 
-        // print statements
+            // print statements
+            for (Element e : f.elements)
+                mips.append(e.toMIPS(f));
 
-        // extra line
+            // extra line
+            mips.append('\n');
+        }
+
+        // Helper functions
+        mips.append("_print:\n  li $v0 1\n  syscall\n  la $a0 _newline\n  li $v0 4\n  syscall\n  jr $ra\n\n" +
+                "_error:\n  la $a0 _err\n  li $v0 4\n  syscall\n  li $v0 10\n  syscall\n\n" +
+                "_heapAlloc:\n  li $v0 9\n  syscall\n  jr $ra\n\n" +
+                ".data\n.align 0\n_newline: .asciiz \"\\n\"\n_err: .asciiz \"null pointer\\n\"\n");
 
         if (debug) {
             try {
-                BufferedWriter writer = new BufferedWriter(new FileWriter("tmp.vaporm"));
+                BufferedWriter writer = new BufferedWriter(new FileWriter("tmp.s"));
                 writer.write(mips.toString());
                 writer.close();
             } catch (IOException e) {

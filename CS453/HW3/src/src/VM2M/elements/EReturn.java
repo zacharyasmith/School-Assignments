@@ -1,9 +1,7 @@
 package VM2M.elements;
 
-import VM2M.CFG.CFG;
-import VM2M.Variable;
+import VM2M.MipsFunction;
 import cs132.vapor.ast.VReturn;
-import cs132.vapor.ast.VVarRef;
 
 public class EReturn extends Element {
     VReturn statement;
@@ -13,20 +11,9 @@ public class EReturn extends Element {
     }
 
     @Override
-    public String toVapor(CFG cfg) {
-        String beginning = super.toVapor(cfg);
-        String ret = "";
-        if (statement.value != null) {
-            ret += tab + "$v0 = ";
-            if (statement.value instanceof VVarRef.Local) {
-                Variable.Interval i = n.accessor_vars.get(0).getIntervalAt(statement.sourcePos.line);
-                beginning += i.spillBefore(statement.sourcePos.line, true);
-                ret += i.getRegister(statement.sourcePos.line);
-            } else
-                ret += statement.value;
-            ret += "\n";
-        }
-        ret += tab + "ret\n";
-        return beginning + ret;
+    public String toMIPS(MipsFunction f) {
+        String ret = super.toMIPS(f);
+        ret += f.epilogue();
+        return ret;
     }
 }

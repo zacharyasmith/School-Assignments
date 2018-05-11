@@ -1,6 +1,7 @@
 package VM2M.elements;
 
-import VM2M.CFG.CFG;
+import VM2M.MipsFunction;
+import cs132.vapor.ast.VAddr;
 import cs132.vapor.ast.VGoto;
 
 public class EGoto extends Element {
@@ -11,7 +12,9 @@ public class EGoto extends Element {
     }
 
     @Override
-    public String toVapor(CFG cfg) {
-        return super.toVapor(cfg) + tab + "goto " + statement.target + "\n";
+    public String toMIPS(MipsFunction f) {
+        if (statement.target instanceof VAddr.Label)
+            return super.toMIPS(f) + tab + "j " + ((VAddr.Label)statement.target).label.ident + "\n";
+        throw new RuntimeException("Should have been a VAddr.Label");
     }
 }

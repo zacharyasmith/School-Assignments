@@ -1,11 +1,9 @@
 package VM2M.elements;
 
-import VM2M.CFG.CFG;
-import VM2M.Variable;
-import cs132.vapor.ast.VAddr;
+import VM2M.MipsFunction;
+import cs132.vapor.ast.VLabelRef;
 import cs132.vapor.ast.VMemRef;
 import cs132.vapor.ast.VMemWrite;
-import cs132.vapor.ast.VVarRef;
 
 public class EMemWrite extends Element {
     VMemWrite statement;
@@ -15,30 +13,30 @@ public class EMemWrite extends Element {
     }
 
     @Override
-    public String toVapor(CFG cfg) {
-        String before = super.toVapor(cfg);
-        String ret = tab + "[";
-        int index = 0;
-        // LHS
+    public String toMIPS(MipsFunction f) {
+        String begin = super.toMIPS(f) + tab;
+        String fnc = "sw";
+        String src = statement.source.toString();
+        String rst = "";
         if (statement.dest instanceof VMemRef.Global) {
-            if (((VMemRef.Global) statement.dest).base instanceof VAddr.Var) {
-                Variable.Interval i = n.accessor_vars.get(index++).getIntervalAt(statement.sourcePos.line);
-                before += i.spillBefore(statement.sourcePos.line, true);
-                ret += i.getRegister(statement.sourcePos.line);
-            } else
-                ret += statement.dest.toString();
-            if (((VMemRef.Global) statement.dest).byteOffset != 0)
-                ret += " + " + ((VMemRef.Global) statement.dest).byteOffset;
+            rst += ((VMemRef.Global) statement.dest).byteOffset + "(" +
+                    ((VMemRef.Global) statement.dest).base + ")";
+        } else if (statement.dest instanceof VMemRef.Stack){
+            if (((VMemRef.Stack) statement.dest).region == VMemRef.Stack.Region.Local) {
+                rst += f.stack_out * 4 + ((VMemRef.Stack) statement.dest).index * 4;
+                rst += "($sp)";
+            } else if (((VMemRef.Stack) statement.dest).region == VMemRef.Stack.Region.In) {
+                rst += ((VMemRef.Stack) statement.dest).index * 4;
+                rst += "($fp)";
+            } else { // Out
+                rst += ((VMemRef.Stack) statement.dest).index * 4;
+                rst += "($sp)";
+            }
         }
-        ret += "] = ";
-        // RHS
-        if (statement.source instanceof VVarRef.Local) {
-            Variable.Interval i = n.accessor_vars.get(index).getIntervalAt(statement.sourcePos.line);
-            before += i.spillBefore(statement.sourcePos.line, true);
-            ret += i.getRegister(statement.sourcePos.line);
-        } else
-            ret += statement.source;
-        ret += "\n";
-        return before + ret;
+        if (statement.source instanceof VLabelRef) {
+            begin += "la $t9 " + ((VLabelRef) statement.source).ident + '\n' + tab;
+            src = "$t9";
+        }
+        return begin + fnc + " " + src + " " + rst + '\n';
     }
 }
