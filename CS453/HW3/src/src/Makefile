@@ -1,6 +1,6 @@
 JC = javac
 PWD := $(shell pwd)
-default: hw4
+default: hw5
 
 hw3:
 	$(JC) J2V.java
@@ -8,10 +8,14 @@ hw3:
 hw4:
 	$(JC) -cp ".:vapor-parser.jar" V2VM.java
 
+hw5:
+	$(JC) -cp ".:vapor-parser.jar" VM2M.java
+
 clean:
 	-rm smithza.zip *.class
 	-rm J2V/*.class J2V/context/*.class J2V/elements/*.class
 	-rm V2VM/*.class V2VM/elements/*.class V2VM/CFG/*.class
+	-rm VM2M/*.class V2VM/elements/*.class
 
 packhw3:
 	-rm smithza.zip
@@ -20,3 +24,7 @@ packhw3:
 packhw4:
 	-rm smithza.zip
 	zip smithza -r V2VM V2VM.java
+
+packhw5:
+	-rm smithza.zip
+	zip smithza -r VM2M VM2M.java
