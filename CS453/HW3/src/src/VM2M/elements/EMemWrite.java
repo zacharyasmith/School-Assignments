@@ -2,6 +2,7 @@ package VM2M.elements;
 
 import VM2M.MipsFunction;
 import cs132.vapor.ast.VLabelRef;
+import cs132.vapor.ast.VLitInt;
 import cs132.vapor.ast.VMemRef;
 import cs132.vapor.ast.VMemWrite;
 
@@ -35,6 +36,9 @@ public class EMemWrite extends Element {
         }
         if (statement.source instanceof VLabelRef) {
             begin += "la $t9 " + ((VLabelRef) statement.source).ident + '\n' + tab;
+            src = "$t9";
+        } else if (statement.source instanceof VLitInt) {
+            begin += "li $t9 " + statement.source + '\n' + tab;
             src = "$t9";
         }
         return begin + fnc + " " + src + " " + rst + '\n';

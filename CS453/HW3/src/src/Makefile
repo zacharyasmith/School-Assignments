@@ -15,7 +15,7 @@ clean:
 	-rm smithza.zip *.class
 	-rm J2V/*.class J2V/context/*.class J2V/elements/*.class
 	-rm V2VM/*.class V2VM/elements/*.class V2VM/CFG/*.class
-	-rm VM2M/*.class V2VM/elements/*.class
+	-rm VM2M/*.class VM2M/elements/*.class
 
 packhw3:
 	-rm smithza.zip

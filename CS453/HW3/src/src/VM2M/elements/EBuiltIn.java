@@ -3,6 +3,7 @@ package VM2M.elements;
 import VM2M.MipsFunction;
 import cs132.vapor.ast.VBuiltIn;
 import cs132.vapor.ast.VLitInt;
+import cs132.vapor.ast.VLitStr;
 import cs132.vapor.ast.VOperand;
 
 public class EBuiltIn extends Element {
@@ -37,43 +38,53 @@ public class EBuiltIn extends Element {
                 ret += tab + "jal _print\n";
                 break;
             case "Error":
+                ret += tab + "la $a0 " + f.errMsgLabel(((VLitStr) statement.args[0]).value) + "\n";
                 ret += tab + "j _error\n";
                 break;
             case "Add":
                 if (ac.both_imm) {
                     ret += tab + "li " + statement.dest + " " + (ac.i0 + ac.i1) + "\n";
                 } else {
-                    ret += tab + "add " + statement.dest + " " + statement.args[0] +
-                            " " + statement.args[1] + "\n";
+                    ret += tab + "addu " + statement.dest + " " + ac.first +
+                            " " + ac.second + "\n";
                 }
                 break;
             case "Sub":
                 if (ac.both_imm) {
                     ret += tab + "li " + statement.dest + " " + (ac.i0 - ac.i1) + "\n";
                 } else {
-                    ret += tab + "sub " + statement.dest + " " + statement.args[0] +
-                            " " + statement.args[1] + "\n";
+                    ret += tab + "subu " + statement.dest + " " + ac.first +
+                            " " + ac.second + "\n";
+                    if (ac.has_imm && ac.first != statement.args[0])
+                        ret += tab + "mul " + statement.dest + " " +
+                                statement.dest + " -1\n";
                 }
                 break;
             case "MulS":
                 if (ac.both_imm) {
                     ret += tab + "li " + statement.dest + " " + (ac.i0 * ac.i1) + "\n";
                 } else {
-                    ret += tab + "mul " + statement.dest + " " + statement.args[0] +
-                            " " + statement.args[1] + "\n";
+                    ret += tab + "mul " + statement.dest + " " + ac.first +
+                            " " + ac.second + "\n";
                 }
                 break;
             case "Eq":
-                ret += tab + "and " + statement.dest + " " + statement.args[0] +
-                        " " + statement.args[1] + "\n";
+                ret += tab + "xor " + statement.dest + " " + ac.first +
+                        " " + ac.second + "\n";
+                ret += tab + "sltiu " + statement.dest + " " + statement.dest +
+                        " 1\n";
                 break;
             case "Lt":
                 if (ac.both_imm) {
                     ret += tab + "li " + statement.dest + " " +
                             (Math.abs(ac.i0) < Math.abs(ac.i1) ? 1 : 0) + "\n";
                 } else if (ac.has_imm) {
-                    ret += tab + "slti " + statement.dest + " " + ac.first +
-                            " " + ac.second + "\n";
+                    ret += tab + "li $t9 " + ac.second + "\n";
+                    if (ac.first != statement.args[0]) {
+                        ret += tab + "sltu " + statement.dest + " $t9 " + ac.first + "\n";
+                    } else {
+                        ret += tab + "sltu " + statement.dest + " " + ac.first + " $t9\n";
+                    }
                 } else {
                     ret += tab + "slt " + statement.dest + " " + statement.args[0] +
                             " " + statement.args[1] + "\n";

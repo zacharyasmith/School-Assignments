@@ -3,8 +3,11 @@ package VM2M;
 import VM2M.elements.*;
 import cs132.vapor.ast.*;
 
+import java.util.HashSet;
+
 public class ElementsVisitor extends VInstr.Visitor {
     public MipsFunction f;
+    public HashSet<String> err_messages = new HashSet<>();
     public ElementsVisitor(MipsFunction f) {
         super();
         this.f = f;
@@ -22,6 +25,8 @@ public class ElementsVisitor extends VInstr.Visitor {
 
     @Override
     public void visit(VBuiltIn curr) throws Throwable {
+        if (curr.op.name.equals("Error"))
+            err_messages.add(((VLitStr) curr.args[0]).value);
         f.addElement(new EBuiltIn(curr));
     }
 

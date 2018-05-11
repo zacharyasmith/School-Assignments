@@ -1,13 +1,14 @@
-import VM2M.elements.Element;
-import cs132.util.ProblemException;
-import cs132.vapor.ast.*;
-import cs132.vapor.ast.VBuiltIn.Op;
-import cs132.vapor.parser.VaporParser;
 import VM2M.ElementsVisitor;
 import VM2M.MipsFunction;
+import VM2M.elements.Element;
+import cs132.util.ProblemException;
+import cs132.vapor.ast.VBuiltIn.Op;
+import cs132.vapor.ast.*;
+import cs132.vapor.parser.VaporParser;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.Scanner;
 
 import static java.lang.System.exit;
@@ -44,12 +45,14 @@ public class VM2M {
         /**
          * Build AST
          */
+        HashSet<String> err_messages = new HashSet<>();
         ArrayList<MipsFunction> mfs = new ArrayList<>();
         for (VFunction f : v.functions) {
-            ElementsVisitor ev = new ElementsVisitor(new MipsFunction(f));
+            ElementsVisitor ev = new ElementsVisitor(new MipsFunction(f, err_messages));
             for (VInstr i : f.body)
                 i.accept(ev);
             mfs.add(ev.f);
+            err_messages.addAll(ev.err_messages);
         }
 
 
@@ -62,7 +65,6 @@ public class VM2M {
         mips.append(".data\n\n");
         for (VDataSegment d : v.dataSegments) {
             mips.append(d.ident + ":\n");
-            System.out.println(d.values[0].getClass());
             for (VOperand.Static s : d.values)
                 mips.append("  " + ((VLabelRef)s).ident + "\n");
             mips.append('\n');
@@ -86,9 +88,13 @@ public class VM2M {
 
         // Helper functions
         mips.append("_print:\n  li $v0 1\n  syscall\n  la $a0 _newline\n  li $v0 4\n  syscall\n  jr $ra\n\n" +
-                "_error:\n  la $a0 _err\n  li $v0 4\n  syscall\n  li $v0 10\n  syscall\n\n" +
+                "_error:\n  li $v0 4\n  syscall\n  li $v0 10\n  syscall\n\n" +
                 "_heapAlloc:\n  li $v0 9\n  syscall\n  jr $ra\n\n" +
-                ".data\n.align 0\n_newline: .asciiz \"\\n\"\n_err: .asciiz \"null pointer\\n\"\n");
+                ".data\n.align 0\n_newline: .asciiz \"\\n\"\n");
+        int index = 0;
+        for (String e : err_messages) {
+            mips.append("_err" + index++ + ": .asciiz \"" + e + "\\n\"\n");
+        }
 
         if (debug) {
             try {

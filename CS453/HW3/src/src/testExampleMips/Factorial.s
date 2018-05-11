@@ -9,7 +9,7 @@ vmt_Fac:
   li $v0 10
   syscall
 
-Main:
+Main:t
   sw $fp -8($sp)
   move $fp $sp
   subu $sp $sp 8
